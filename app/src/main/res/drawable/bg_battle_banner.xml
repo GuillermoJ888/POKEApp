@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Letrero central de la arena ("¡Comienza!", "¡X gana!") -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="18dp" />
+    <solid android:color="#E6142036" />
+    <stroke android:width="3dp" android:color="#FACC15" />
+</shape>

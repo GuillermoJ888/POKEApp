@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tarjetaMini"
+    android:layout_width="92dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="10dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="8dp"
+    android:background="@drawable/bg_mini_normal">
+
+    <ImageView
+        android:id="@+id/imgMini"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="Sprite del Pokémon" />
+
+    <TextView
+        android:id="@+id/tvNumeroMini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="#001"
+        android:textColor="#7A1507"
+        android:textSize="10sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvNombreMini"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="Nombre"
+        android:textColor="#14213D"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+</LinearLayout>

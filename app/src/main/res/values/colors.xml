@@ -1,0 +1,27 @@
+<resources>
+    <color name="poke_blue_dark">#0D1B3E</color>
+    <color name="poke_blue">#182A57</color>
+    <color name="poke_blue_light">#2E4A8F</color>
+    <color name="poke_gold">#FFC542</color>
+    <color name="poke_red">#E3350D</color>
+    <color name="poke_white">#FFFFFF</color>
+    <color name="poke_gray_text">#8A93A6</color>
+    <color name="poke_field_bg">#1E2E5C</color>
+    <color name="poke_green">#39C06B</color>
+
+    <!-- Menú principal: rojos y blancos -->
+    <color name="menu_red">#E3350D</color>
+    <color name="menu_red_dark">#A81C0A</color>
+    <color name="menu_bg">#FFF6F4</color>
+    <color name="menu_text">#3A1410</color>
+    <color name="menu_text_soft">#9A6F6A</color>
+
+    <!-- Perfil: morados y azules -->
+    <color name="perfil_indigo_dark">#120E33</color>
+    <color name="perfil_purple">#3D1F94</color>
+    <color name="perfil_blue">#1D3C8F</color>
+    <color name="perfil_violet">#A78BFA</color>
+    <color name="perfil_lavender">#DDD6FE</color>
+    <color name="perfil_sky">#93C5FD</color>
+    <color name="perfil_text_soft">#B9B4E6</color>
+</resources>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Escenario: Montaña nevada (montañas con nieve, pinos y suelo de nieve) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="400dp"
+    android:height="600dp"
+    android:viewportWidth="400"
+    android:viewportHeight="600">
+
+    <!-- Cielo -->
+    <path android:pathData="M0,0h400v245h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="0" android:endX="0" android:endY="245"
+                android:startColor="#7FAFD9" android:endColor="#EAF4FC" />
+        </aapt:attr>
+    </path>
+
+    <!-- Copos -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.85"
+        android:pathData="M40,40a3,3 0 1,0 6,0a3,3 0 1,0 -6,0 M120,70a2,2 0 1,0 4,0a2,2 0 1,0 -4,0 M200,30a3,3 0 1,0 6,0a3,3 0 1,0 -6,0 M260,90a2,2 0 1,0 4,0a2,2 0 1,0 -4,0 M330,50a3,3 0 1,0 6,0a3,3 0 1,0 -6,0 M90,130a2,2 0 1,0 4,0a2,2 0 1,0 -4,0 M370,120a2,2 0 1,0 4,0a2,2 0 1,0 -4,0 M160,110a2,2 0 1,0 4,0a2,2 0 1,0 -4,0 M60,300a3,3 0 1,0 6,0a3,3 0 1,0 -6,0 M320,350a3,3 0 1,0 6,0a3,3 0 1,0 -6,0 M150,460a2,2 0 1,0 4,0a2,2 0 1,0 -4,0" />
+
+    <!-- Montañas del fondo -->
+    <path android:fillColor="#9DB3D2"
+        android:pathData="M0,245 L0,170 L60,110 L110,160 L170,78 L240,170 L290,118 L350,175 L400,138 L400,245 Z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M60,110 L45,125 L57,121 L65,129 L75,123 Z M170,78 L148,104 L161,99 L171,110 L182,100 L193,106 Z M290,118 L275,135 L287,131 L295,140 L305,133 Z M400,138 L386,150 L396,149 L400,156 Z" />
+
+    <!-- Colinas cercanas -->
+    <path android:fillColor="#C6D7EA"
+        android:pathData="M0,252 Q60,200 130,236 Q200,206 270,238 Q340,210 400,236 L400,262 L0,262 Z" />
+
+    <!-- Suelo de nieve -->
+    <path android:pathData="M0,240h400v360h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="240" android:endX="0" android:endY="600"
+                android:startColor="#FFFFFF" android:endColor="#CFE1F3" />
+        </aapt:attr>
+    </path>
+
+    <!-- Sombras en la nieve -->
+    <path android:fillColor="#DCE9F6"
+        android:pathData="M110,330 a60,10 0 1,0 120,0 a60,10 0 1,0 -120,0 z M230,470 a80,12 0 1,0 160,0 a80,12 0 1,0 -160,0 z M20,560 a70,10 0 1,0 140,0 a70,10 0 1,0 -140,0 z" />
+
+    <!-- Pino izquierdo -->
+    <path android:fillColor="#5A3A28" android:pathData="M24,330 h14 v24 h-14 z" />
+    <path android:fillColor="#2F5D62"
+        android:pathData="M31,165 L2,222 L16,220 L-8,272 L12,270 L-16,330 L78,330 L50,270 L70,272 L46,220 L60,222 Z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M31,165 L20,187 L31,182 L42,187 Z M16,220 L8,236 L22,230 L31,236 L40,230 L54,236 L46,220 Z M12,270 L2,288 L18,282 L31,290 L44,282 L60,288 L50,270 Z" />
+
+    <!-- Pino derecho -->
+    <path android:fillColor="#5A3A28" android:pathData="M362,340 h14 v24 h-14 z" />
+    <path android:fillColor="#2F5D62"
+        android:pathData="M369,175 L340,232 L354,230 L330,282 L350,280 L322,340 L416,340 L388,280 L408,282 L384,230 L398,232 Z" />
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M369,175 L358,197 L369,192 L380,197 Z M354,230 L346,246 L360,240 L369,246 L378,240 L392,246 L384,230 Z M350,280 L340,298 L356,292 L369,300 L382,292 L398,298 L388,280 Z" />
+</vector>

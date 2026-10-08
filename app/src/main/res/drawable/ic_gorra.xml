@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="96"
+    android:viewportHeight="96">
+    <!-- visera -->
+    <path
+        android:fillColor="#B71C1C"
+        android:strokeColor="#7A1507"
+        android:strokeWidth="2.5"
+        android:pathData="M8,58 H88 C88,70 72,78 48,78 C24,78 8,70 8,58 Z" />
+    <!-- copa roja -->
+    <path
+        android:fillColor="#E3350D"
+        android:strokeColor="#7A1507"
+        android:strokeWidth="2.5"
+        android:pathData="M14,58 C14,30 30,14 48,14 C66,14 82,30 82,58 Z" />
+    <!-- panel frontal blanco -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,58 C34,38 40,22 48,15 C56,22 62,38 62,58 Z" />
+    <!-- emblema -->
+    <path
+        android:fillColor="#E3350D"
+        android:pathData="M41,40 A7,7 0 0 1 55,40 Z" />
+    <path
+        android:fillColor="#1B2A41"
+        android:pathData="M41,40 H55 A7,7 0 0 1 41,40 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#1B2A41"
+        android:strokeWidth="1.5"
+        android:pathData="M45.5,40 A2.5,2.5 0 1 0 50.5,40 A2.5,2.5 0 1 0 45.5,40 Z" />
+    <!-- botón superior -->
+    <path android:fillColor="#7A1507" android:pathData="M45,13 A3,3 0 1 0 51,13 A3,3 0 1 0 45,13 Z" />
+</vector>

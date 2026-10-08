@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Escenario: Playa (cielo, mar con olas, arena y palmera) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="400dp"
+    android:height="600dp"
+    android:viewportWidth="400"
+    android:viewportHeight="600">
+
+    <!-- Cielo -->
+    <path android:pathData="M0,0h400v190h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="0" android:endX="0" android:endY="190"
+                android:startColor="#3FB5F0" android:endColor="#C5ECFD" />
+        </aapt:attr>
+    </path>
+
+    <!-- Sol y nubes -->
+    <path android:fillColor="#FFF6C8"
+        android:pathData="M50,70 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0 z" />
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.9"
+        android:pathData="M170,110 a18,18 0 0,1 22,-20 a26,26 0 0,1 46,4 a17,17 0 0,1 18,16 z M290,60 a12,12 0 0,1 15,-14 a18,18 0 0,1 32,3 a12,12 0 0,1 12,11 z" />
+
+    <!-- Mar -->
+    <path android:pathData="M0,185h400v75h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="185" android:endX="0" android:endY="260"
+                android:startColor="#1572C2" android:endColor="#45B4E6" />
+        </aapt:attr>
+    </path>
+    <path android:strokeColor="#FFFFFF" android:strokeAlpha="0.7" android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M20,212 q15,-6 30,0 M140,200 q15,-6 30,0 M250,228 q15,-6 30,0 M330,204 q15,-6 30,0 M80,238 q15,-6 30,0 M190,244 q15,-6 30,0" />
+
+    <!-- Espuma -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.9"
+        android:pathData="M0,252 Q40,242 80,252 Q120,262 160,250 Q200,240 240,252 Q280,264 320,250 Q360,240 400,252 L400,266 L0,266 Z" />
+
+    <!-- Arena -->
+    <path android:pathData="M0,262h400v338h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="262" android:endX="0" android:endY="600"
+                android:startColor="#FDEFC8" android:endColor="#EBCB8E" />
+        </aapt:attr>
+    </path>
+    <path android:fillColor="#E3C98F" android:fillAlpha="0.6" android:pathData="M0,264h400v16h-400z" />
+
+    <!-- Conchas y estrella de mar -->
+    <path android:fillColor="#F7A8A0"
+        android:pathData="M80,420 a7,5 0 1,0 14,0 a7,5 0 1,0 -14,0 z M250,520 a6,4 0 1,0 12,0 a6,4 0 1,0 -12,0 z" />
+    <path android:fillColor="#F28C4B"
+        android:pathData="M160,560 l4,9 l10,1 l-8,6 l3,10 l-9,-5 l-9,5 l3,-10 l-8,-6 l10,-1 z" />
+
+    <!-- Roca izquierda -->
+    <path android:fillColor="#9AA5B1"
+        android:pathData="M0,300 Q10,262 40,268 Q62,272 64,300 Z" />
+
+    <!-- Palmera -->
+    <path android:strokeColor="#8A5A33" android:strokeWidth="14" android:strokeLineCap="round"
+        android:pathData="M372,345 Q388,245 336,152" />
+    <path android:fillColor="#2E9E4F"
+        android:pathData="M336,150 Q290,118 248,150 Q294,134 336,156 Z M336,150 Q302,88 260,94 Q302,106 334,148 Z M336,150 Q362,92 404,98 Q366,110 339,150 Z M336,150 Q384,138 412,176 Q376,150 338,155 Z M336,150 Q318,172 300,216 Q326,176 339,154 Z" />
+    <path android:fillColor="#6B4226"
+        android:pathData="M327,158 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 z M337,162 a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 z" />
+</vector>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/tvEtiquetaStat"
+        android:layout_width="78dp"
+        android:layout_height="wrap_content"
+        android:text="HP"
+        android:textColor="@color/poke_gray_text"
+        android:textSize="11sp" />
+
+    <ProgressBar
+        android:id="@+id/barraStat"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="10dp"
+        android:layout_weight="1"
+        android:max="180"
+        android:progress="50"
+        android:progressTint="@color/poke_gold" />
+
+    <TextView
+        android:id="@+id/tvValorStat"
+        android:layout_width="34dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="50"
+        android:textColor="@color/poke_white"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

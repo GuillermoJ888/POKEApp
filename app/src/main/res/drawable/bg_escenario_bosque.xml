@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Escenario: Bosque (cielo con nubes, árboles a los lados y camino de tierra) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="400dp"
+    android:height="600dp"
+    android:viewportWidth="400"
+    android:viewportHeight="600">
+
+    <!-- Cielo -->
+    <path android:pathData="M0,0h400v232h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="0" android:endX="0" android:endY="232"
+                android:startColor="#4FAEEC" android:endColor="#D4EEFF" />
+        </aapt:attr>
+    </path>
+
+    <!-- Nubes -->
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.92"
+        android:pathData="M226,98 a22,22 0 0,1 28,-26 a30,30 0 0,1 56,4 a20,20 0 0,1 22,22 z" />
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.8"
+        android:pathData="M110,58 a16,16 0 0,1 20,-18 a22,22 0 0,1 40,3 a15,15 0 0,1 16,15 z" />
+
+    <!-- Bosque lejano -->
+    <path android:fillColor="#5FA35C"
+        android:pathData="M0,232 L0,176 Q15,150 30,170 Q48,140 66,168 Q84,148 100,172 Q120,150 140,176 Q160,158 180,180 Q200,160 220,180 Q240,156 260,176 Q280,150 300,172 Q318,146 336,168 Q354,150 372,172 Q388,152 400,168 L400,232 Z" />
+    <path android:fillColor="#3F8146"
+        android:pathData="M0,236 L0,198 Q20,176 40,196 Q60,172 80,196 Q100,178 120,200 Q140,180 160,202 Q180,184 200,204 Q220,182 240,202 Q260,178 280,200 Q300,180 320,200 Q340,176 360,198 Q380,178 400,196 L400,236 Z" />
+
+    <!-- Pasto -->
+    <path android:pathData="M0,222h400v378h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="222" android:endX="0" android:endY="600"
+                android:startColor="#9BD873" android:endColor="#4C9A36" />
+        </aapt:attr>
+    </path>
+
+    <!-- Camino de tierra -->
+    <path android:fillColor="#D2AC70"
+        android:pathData="M182,224 Q200,219 218,224 L300,420 Q338,520 345,600 L55,600 Q66,520 108,430 Z" />
+    <path android:fillColor="#E4C690"
+        android:pathData="M194,228 L208,228 L248,420 Q262,520 262,600 L140,600 Q140,520 156,420 Z" />
+
+    <!-- Árbol izquierdo -->
+    <path android:fillColor="#7A4A2A" android:pathData="M14,340 h32 v-130 h-32 z" />
+    <path android:fillColor="#2E7A36"
+        android:pathData="M-40,180 a60,60 0 1,0 120,0 a60,60 0 1,0 -120,0 z M25,150 a45,45 0 1,0 90,0 a45,45 0 1,0 -90,0 z M-35,110 a45,45 0 1,0 90,0 a45,45 0 1,0 -90,0 z M20,215 a40,40 0 1,0 80,0 a40,40 0 1,0 -80,0 z" />
+    <path android:fillColor="#4C9E48"
+        android:pathData="M38,138 a20,20 0 1,0 40,0 a20,20 0 1,0 -40,0 z M-6,96 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0 z" />
+
+    <!-- Árbol derecho -->
+    <path android:fillColor="#7A4A2A" android:pathData="M354,340 h32 v-130 h-32 z" />
+    <path android:fillColor="#2E7A36"
+        android:pathData="M320,180 a60,60 0 1,0 120,0 a60,60 0 1,0 -120,0 z M285,150 a45,45 0 1,0 90,0 a45,45 0 1,0 -90,0 z M345,110 a45,45 0 1,0 90,0 a45,45 0 1,0 -90,0 z M300,215 a40,40 0 1,0 80,0 a40,40 0 1,0 -80,0 z" />
+    <path android:fillColor="#4C9E48"
+        android:pathData="M322,138 a20,20 0 1,0 40,0 a20,20 0 1,0 -40,0 z M368,96 a16,16 0 1,0 32,0 a16,16 0 1,0 -32,0 z" />
+
+    <!-- Matas de pasto -->
+    <path android:fillColor="#3D8A2E"
+        android:pathData="M20,470 l6,-14 l4,12 l5,-16 l4,16 l5,-12 l4,14 z M340,500 l6,-14 l4,12 l5,-16 l4,16 l5,-12 l4,14 z M70,330 l5,-11 l3,9 l4,-13 l3,13 l4,-9 l3,11 z M300,300 l5,-11 l3,9 l4,-13 l3,13 l4,-9 l3,11 z M360,400 l6,-14 l4,12 l5,-16 l4,16 l5,-12 l4,14 z M10,560 l6,-14 l4,12 l5,-16 l4,16 l5,-12 l4,14 z" />
+</vector>

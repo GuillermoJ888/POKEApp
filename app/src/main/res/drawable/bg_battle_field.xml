@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de la arena: cielo arriba y pasto abajo, como en los juegos -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Cielo -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="22dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="#6EC6F5"
+                android:endColor="#D8F1FF" />
+        </shape>
+    </item>
+
+    <!-- Pasto -->
+    <item android:top="170dp">
+        <shape android:shape="rectangle">
+            <corners
+                android:bottomLeftRadius="22dp"
+                android:bottomRightRadius="22dp" />
+            <gradient
+                android:angle="270"
+                android:startColor="#9BDB74"
+                android:endColor="#5DA840" />
+        </shape>
+    </item>
+
+    <!-- Borde -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="22dp" />
+            <stroke android:width="3dp" android:color="#3A1410" />
+        </shape>
+    </item>
+</layer-list>

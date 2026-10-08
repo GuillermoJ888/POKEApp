@@ -1,0 +1,24 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Configuración de Firebase: cada quien usa la de su propio proyecto (ver README)
+app/google-services.json
+
+# APKs / bundles generados y firmas
+*.apk
+*.aab
+*.jks
+*.keystore

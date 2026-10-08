@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Batalla a pantalla completa: arena arriba y registro abajo.
+  Plataformas, Pokémon y tarjetas de vida se acomodan desde BattleArenaActivity
+  según el escenario (aquí solo tienen tamaño; empiezan invisibles).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#142036">
+
+    <FrameLayout
+        android:id="@+id/arena"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipChildren="false">
+
+        <!-- Fondo del escenario (se elige al azar) -->
+        <ImageView
+            android:id="@+id/imgFondo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_escenario_bosque"
+            android:contentDescription="Escenario de batalla" />
+
+        <!-- Plataformas (solo en fondos que no las traen dibujadas) -->
+        <View
+            android:id="@+id/plataformaB"
+            android:layout_width="190dp"
+            android:layout_height="54dp"
+            android:layout_gravity="top|start"
+            android:visibility="invisible" />
+
+        <View
+            android:id="@+id/plataformaA"
+            android:layout_width="210dp"
+            android:layout_height="60dp"
+            android:layout_gravity="top|start"
+            android:visibility="invisible" />
+
+        <!-- Pokémon B (rival) -->
+        <FrameLayout
+            android:id="@+id/contenedorB"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="top|start"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/imgB"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:contentDescription="Pokémon B" />
+        </FrameLayout>
+
+        <!-- Pokémon A (volteado para que mire hacia el rival) -->
+        <FrameLayout
+            android:id="@+id/contenedorA"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="top|start"
+            android:visibility="invisible">
+
+            <ImageView
+                android:id="@+id/imgA"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:scaleX="-1"
+                android:contentDescription="Pokémon A" />
+        </FrameLayout>
+
+        <!-- Tarjeta de vida de B: arriba a la izquierda -->
+        <LinearLayout
+            android:id="@+id/hudB"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="56dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_battle_hud"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/tvNombreB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="B"
+                android:textColor="@color/menu_text"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvTiposB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tipo"
+                android:textColor="@color/menu_text_soft"
+                android:textSize="11sp"
+                android:maxLines="1" />
+
+            <ProgressBar
+                android:id="@+id/barraHpB"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_marginTop="6dp"
+                android:progressDrawable="@drawable/bg_hp_bar"
+                android:max="100"
+                android:progress="100" />
+
+            <TextView
+                android:id="@+id/tvHpB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="end"
+                android:text="100 / 100 HP · 100%"
+                android:textColor="@color/menu_text"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Tarjeta de vida de A: a la derecha; su altura se ajusta al escenario -->
+        <LinearLayout
+            android:id="@+id/hudA"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_marginEnd="14dp"
+            android:orientation="vertical"
+            android:background="@drawable/bg_battle_hud"
+            android:padding="12dp"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/tvNombreA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="A"
+                android:textColor="@color/menu_text"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/tvTiposA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tipo"
+                android:textColor="@color/menu_text_soft"
+                android:textSize="11sp"
+                android:maxLines="1" />
+
+            <ProgressBar
+                android:id="@+id/barraHpA"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_marginTop="6dp"
+                android:progressDrawable="@drawable/bg_hp_bar"
+                android:max="100"
+                android:progress="100" />
+
+            <TextView
+                android:id="@+id/tvHpA"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="end"
+                android:text="100 / 100 HP · 100%"
+                android:textColor="@color/menu_text"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Barra superior: salir y número de turno -->
+        <LinearLayout
+            android:id="@+id/barraSuperior"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/btnSalirArena"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_battle_banner"
+                android:gravity="center"
+                android:text="✕"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvTurno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_battle_banner"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:text="Preparando..."
+                android:textColor="#FACC15"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Letrero central -->
+        <TextView
+            android:id="@+id/tvBanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_battle_banner"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:gravity="center"
+            android:text="¡Comienza la batalla!"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Registro de batalla -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_dex_panel"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REGISTRO DE BATALLA"
+            android:textColor="#FACC15"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.1" />
+
+        <ScrollView
+            android:id="@+id/scrollBitacora"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="6dp"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/tvBitacora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="12dp"
+                android:text=""
+                android:textColor="#C9D1E8"
+                android:textSize="13sp"
+                android:lineSpacingExtra="3dp" />
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

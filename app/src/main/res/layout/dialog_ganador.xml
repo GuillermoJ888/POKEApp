@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ventana emergente con el ganador, encima del Emulator -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_card_menu"
+    android:padding="22dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🏆 GANADOR"
+        android:textColor="@color/menu_red"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.12" />
+
+    <FrameLayout
+        android:layout_width="170dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="8dp">
+
+        <View
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@drawable/bg_battle_platform" />
+
+        <ImageView
+            android:id="@+id/imgGanador"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center_horizontal|top"
+            android:scaleType="fitCenter"
+            android:contentDescription="Pokémon ganador" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvGanador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Nombre"
+        android:textColor="@color/menu_text"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvContra"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="venció a ..."
+        android:textColor="@color/menu_text_soft"
+        android:textSize="13sp" />
+
+    <!-- HP restante y turnos -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/bg_chip_turnos"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tvHpGanador"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 / 0"
+                android:textColor="@color/menu_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HP restante"
+                android:textColor="@color/menu_text_soft"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="6dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/bg_chip_turnos"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tvTurnosGanador"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/menu_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Número de turnos"
+                android:textColor="@color/menu_text_soft"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnRevancha"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/bg_button_primary"
+        android:text="🔁 Revancha"
+        android:textAllCaps="false"
+        android:textColor="@color/poke_blue_dark"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnElegirOtro"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_primary"
+        android:text="Elegir otro Pokémon"
+        android:textAllCaps="false"
+        android:textColor="@color/poke_blue_dark"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnMenu"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_menu_logout"
+        android:text="Regresar al menú"
+        android:textAllCaps="false"
+        android:textColor="@color/menu_red"
+        android:textStyle="bold" />
+</LinearLayout>

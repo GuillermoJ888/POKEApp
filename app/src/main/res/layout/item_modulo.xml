@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="7dp"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:id="@+id/tarjetaModulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="146dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="14dp">
+
+        <FrameLayout
+            android:id="@+id/chipIcono"
+            android:layout_width="72dp"
+            android:layout_height="72dp">
+
+            <ImageView
+                android:id="@+id/imgModulo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="9dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="Icono del módulo"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvEmojiModulo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="32sp" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvTituloModulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:maxLines="2"
+            android:text="Módulo"
+            android:textColor="@color/menu_text"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDescripcionModulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:text="Descripción"
+            android:textColor="@color/menu_text_soft"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+
+</FrameLayout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Escenario: Gimnasio / estadio (gradas rojas, luces y cancha con Pokébola al centro) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="400dp"
+    android:height="600dp"
+    android:viewportWidth="400"
+    android:viewportHeight="600">
+
+    <!-- Pared / gradas -->
+    <path android:pathData="M0,0h400v220h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="0" android:endX="0" android:endY="220"
+                android:startColor="#7A1A1A" android:endColor="#C2412F" />
+        </aapt:attr>
+    </path>
+    <path android:fillColor="#5E1212" android:fillAlpha="0.7"
+        android:pathData="M0,64h400v8h-400z M0,100h400v8h-400z M0,136h400v8h-400z M0,172h400v8h-400z" />
+
+    <!-- Público -->
+    <path android:fillColor="#FFD166"
+        android:pathData="M14,56a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M104,92a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M194,56a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M284,128a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M374,92a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M60,164a6,6 0 1,0 12,0a6,6 0 1,0 -12,0" />
+    <path android:fillColor="#7DD3FC"
+        android:pathData="M54,92a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M144,128a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M234,92a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M324,56a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M344,164a6,6 0 1,0 12,0a6,6 0 1,0 -12,0" />
+    <path android:fillColor="#F1F5F9"
+        android:pathData="M34,128a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M124,56a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M214,164a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M264,56a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M354,128a6,6 0 1,0 12,0a6,6 0 1,0 -12,0 M164,92a6,6 0 1,0 12,0a6,6 0 1,0 -12,0" />
+
+    <!-- Luces -->
+    <path android:fillColor="#FFF8D6" android:fillAlpha="0.35"
+        android:pathData="M36,22a24,24 0 1,0 48,0a24,24 0 1,0 -48,0 M176,22a24,24 0 1,0 48,0a24,24 0 1,0 -48,0 M316,22a24,24 0 1,0 48,0a24,24 0 1,0 -48,0" />
+    <path android:fillColor="#FFFDF0"
+        android:pathData="M48,22a12,12 0 1,0 24,0a12,12 0 1,0 -24,0 M188,22a12,12 0 1,0 24,0a12,12 0 1,0 -24,0 M328,22a12,12 0 1,0 24,0a12,12 0 1,0 -24,0" />
+
+    <!-- Base de la pared -->
+    <path android:fillColor="#3A0E0E" android:pathData="M0,206h400v16h-400z" />
+
+    <!-- Piso de la cancha -->
+    <path android:pathData="M0,220h400v380h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="220" android:endX="0" android:endY="600"
+                android:startColor="#E7B77B" android:endColor="#C98A4E" />
+        </aapt:attr>
+    </path>
+    <path android:strokeColor="#B87C45" android:strokeAlpha="0.45" android:strokeWidth="1.5"
+        android:pathData="M0,262 h400 M0,318 h400 M0,388 h400 M0,470 h400 M0,560 h400" />
+
+    <!-- Líneas de la cancha -->
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="4" android:strokeLineJoin="round"
+        android:pathData="M60,240 L340,240 L396,592 L4,592 Z M24,400 L376,400" />
+
+    <!-- Pokébola al centro -->
+    <path android:fillColor="#E3350D" android:fillAlpha="0.85"
+        android:pathData="M120,400 a80,36 0 0,1 160,0 Z" />
+    <path android:fillColor="#FFFFFF" android:fillAlpha="0.85"
+        android:pathData="M120,400 a80,36 0 0,0 160,0 Z" />
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="4"
+        android:pathData="M120,400 a80,36 0 1,0 160,0 a80,36 0 1,0 -160,0" />
+    <path android:fillColor="#FFFFFF" android:strokeColor="#3A1410" android:strokeWidth="3"
+        android:pathData="M188,400 a12,12 0 1,0 24,0 a12,12 0 1,0 -24,0 z" />
+</vector>

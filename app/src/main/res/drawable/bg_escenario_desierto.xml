@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Escenario: Desierto (cielo cálido con sol, mesetas, dunas y cactus) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="400dp"
+    android:height="600dp"
+    android:viewportWidth="400"
+    android:viewportHeight="600">
+
+    <!-- Cielo -->
+    <path android:pathData="M0,0h400v245h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="0" android:endX="0" android:endY="245"
+                android:startColor="#F39A4F" android:endColor="#FDE3A7" />
+        </aapt:attr>
+    </path>
+
+    <!-- Sol -->
+    <path android:fillColor="#FFF4CC" android:fillAlpha="0.35"
+        android:pathData="M245,90 a55,55 0 1,0 110,0 a55,55 0 1,0 -110,0 z" />
+    <path android:fillColor="#FFF1C1"
+        android:pathData="M262,90 a38,38 0 1,0 76,0 a38,38 0 1,0 -76,0 z" />
+
+    <!-- Mesetas -->
+    <path android:fillColor="#C77B4B"
+        android:pathData="M0,245 L0,182 L30,182 L40,170 L95,170 L105,182 L122,245 Z M255,245 L272,176 L338,176 L348,164 L400,164 L400,245 Z" />
+    <path android:fillColor="#A9603A" android:fillAlpha="0.6"
+        android:pathData="M0,200 h112 l3,10 h-115 z M268,192 h132 v10 h-134 z" />
+
+    <!-- Dunas del fondo -->
+    <path android:fillColor="#E9B76A"
+        android:pathData="M0,252 Q80,206 170,238 Q260,200 400,236 L400,262 L0,262 Z" />
+
+    <!-- Arena -->
+    <path android:pathData="M0,242h400v358h-400z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="0" android:startY="242" android:endX="0" android:endY="600"
+                android:startColor="#F4D394" android:endColor="#D9A65E" />
+        </aapt:attr>
+    </path>
+
+    <!-- Ondas en la arena -->
+    <path android:strokeColor="#F8E2B0" android:strokeWidth="3" android:strokeLineCap="round"
+        android:pathData="M30,400 Q90,385 150,400 M240,470 Q300,455 370,470 M60,545 Q130,530 200,545 M180,320 Q230,308 280,320" />
+
+    <!-- Rocas -->
+    <path android:fillColor="#B98B5A"
+        android:pathData="M130,350 a14,8 0 1,0 28,0 a14,8 0 1,0 -28,0 z M300,560 a18,10 0 1,0 36,0 a18,10 0 1,0 -36,0 z" />
+
+    <!-- Cactus izquierdo -->
+    <path android:fillColor="#4E9B47"
+        android:pathData="M26,340 v-112 a13,13 0 0,1 26,0 v112 z M26,290 h-16 a7,7 0 0,1 -7,-7 v-24 a7,7 0 0,1 14,0 v17 h9 z M52,270 h10 v-16 a7,7 0 0,1 14,0 v23 a7,7 0 0,1 -7,7 h-17 z" />
+    <path android:strokeColor="#3C7F37" android:strokeWidth="2" android:pathData="M39,232 v104" />
+
+    <!-- Cactus derecho -->
+    <path android:fillColor="#4E9B47"
+        android:pathData="M350,350 v-122 a13,13 0 0,1 26,0 v122 z M350,300 h-16 a7,7 0 0,1 -7,-7 v-24 a7,7 0 0,1 14,0 v17 h9 z M376,280 h10 v-16 a7,7 0 0,1 14,0 v23 a7,7 0 0,1 -7,7 h-17 z" />
+    <path android:strokeColor="#3C7F37" android:strokeWidth="2" android:pathData="M363,232 v114" />
+</vector>

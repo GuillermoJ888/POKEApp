@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Plataforma ovalada donde se para cada Pokémon -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:type="radial"
+        android:gradientRadius="90dp"
+        android:startColor="#C8E89A"
+        android:endColor="#7DBF55" />
+    <stroke android:width="2dp" android:color="#4E8A32" />
+</shape>
