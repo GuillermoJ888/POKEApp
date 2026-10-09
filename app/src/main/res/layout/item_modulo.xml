@@ -1,66 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Botón del menú a todo el diseño: el fondo (degradado del módulo o imagen mod_<clave>)
+  cubre la tarjeta completa; el icono va grande como ilustración y el texto encima.
+-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="7dp"
     android:clipToPadding="false">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/tarjetaModulo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="146dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="14dp">
+        android:layout_height="150dp"
+        android:foreground="?attr/selectableItemBackground">
 
-        <FrameLayout
-            android:id="@+id/chipIcono"
-            android:layout_width="72dp"
-            android:layout_height="72dp">
+        <!-- Imagen del usuario a todo el botón (res/drawable/mod_<clave>.png) -->
+        <ImageView
+            android:id="@+id/imgFondoModulo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="Imagen del módulo"
+            android:visibility="gone" />
 
-            <ImageView
-                android:id="@+id/imgModulo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="9dp"
-                android:scaleType="fitCenter"
-                android:contentDescription="Icono del módulo"
-                android:visibility="gone" />
+        <!-- Pokébola de marca de agua -->
+        <ImageView
+            android:id="@+id/imgMarcaAgua"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="-34dp"
+            android:layout_marginBottom="-34dp"
+            android:alpha="0.16"
+            android:src="@drawable/ic_pokeball_watermark"
+            android:importantForAccessibility="no" />
+
+        <!-- Ilustración grande: dibujo propio o emoji -->
+        <ImageView
+            android:id="@+id/imgModulo"
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="8dp"
+            android:rotation="-10"
+            android:scaleType="fitCenter"
+            android:contentDescription="Icono del módulo"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvEmojiModulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:rotation="-10"
+            android:textSize="58sp" />
+
+        <!-- Sombra abajo para que el texto se lea sobre cualquier fondo -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_modulo_sombra" />
+
+        <!-- Etiqueta "Próximamente" -->
+        <TextView
+            android:id="@+id/tvProximamente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_modulo_etiqueta"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:text="Próximamente"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Texto -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="12dp">
 
             <TextView
-                android:id="@+id/tvEmojiModulo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="32sp" />
-        </FrameLayout>
+                android:id="@+id/tvTituloModulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:text="Módulo"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:shadowColor="#80000000"
+                android:shadowDy="2"
+                android:shadowRadius="4" />
 
-        <TextView
-            android:id="@+id/tvTituloModulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:maxLines="2"
-            android:text="Módulo"
-            android:textColor="@color/menu_text"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvDescripcionModulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:gravity="center"
-            android:text="Descripción"
-            android:textColor="@color/menu_text_soft"
-            android:textSize="11sp" />
-    </LinearLayout>
-
+            <TextView
+                android:id="@+id/tvDescripcionModulo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:maxLines="1"
+                android:text="Descripción"
+                android:textColor="#E6FFFFFF"
+                android:textSize="11sp"
+                android:shadowColor="#80000000"
+                android:shadowDy="1"
+                android:shadowRadius="3" />
+        </LinearLayout>
+    </FrameLayout>
 
 </FrameLayout>
