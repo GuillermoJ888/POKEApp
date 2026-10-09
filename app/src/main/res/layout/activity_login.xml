@@ -107,12 +107,12 @@
         </LinearLayout>
 
         <!-- Botón iniciar sesión -->
-        <Button
+        <com.example.pokeapp.PokeBoton
             android:id="@+id/btnIniciarSesion"
+            app:tema="charmander"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginTop="18dp"
-            android:background="@drawable/bg_button_primary"
+            android:layout_marginTop="32dp"
             android:text="INICIAR SESIÓN"
             android:textColor="@color/poke_blue_dark"
             android:textStyle="bold"
@@ -153,12 +153,12 @@
         </LinearLayout>
 
         <!-- Continuar con Google -->
-        <Button
+        <com.example.pokeapp.PokeBoton
             android:id="@+id/btnGoogle"
+            app:tema="squirtle"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_button_outline"
+            android:layout_marginTop="34dp"
             android:text="Continuar con Google"
             android:textColor="@color/poke_white"
             android:drawableStart="@android:drawable/ic_secure"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/scrollRaiz"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -221,14 +222,13 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <Button
+            <com.example.pokeapp.PokeBoton
                 android:id="@+id/btnIniciarBatalla"
+                app:tema="charizard"
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/bg_button_primary"
+                android:layout_marginTop="40dp"
                 android:text="⚔️ Iniciar batalla"
-                android:textAllCaps="false"
                 android:textColor="@color/poke_blue_dark"
                 android:textSize="17sp"
                 android:textStyle="bold"
@@ -255,7 +255,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="24dp"
                     android:gravity="center_vertical">
 
                     <EditText
@@ -271,14 +271,13 @@
                         android:inputType="text"
                         android:singleLine="true" />
 
-                    <Button
+                    <com.example.pokeapp.PokeBoton
                         android:id="@+id/btnBuscar"
+                        app:tema="pikachu"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:background="@drawable/bg_button_primary"
                         android:text="Buscar"
-                        android:textAllCaps="false"
                         android:textColor="@color/poke_blue_dark"
                         android:textStyle="bold"
                         android:paddingLeft="18dp"
@@ -294,14 +293,13 @@
                     android:overScrollMode="never"
                     android:visibility="gone" />
 
-                <Button
+                <com.example.pokeapp.PokeBoton
                     android:id="@+id/btnSorprendeme"
+                    app:tema="ditto"
                     android:layout_width="match_parent"
                     android:layout_height="46dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/bg_button_menu_logout"
+                    android:layout_marginTop="26dp"
                     android:text="🎲 Sorpréndeme"
-                    android:textAllCaps="false"
                     android:textColor="@color/menu_red"
                     android:textStyle="bold" />
 
@@ -399,14 +397,13 @@
                         android:textSize="12sp"
                         android:lineSpacingExtra="3dp" />
 
-                    <Button
+                    <com.example.pokeapp.PokeBoton
                         android:id="@+id/btnAceptar"
+                        app:tema="eevee"
                         android:layout_width="match_parent"
                         android:layout_height="54dp"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/bg_button_primary"
+                        android:layout_marginTop="30dp"
                         android:text="Aceptar"
-                        android:textAllCaps="false"
                         android:textColor="@color/poke_blue_dark"
                         android:textStyle="bold" />
                 </LinearLayout>

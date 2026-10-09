@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient_perfil">
@@ -277,15 +278,14 @@
             </LinearLayout>
         </LinearLayout>
 
-            <Button
+            <com.example.pokeapp.PokeBoton
                 android:id="@+id/btnCerrarSesionPerfil"
+                app:tema="gengar"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_button_perfil_logout"
                 android:text="Cerrar sesión"
-                android:textAllCaps="false"
                 android:textColor="@color/poke_white"
                 android:textStyle="bold" />
 

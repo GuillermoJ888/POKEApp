@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tema de Pokémon de cada PokeBoton (app:tema="pikachu") -->
+    <declare-styleable name="PokeBoton">
+        <attr name="tema" format="enum">
+            <enum name="pikachu" value="0" />
+            <enum name="charmander" value="1" />
+            <enum name="squirtle" value="2" />
+            <enum name="bulbasaur" value="3" />
+            <enum name="ditto" value="4" />
+            <enum name="eevee" value="5" />
+            <enum name="charizard" value="6" />
+            <enum name="jigglypuff" value="7" />
+            <enum name="psyduck" value="8" />
+            <enum name="snorlax" value="9" />
+            <enum name="gengar" value="10" />
+        </attr>
+    </declare-styleable>
+</resources>
