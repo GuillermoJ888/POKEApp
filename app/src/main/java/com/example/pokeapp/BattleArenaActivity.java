@@ -349,47 +349,19 @@ public class BattleArenaActivity extends AppCompatActivity {
         arena.post(() -> {
             if (isFinishing() || isDestroyed()) return;
 
-            float ancho = arena.getWidth(), alto = arena.getHeight();
-            float imgAncho = imgFondo.getDrawable().getIntrinsicWidth();
-            float imgAlto = imgFondo.getDrawable().getIntrinsicHeight();
-
-            // Misma cuenta que hace centerCrop: escala para cubrir y centra lo que sobra
-            float escala = Math.max(ancho / imgAncho, alto / imgAlto);
-            float despX = (ancho - imgAncho * escala) / 2f;
-            float despY = (alto - imgAlto * escala) / 2f;
-
-            float bx = despX + escenario.bX * imgAncho * escala;
-            float by = despY + escenario.bY * imgAlto * escala;
-            float ax = despX + escenario.aX * imgAncho * escala;
-            float ay = despY + escenario.aY * imgAlto * escala;
-
-            float dp = getResources().getDisplayMetrics().density;
-
-            if (!escenario.plataformasDibujadas) {
-                colocar(plataformaB, bx, by + plataformaB.getLayoutParams().height / 2f);
-                colocar(plataformaA, ax, ay + plataformaA.getLayoutParams().height / 2f);
-                plataformaA.setVisibility(View.VISIBLE);
-                plataformaB.setVisibility(View.VISIBLE);
-            }
-
-            // Tamaño de los Pokémon según el escenario
+            // Tamaño de los Pokémon según el escenario (una sola vez)
             escalar(contenedorB, escenario.escalaPokemon);
             escalar(contenedorA, escenario.escalaPokemon);
 
-            // Los pies del Pokémon quedan un poco abajo del centro de su plataforma
-            colocar(contenedorB, bx, by + 6 * dp);
-            colocar(contenedorA, ax, ay + 6 * dp);
+            posicionar(escenario);
 
-            // Tarjeta de A: si A está hasta abajo, va a media altura (bajo B);
-            // si A está más arriba, va abajo a la derecha para no tapar a B
-            FrameLayout.LayoutParams lpHud = (FrameLayout.LayoutParams) hudA.getLayoutParams();
-            lpHud.topMargin = escenario.aY > 0.8f
-                    ? Math.round(alto * 0.53f)
-                    : Math.round(alto - hudA.getHeight() - 16 * dp);
-            hudA.setLayoutParams(lpHud);
-            hudA.setVisibility(View.VISIBLE);
+            // Si la arena cambia de alto (por ejemplo, aparece algo abajo), se vuelve a acomodar
+            arena.addOnLayoutChangeListener((v, l, t, r, b, ol, ot, or, ob) -> {
+                if ((b - t) != (ob - ot) || (r - l) != (or - ol)) v.post(() -> posicionar(escenario));
+            });
 
             // Entrada: cada Pokémon llega desde su lado
+            float ancho = arena.getWidth();
             contenedorA.setVisibility(View.VISIBLE);
             contenedorB.setVisibility(View.VISIBLE);
             contenedorA.setTranslationX(-ancho);
@@ -399,6 +371,55 @@ public class BattleArenaActivity extends AppCompatActivity {
             contenedorB.animate().translationX(0f).setDuration(600).setStartDelay(150)
                     .setInterpolator(new OvershootInterpolator()).start();
         });
+    }
+
+    /** Coloca plataformas, Pokémon y la tarjeta de A según el tamaño actual de la arena. */
+    private void posicionar(Escenario escenario) {
+        if (isFinishing() || isDestroyed()) return;
+
+        ImageView imgFondo = findViewById(R.id.imgFondo);
+        View arena = findViewById(R.id.arena);
+        View plataformaA = findViewById(R.id.plataformaA);
+        View plataformaB = findViewById(R.id.plataformaB);
+        View hudA = findViewById(R.id.hudA);
+
+        float ancho = arena.getWidth(), alto = arena.getHeight();
+        if (ancho == 0 || alto == 0 || imgFondo.getDrawable() == null) return;
+        float imgAncho = imgFondo.getDrawable().getIntrinsicWidth();
+        float imgAlto = imgFondo.getDrawable().getIntrinsicHeight();
+
+        // Misma cuenta que hace centerCrop: escala para cubrir y centra lo que sobra
+        float escala = Math.max(ancho / imgAncho, alto / imgAlto);
+        float despX = (ancho - imgAncho * escala) / 2f;
+        float despY = (alto - imgAlto * escala) / 2f;
+
+        float bx = despX + escenario.bX * imgAncho * escala;
+        float by = despY + escenario.bY * imgAlto * escala;
+        float ax = despX + escenario.aX * imgAncho * escala;
+        float ay = despY + escenario.aY * imgAlto * escala;
+
+        float dp = getResources().getDisplayMetrics().density;
+
+        if (!escenario.plataformasDibujadas) {
+            colocar(plataformaB, bx, by + plataformaB.getLayoutParams().height / 2f);
+            colocar(plataformaA, ax, ay + plataformaA.getLayoutParams().height / 2f);
+            plataformaA.setVisibility(View.VISIBLE);
+            plataformaB.setVisibility(View.VISIBLE);
+        }
+
+        // Los pies del Pokémon quedan un poco abajo del centro de su plataforma,
+        // sin salirse por abajo de la arena
+        colocar(contenedorB, bx, by + 6 * dp);
+        colocar(contenedorA, ax, Math.min(ay + 6 * dp, alto - 4 * dp));
+
+        // Tarjeta de A: si A está hasta abajo, va a media altura (bajo B);
+        // si A está más arriba, va abajo a la derecha para no tapar a B
+        FrameLayout.LayoutParams lpHud = (FrameLayout.LayoutParams) hudA.getLayoutParams();
+        lpHud.topMargin = escenario.aY > 0.8f
+                ? Math.round(alto * 0.53f)
+                : Math.round(alto - hudA.getHeight() - 16 * dp);
+        hudA.setLayoutParams(lpHud);
+        hudA.setVisibility(View.VISIBLE);
     }
 
     private void escalar(View vista, float factor) {
@@ -487,12 +508,41 @@ public class BattleArenaActivity extends AppCompatActivity {
             nombre.setShadowLayer(3 * dp, 0, dp, 0x99000000);
             boton.addView(nombre);
 
+            // Etiqueta del tipo (más oscura que el botón) + potencia y precisión
+            LinearLayout filaTipo = new LinearLayout(this);
+            filaTipo.setOrientation(LinearLayout.HORIZONTAL);
+            filaTipo.setGravity(android.view.Gravity.CENTER_VERTICAL);
+
+            TextView chipTipo = new TextView(this);
+            chipTipo.setText(m.tipoTexto().toUpperCase(Locale.ROOT));
+            chipTipo.setTextColor(0xFFFFFFFF);
+            chipTipo.setTextSize(9);
+            chipTipo.setTypeface(null, android.graphics.Typeface.BOLD);
+            chipTipo.setPadding(Math.round(6 * dp), Math.round(1 * dp), Math.round(6 * dp), Math.round(1 * dp));
+            GradientDrawable pastilla = new GradientDrawable();
+            pastilla.setCornerRadius(8 * dp);
+            pastilla.setColor(oscurecer(oscurecer(color)));
+            chipTipo.setBackground(pastilla);
+            filaTipo.addView(chipTipo);
+
             TextView detalle = new TextView(this);
-            detalle.setText(m.detalle());
+            detalle.setText("  Pot. " + m.potencia + " · " + (m.precision > 0 ? m.precision + "%" : "—"));
             detalle.setTextColor(0xE6FFFFFF);
             detalle.setTextSize(11);
             detalle.setShadowLayer(2 * dp, 0, dp, 0x99000000);
-            boton.addView(detalle);
+            filaTipo.addView(detalle);
+            boton.addView(filaTipo);
+
+            // Daño base contra el rival actual (sin contar súper eficaz ni críticos)
+            int[] rango = BattleEngine.rangoDanioBase(m, p, actual(!ladoA));
+            TextView danio = new TextView(this);
+            danio.setText("💥 Daño " + (rango[0] == rango[1] ? String.valueOf(rango[0]) : rango[0] + "–" + rango[1]));
+            danio.setTextColor(0xFFFFFFFF);
+            danio.setTextSize(12);
+            danio.setTypeface(null, android.graphics.Typeface.BOLD);
+            danio.setShadowLayer(2 * dp, 0, dp, 0x99000000);
+            danio.setPadding(0, Math.round(2 * dp), 0, 0);
+            boton.addView(danio);
 
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
                     GridLayout.spec(GridLayout.UNDEFINED), GridLayout.spec(GridLayout.UNDEFINED, 1f));

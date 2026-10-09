@@ -123,6 +123,18 @@ public class BattleEngine {
         return mejor != null ? mejor : Movimiento.FORCEJEO;
     }
 
+    /**
+     * Daño base de un ataque contra ese defensor: la fórmula de la regla 5 SIN contar
+     * efectividad de tipo ni críticos (sí cuenta el bono de mismo tipo).
+     * Devuelve {mínimo, máximo} por la variación aleatoria 0.85–1.00.
+     */
+    public static int[] rangoDanioBase(Movimiento m, BattlePokemon atacante, BattlePokemon defensor) {
+        float danio = DANIO_BASE * atacante.ataque / (float) Math.max(1, defensor.defensa)
+                * (m.potencia / POTENCIA_REFERENCIA);
+        if (m.tipo != null && atacante.tipos.contains(m.tipo)) danio *= BONO_MISMO_TIPO;
+        return new int[]{Math.max(1, Math.round(danio * 0.85f)), Math.max(1, Math.round(danio))};
+    }
+
     private float valorEsperado(Movimiento m, BattlePokemon atacante, BattlePokemon defensor) {
         float valor = m.potencia * (m.precision > 0 ? m.precision / 100f : 1f);
         if (m.tipo != null && atacante.tipos.contains(m.tipo)) valor *= BONO_MISMO_TIPO;
