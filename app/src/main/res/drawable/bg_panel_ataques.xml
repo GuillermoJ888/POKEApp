@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Caja de ataques de la arena (azul oscuro con borde dorado arriba, como en los juegos) -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FACC15" />
+        </shape>
+    </item>
+    <item android:top="3dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:angle="270"
+                android:startColor="#1E2E5C"
+                android:endColor="#142036" />
+        </shape>
+    </item>
+</layer-list>

@@ -289,38 +289,59 @@
             android:visibility="gone" />
     </FrameLayout>
 
-    <!-- Barra de acción: solo en el turno de un jugador (Versus / Torre) -->
+    <!-- Panel de ataques estilo juego: solo en el turno de un jugador (Versus / Torre) -->
     <LinearLayout
         android:id="@+id/barraAccion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="#142036"
-        android:paddingStart="16dp"
-        android:paddingEnd="22dp"
-        android:paddingTop="22dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_panel_ataques"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="12dp"
         android:paddingBottom="10dp"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/tvTurnoDe"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="12dp"
-            android:text="Turno de Jugador 1"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp">
 
-        <com.example.pokeapp.PokeBoton
-            android:id="@+id/btnAtacar"
-            app:tema="pikachu"
-            android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:text="⚡ Atacar"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tvTurnoDe"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="¿Qué hará Pikachu?"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btnCambiar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="36dp"
+                android:gravity="center"
+                android:background="@drawable/bg_boton_cambiar"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:text="🔄 Cambiar"
+                android:textColor="#142036"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Los 4 ataques (se llenan desde el código, uno por botón, color de su tipo) -->
+        <GridLayout
+            android:id="@+id/gridAtaques"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:columnCount="2" />
     </LinearLayout>
 
     <!-- Registro de batalla -->

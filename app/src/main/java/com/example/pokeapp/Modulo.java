@@ -45,6 +45,7 @@ public class Modulo {
         m.add(new Modulo("pokedex", "a", "Pokédex", "Busca Pokémon", "📱", R.drawable.ic_pokedex, 0xFFC81E0A, 0xFFFF7A45, PokedexActivity.class));
         m.add(new Modulo("emulator", "b", "Battle Emulator", "Duelo simulado", "⚔️", 0, 0xFF5B21B6, 0xFFA855F7, BattleEmulatorActivity.class));
         m.add(new Modulo("versus", "c", "Battle Versus", "2 jugadores", "🆚", 0, 0xFF1D4ED8, 0xFF60A5FA, VersusActivity.class));
+        m.add(new Modulo("multijugador", "", "Batalla entre dispositivos", "Reta a otro celular", "📡", 0, 0xFF0E7490, 0xFF818CF8, null));
         m.add(new Modulo("torre", "d", "Torre Pokémon", "6 niveles", "🏰", R.drawable.ic_torre_pisa, 0xFF0F766E, 0xFF2DD4BF, TorreActivity.class));
         m.add(new Modulo("quien", "e", "¿Quién es ese Pokémon?", "Adivina la silueta", "❓", 0, 0xFF1E1B4B, 0xFF4F46E5, null));
         m.add(new Modulo("safari", "f", "Safari Pokémon", "Captura Pokémon", "🌿", 0, 0xFF166534, 0xFF4ADE80, null));

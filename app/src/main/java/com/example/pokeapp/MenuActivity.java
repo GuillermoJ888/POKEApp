@@ -2,7 +2,6 @@ package com.example.pokeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,7 +11,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pokeapp.data.AvatarManager;
 import com.example.pokeapp.data.FavoritosManager;
 import com.example.pokeapp.data.UsuarioManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +25,8 @@ import java.util.List;
  */
 public class MenuActivity extends AppCompatActivity {
 
+    private ModuloAdapter adapterModulos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,19 +39,12 @@ public class MenuActivity extends AppCompatActivity {
         mostrarSaludo();
         configurarModulos();
 
-        // El avatar de arriba a la derecha abre el perfil del usuario.
+        // La pokébola de arriba a la derecha abre el perfil del usuario.
         // Cerrar sesión ahora vive solo ahí, no repetido en este Menú.
         findViewById(R.id.imgAvatar).setOnClickListener(v ->
                 startActivity(new Intent(this, PerfilActivity.class)));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Al volver del perfil se muestra el avatar que se haya elegido ahí
-        ImageView imgAvatar = findViewById(R.id.imgAvatar);
-        imgAvatar.setImageResource(AvatarManager.obtener(this).dibujo);
-    }
 
     private void mostrarSaludo() {
         TextView tvSaludo = findViewById(R.id.tvSaludo);
@@ -80,7 +73,8 @@ public class MenuActivity extends AppCompatActivity {
         });
 
         recycler.setLayoutManager(layout);
-        recycler.setAdapter(new ModuloAdapter(modulos, this::abrirModulo));
+        adapterModulos = new ModuloAdapter(modulos, this::abrirModulo);
+        recycler.setAdapter(adapterModulos);
 
         // Android 15+ dibuja la app detrás de la barra de navegación: se suma su alto
         // al espacio final para que los últimos botones no queden tapados
@@ -90,6 +84,13 @@ public class MenuActivity extends AppCompatActivity {
             v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), espacioFinal + barra);
             return insets;
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Al volver del perfil, el botón "Mi perfil" muestra el avatar recién elegido
+        if (adapterModulos != null) adapterModulos.notifyDataSetChanged();
     }
 
     private void abrirModulo(Modulo modulo) {

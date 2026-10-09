@@ -12,6 +12,7 @@ public class Pokemon {
     private List<PokemonStat> stats;
     private List<TypeSlot> types;
     private List<AbilitySlot> abilities;
+    private List<MoveSlot> moves;
 
     public int getId() { return id; }
     public String getName() { return name; }
@@ -21,4 +22,15 @@ public class Pokemon {
     public List<PokemonStat> getStats() { return stats; }
     public List<TypeSlot> getTypes() { return types; }
     public List<AbilitySlot> getAbilities() { return abilities; }
+    public List<MoveSlot> getMoves() { return moves; }
+
+    /**
+     * Un ataque que el Pokémon puede aprender. Solo se guarda su nombre/URL
+     * (los detalles de cada versión del juego se ignoran para que pese poco).
+     */
+    public static class MoveSlot {
+        private NamedApiResource move;
+
+        public NamedApiResource getMove() { return move; }
+    }
 }

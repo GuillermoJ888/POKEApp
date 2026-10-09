@@ -130,6 +130,12 @@ public class BattleEmulatorActivity extends AppCompatActivity {
         });
         btnIniciarBatalla.setOnClickListener(v -> iniciarBatalla());
         btnAceptar.setOnClickListener(v -> aceptar());
+
+        // Cerrar la vista previa y volver a los populares (útil si el Pokémon no se puede aceptar)
+        findViewById(R.id.btnCerrarPrevia).setOnClickListener(v -> {
+            limpiarBusqueda();
+            scrollRaiz.smoothScrollTo(0, 0);
+        });
     }
 
     private void enlazarVistas() {

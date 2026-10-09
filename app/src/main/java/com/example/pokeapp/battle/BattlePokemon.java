@@ -25,7 +25,11 @@ public class BattlePokemon {
 
     public final int hpMaxima, ataque, defensa, ataqueEspecial, defensaEspecial, velocidad;
 
+    /** Nombres (en inglés, como los da la PokéAPI) de todos los ataques que puede aprender. */
+    public final List<String> nombresAtaques;
+
     private int hpActual;
+    private List<Movimiento> movimientos = new ArrayList<>();
 
     public BattlePokemon(Pokemon pokemon) {
         this.id = pokemon.getId();
@@ -64,6 +68,26 @@ public class BattlePokemon {
         this.defensaEspecial = defEsp;
         this.velocidad = vel;
         this.hpActual = hpMaxima;
+
+        List<String> nombres = new ArrayList<>();
+        if (pokemon.getMoves() != null) {
+            for (Pokemon.MoveSlot m : pokemon.getMoves()) {
+                if (m.getMove() != null && m.getMove().getName() != null) nombres.add(m.getMove().getName());
+            }
+        }
+        this.nombresAtaques = Collections.unmodifiableList(nombres);
+
+        // Mientras se cargan los reales de la PokéAPI: un ataque genérico por cada tipo
+        for (String tipo : tipos) movimientos.add(Movimiento.basico(tipo));
+    }
+
+    /** Sus (hasta) 4 ataques de batalla. */
+    public List<Movimiento> getMovimientos() {
+        return Collections.unmodifiableList(movimientos);
+    }
+
+    public void setMovimientos(List<Movimiento> nuevos) {
+        if (nuevos != null && !nuevos.isEmpty()) movimientos = new ArrayList<>(nuevos);
     }
 
     public int getHpActual() {

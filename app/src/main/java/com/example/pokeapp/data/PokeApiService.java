@@ -16,6 +16,10 @@ public interface PokeApiService {
     @GET("evolution-chain/{id}")
     Call<EvolutionChainResponse> getEvolutionChain(@Path("id") String id);
 
+    /** Detalle de un ataque: tipo, potencia, precisión y nombres en otros idiomas. */
+    @GET("move/{nombre}")
+    Call<MoveDetalle> getMove(@Path("nombre") String nombre);
+
     /** Lista paginada de Pokémon (nombre + url). */
     @GET("pokemon")
     Call<PokemonListResponse> listarPokemon(@Query("limit") int limit, @Query("offset") int offset);

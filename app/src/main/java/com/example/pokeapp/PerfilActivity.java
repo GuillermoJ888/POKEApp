@@ -72,7 +72,7 @@ public class PerfilActivity extends AppCompatActivity {
         AlertDialog dialogo = new AlertDialog.Builder(this).setView(vista).create();
         String actual = AvatarManager.obtener(this).clave;
 
-        for (AvatarManager.Avatar avatar : AvatarManager.TODOS) {
+        for (AvatarManager.Avatar avatar : AvatarManager.todos(this)) {
             View opcion = LayoutInflater.from(this).inflate(R.layout.item_avatar, grid, false);
             ImageView img = opcion.findViewById(R.id.imgOpcionAvatar);
             img.setImageResource(avatar.dibujo);

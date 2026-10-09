@@ -101,60 +101,146 @@
         android:textSize="13sp"
         android:visibility="gone" />
 
+    <!-- Vista previa decorada: fondo del color del tipo, plataforma, chips y barras de stats -->
     <LinearLayout
         android:id="@+id/cardPreviaSel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
         android:background="@drawable/bg_card_menu"
-        android:padding="18dp"
         android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/imgPreviaSel"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:scaleType="fitCenter"
-            android:contentDescription="Pokémon encontrado" />
+        <FrameLayout
+            android:id="@+id/fondoTipoSel"
+            android:layout_width="match_parent"
+            android:layout_height="210dp">
 
-        <TextView
-            android:id="@+id/tvNombrePreviaSel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="#000 Nombre"
-            android:textColor="@color/menu_text"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            <ImageView
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_gravity="end|top"
+                android:layout_marginTop="-30dp"
+                android:layout_marginEnd="-40dp"
+                android:alpha="0.22"
+                android:src="@drawable/ic_pokeball_watermark"
+                android:importantForAccessibility="no" />
 
-        <TextView
-            android:id="@+id/tvTiposPreviaSel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Tipo"
-            android:textColor="@color/menu_text_soft"
-            android:textSize="13sp" />
+            <View
+                android:id="@+id/plataformaSel"
+                android:layout_width="170dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="12dp" />
 
-        <TextView
-            android:id="@+id/tvStatsPreviaSel"
+            <ImageView
+                android:id="@+id/imgPreviaSel"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="22dp"
+                android:scaleType="fitCenter"
+                android:contentDescription="Pokémon encontrado" />
+
+            <TextView
+                android:id="@+id/btnCerrarPreviaSel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|top"
+                android:layout_margin="10dp"
+                android:minHeight="36dp"
+                android:gravity="center"
+                android:background="@drawable/bg_modulo_etiqueta"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="✕ Ver otros"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvNumeroSel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:layout_margin="12dp"
+                android:background="@drawable/bg_modulo_etiqueta"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:text="#000"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:text=""
-            android:textColor="@color/menu_text"
-            android:textSize="12sp"
-            android:lineSpacingExtra="3dp" />
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="18dp">
 
-        <com.example.pokeapp.PokeBoton
-            android:id="@+id/btnAceptarSel"
-            app:tema="eevee"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginTop="30dp"
-            android:text="Aceptar" />
+            <TextView
+                android:id="@+id/tvNombrePreviaSel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre"
+                android:textColor="@color/menu_text"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/chipsTiposSel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal" />
+
+            <TextView
+                android:id="@+id/tvTiposPreviaSel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:text="STATS DE BATALLA"
+                android:textColor="@color/menu_text_soft"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
+
+            <LinearLayout
+                android:id="@+id/statsSel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/tvStatsPreviaSel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text=""
+                android:textColor="@color/menu_text_soft"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <com.example.pokeapp.PokeBoton
+                android:id="@+id/btnAceptarSel"
+                app:tema="eevee"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginTop="34dp"
+                android:text="Aceptar" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

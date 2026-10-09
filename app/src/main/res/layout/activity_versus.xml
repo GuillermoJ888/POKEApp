@@ -147,14 +147,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="Jugador 1 · elige tu Pokémon 1 de 3"
+                android:text="Toca un + para agregar un Pokémon"
                 android:textColor="@color/menu_red"
                 android:textSize="15sp"
                 android:textStyle="bold" />
-
-            <include
-                android:id="@+id/selectorVersus"
-                layout="@layout/layout_selector_pokemon" />
 
             <com.example.pokeapp.PokeBoton
                 android:id="@+id/btnIniciarVersus"
@@ -163,8 +159,7 @@
                 android:layout_height="58dp"
                 android:layout_marginTop="44dp"
                 android:text="⚔️ ¡A pelear!"
-                android:textSize="17sp"
-                android:visibility="gone" />
+                android:textSize="17sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

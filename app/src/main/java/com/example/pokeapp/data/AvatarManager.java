@@ -7,6 +7,7 @@ import com.example.pokeapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,13 +31,34 @@ public class AvatarManager {
         }
     }
 
-    public static final List<Avatar> TODOS = Collections.unmodifiableList(Arrays.asList(
-            new Avatar("clasico", "Clásico", R.drawable.ic_avatar_entrenador),
+    /** Hasta cuántas imágenes avatar_1 … avatar_N se buscan en res/drawable(-nodpi). */
+    private static final int MAX_IMAGENES = 30;
+
+    private static final Avatar CLASICO = new Avatar("clasico", "Clásico", R.drawable.ic_avatar_entrenador);
+
+    /** Modelos dibujados en la app; solo se muestran si todavía no hay imágenes propias. */
+    private static final List<Avatar> MODELOS = Arrays.asList(
             new Avatar("chico1", "Chico 1", R.drawable.ic_avatar_chico1),
             new Avatar("chico2", "Chico 2", R.drawable.ic_avatar_chico2),
             new Avatar("chica1", "Chica 1", R.drawable.ic_avatar_chica1),
-            new Avatar("chica2", "Chica 2", R.drawable.ic_avatar_chica2)
-    ));
+            new Avatar("chica2", "Chica 2", R.drawable.ic_avatar_chica2));
+
+    /**
+     * Avatares disponibles: el Clásico + las imágenes avatar_1, avatar_2… que existan.
+     * Para agregar uno basta con copiar la imagen como res/drawable-nodpi/avatar_<n>.png.
+     */
+    public static List<Avatar> todos(Context context) {
+        List<Avatar> lista = new ArrayList<>();
+        lista.add(CLASICO);
+
+        for (int n = 1; n <= MAX_IMAGENES; n++) {
+            int dibujo = context.getResources().getIdentifier("avatar_" + n, "drawable", context.getPackageName());
+            if (dibujo != 0) lista.add(new Avatar("avatar_" + n, "Avatar " + n, dibujo));
+        }
+
+        if (lista.size() == 1) lista.addAll(MODELOS);
+        return Collections.unmodifiableList(lista);
+    }
 
     private static final String PREFS = "poke_app_avatar";
 
@@ -52,11 +74,11 @@ public class AvatarManager {
 
     /** Avatar elegido por el usuario actual; el Clásico si nunca ha elegido. */
     public static Avatar obtener(Context context) {
-        String clave = prefs(context).getString(claveUsuario(), TODOS.get(0).clave);
-        for (Avatar a : TODOS) {
+        String clave = prefs(context).getString(claveUsuario(), CLASICO.clave);
+        for (Avatar a : todos(context)) {
             if (a.clave.equals(clave)) return a;
         }
-        return TODOS.get(0);
+        return CLASICO;   // si el avatar elegido ya no existe
     }
 
     public static void guardar(Context context, Avatar avatar) {

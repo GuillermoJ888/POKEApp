@@ -10,8 +10,8 @@ Aplicación Android en **Java + XML** que consume la [PokéAPI](https://pokeapi.
 | — | Menú principal | ✅ |
 | A | **Pokédex**: búsqueda con sugerencias, normal/shiny, tipos, stats, línea evolutiva, cry y favoritos | ✅ |
 | B | **Battle Emulator**: elegir Pokémon A y B, batalla automática a pantalla completa, historial | ✅ |
-| C | Battle Versus | ⏳ |
-| D | Torre Pokémon | ⏳ |
+| C | **Battle Versus**: 2 jugadores, equipos de 3, ataques reales y cambios | ✅ |
+| D | **Torre Pokémon**: 3 de 6 al azar, 6 niveles, jefe con 4 legendarios, medallas | ✅ |
 | E–H | ¿Quién es ese Pokémon?, Safari, Maestro de Tipos, PokéMemory | ⏳ |
 | I | **Favoritos** (en la nube) | ✅ |
 | J | Historial | ⏳ (el del Battle Emulator ya funciona) |
@@ -29,12 +29,12 @@ Aplicación Android en **Java + XML** que consume la [PokéAPI](https://pokeapi.
 
 ### Motor de batalla compartido (`battle/BattleEngine.java`)
 
-Pensado para reutilizarse en Battle Versus y Torre Pokémon. Usa los **stats reales de la PokéAPI**:
+Una sola arena (`BattleArenaActivity`) y un solo motor para Battle Emulator, Battle Versus y Torre Pokémon. Usa los **stats reales de la PokéAPI**:
 
-- Empieza el Pokémon con mayor **Velocidad** (empate: al azar) y luego se alternan.
-- Movimiento del tipo del atacante que más le afecte al defensor (si ninguno le afecta, usa *Forcejeo*).
-- **Daño = 12 × (Ataque / Defensa) × 1.5 (mismo tipo) × efectividad de tipo × 1.5 si es crítico × variación 0.85–1.00** (mínimo 1).
-- Probabilidad de crítico = Velocidad / 512. El HP nunca baja de 0.
+- Cada Pokémon tiene **4 ataques reales** de la PokéAPI (`/move/{nombre}`: tipo, potencia, precisión y nombre en español). El jugador los elige en una caja de ataques estilo juego; el sistema usa el que más daño haría.
+- Empieza el Pokémon con mayor **Velocidad** (empate: al azar) y luego se alternan. En Versus y Torre se puede **cambiar de Pokémon** (gasta el turno).
+- **Daño = 12 × (Ataque / Defensa) × (Potencia / 60) × 1.5 (mismo tipo) × efectividad de tipo × 1.5 si es crítico × variación 0.85–1.00** (mínimo 1).
+- El ataque puede **fallar** según su precisión. Probabilidad de crítico = Velocidad / 512. Si ningún ataque le afecta al rival usa *Forcejeo*. El HP nunca baja de 0.
 
 ## Tecnologías
 

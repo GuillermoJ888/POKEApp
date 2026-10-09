@@ -14,22 +14,28 @@ import java.util.Random;
  *
  *  1. Se usan los stats reales de la PokéAPI (HP, Ataque, Defensa y Velocidad).
  *  2. Orden: empieza el de mayor Velocidad (empate: al azar) y luego se alternan.
- *  3. Movimiento: del tipo del atacante que más le afecte al defensor.
- *     Si ninguno de sus tipos le afecta (×0), usa Forcejeo: sin tipo y ×1.
- *  4. Daño = 12 · (Ataque del atacante / Defensa del defensor)
- *           × 1.5  si el movimiento es de su mismo tipo (siempre, salvo Forcejeo)
- *           × efectividad de tipo (×4, ×2, ×1, ×0.5, ×0.25)
+ *  3. Cada Pokémon tiene hasta 4 ataques reales de la PokéAPI (tipo, potencia y precisión).
+ *     El jugador elige uno; el sistema elige el que más daño haría (a veces otro, para variar).
+ *  4. Precisión: si el número al azar (0–99) es mayor o igual que la precisión, el ataque falla.
+ *  5. Daño = 12 · (Ataque del atacante / Defensa del defensor) · (Potencia / 60)
+ *           × 1.5  si el ataque es del mismo tipo que el atacante
+ *           × efectividad de tipo (×4, ×2, ×1, ×0.5, ×0.25, ×0)
  *           × 1.5  si es golpe crítico (probabilidad = Velocidad / 512)
  *           × variación aleatoria entre 0.85 y 1.00
- *     Se redondea y el daño mínimo es 1.
- *     Ejemplo: Pikachu (Atq 55) contra Charizard (Def 78) → 12 · 0.71 · 1.5 ≈ 12 de daño.
- *  5. El HP nunca baja de 0; con 0 HP el Pokémon queda derrotado.
+ *     Se redondea y el daño mínimo es 1 (si el ataque le afecta).
+ *     Ejemplo: Pikachu (Atq 55) usa Rayo (Pot. 90) contra Charizard (Def 78)
+ *              → 12 · 0.71 · 1.5 · 1.5 ≈ 19 de daño.
+ *  6. Si ninguno de sus ataques le afecta al rival (×0), usa Forcejeo (sin tipo, Pot. 50).
+ *  7. El HP nunca baja de 0; con 0 HP el Pokémon queda derrotado.
  */
 public class BattleEngine {
 
     private static final float DANIO_BASE = 12f;
+    private static final float POTENCIA_REFERENCIA = 60f;
     private static final float BONO_MISMO_TIPO = 1.5f;
     private static final float BONO_CRITICO = 1.5f;
+    /** Probabilidad de que el sistema use un ataque distinto al mejor (para que no sea predecible). */
+    private static final float VARIEDAD_IA = 0.25f;
 
     private final Random random;
     private final List<BattleTurn> turnos = new ArrayList<>();
@@ -48,41 +54,86 @@ public class BattleEngine {
         return random.nextBoolean() ? a : b;
     }
 
-    /** Calcula el daño, lo aplica al defensor y registra el turno. */
+    /** Ataque con el mejor movimiento (lo usa el sistema). */
     public BattleTurn atacar(BattlePokemon atacante, BattlePokemon defensor) {
+        return atacar(atacante, defensor, elegirMovimiento(atacante, defensor));
+    }
 
-        // Regla 3: el tipo del atacante que más le afecte al defensor
-        String tipoMovimiento = null;
-        float efectividad = 0f;
-        for (String tipo : atacante.tipos) {
-            float e = TypeChart.efectividad(tipo, defensor.tipos);
-            if (tipoMovimiento == null || e > efectividad) {
-                tipoMovimiento = tipo;
-                efectividad = e;
-            }
-        }
-        if (efectividad == 0f) {   // Forcejeo
-            tipoMovimiento = null;
+    /** Usa el movimiento indicado: revisa precisión, calcula el daño, lo aplica y registra el turno. */
+    public BattleTurn atacar(BattlePokemon atacante, BattlePokemon defensor, Movimiento movimiento) {
+        if (movimiento == null) movimiento = elegirMovimiento(atacante, defensor);
+
+        float efectividad = TypeChart.efectividad(movimiento.tipo, defensor.tipos);
+
+        // Regla 6: si nada de lo que sabe le afecta, Forcejeo
+        if (efectividad == 0f && !tieneAtaqueUtil(atacante, defensor)) {
+            movimiento = Movimiento.FORCEJEO;
             efectividad = 1f;
         }
 
-        // Regla 4: daño
-        float danio = DANIO_BASE * atacante.ataque / (float) Math.max(1, defensor.defensa);
-        if (tipoMovimiento != null) danio *= BONO_MISMO_TIPO;
-        danio *= efectividad;
+        // Regla 4: precisión
+        boolean fallo = movimiento.precision > 0 && random.nextInt(100) >= movimiento.precision;
 
-        boolean critico = random.nextFloat() < atacante.velocidad / 512f;
-        if (critico) danio *= BONO_CRITICO;
+        int danioFinal = 0;
+        boolean critico = false;
 
-        danio *= 0.85f + random.nextFloat() * 0.15f;
+        if (!fallo && efectividad > 0f) {
+            // Regla 5: daño
+            float danio = DANIO_BASE * atacante.ataque / (float) Math.max(1, defensor.defensa)
+                    * (movimiento.potencia / POTENCIA_REFERENCIA);
+            if (movimiento.tipo != null && atacante.tipos.contains(movimiento.tipo)) danio *= BONO_MISMO_TIPO;
+            danio *= efectividad;
 
-        int danioFinal = Math.max(1, Math.round(danio));
-        defensor.recibirDanio(danioFinal);
+            critico = random.nextFloat() < atacante.velocidad / 512f;
+            if (critico) danio *= BONO_CRITICO;
+
+            danio *= 0.85f + random.nextFloat() * 0.15f;
+            danioFinal = Math.max(1, Math.round(danio));
+            defensor.recibirDanio(danioFinal);
+        }
 
         BattleTurn turno = new BattleTurn(turnos.size() + 1, atacante, defensor,
-                tipoMovimiento, danioFinal, efectividad, critico);
+                movimiento, danioFinal, efectividad, critico, fallo);
         turnos.add(turno);
         return turno;
+    }
+
+    /**
+     * Regla 3 (sistema): el ataque que más daño esperado haría
+     * (potencia × precisión × mismo tipo × efectividad); a veces otro que sí le afecte.
+     */
+    public Movimiento elegirMovimiento(BattlePokemon atacante, BattlePokemon defensor) {
+        List<Movimiento> opciones = atacante.getMovimientos();
+        Movimiento mejor = null;
+        float mejorValor = -1f;
+        List<Movimiento> utiles = new ArrayList<>();
+
+        for (Movimiento m : opciones) {
+            float valor = valorEsperado(m, atacante, defensor);
+            if (valor > 0) utiles.add(m);
+            if (valor > mejorValor) {
+                mejorValor = valor;
+                mejor = m;
+            }
+        }
+
+        if (utiles.size() > 1 && random.nextFloat() < VARIEDAD_IA) {
+            return utiles.get(random.nextInt(utiles.size()));
+        }
+        return mejor != null ? mejor : Movimiento.FORCEJEO;
+    }
+
+    private float valorEsperado(Movimiento m, BattlePokemon atacante, BattlePokemon defensor) {
+        float valor = m.potencia * (m.precision > 0 ? m.precision / 100f : 1f);
+        if (m.tipo != null && atacante.tipos.contains(m.tipo)) valor *= BONO_MISMO_TIPO;
+        return valor * TypeChart.efectividad(m.tipo, defensor.tipos);
+    }
+
+    private boolean tieneAtaqueUtil(BattlePokemon atacante, BattlePokemon defensor) {
+        for (Movimiento m : atacante.getMovimientos()) {
+            if (TypeChart.efectividad(m.tipo, defensor.tipos) > 0f) return true;
+        }
+        return false;
     }
 
     public List<BattleTurn> getTurnos() {

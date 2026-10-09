@@ -16,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pokeapp.data.AvatarManager;
+
 import java.util.List;
 
 /**
@@ -85,7 +87,30 @@ public class ModuloAdapter extends RecyclerView.Adapter<ModuloAdapter.ModuloView
             h.imgFondo.setVisibility(View.GONE);
             h.imgMarcaAgua.setVisibility(View.VISIBLE);
 
-            if (modulo.iconoRes != 0) {
+            boolean esPerfil = "perfil".equals(modulo.clave);
+
+            // Mi perfil muestra el avatar elegido (en círculo); los demás, su dibujo inclinado
+            if (esPerfil) {
+                GradientDrawable circulo = new GradientDrawable();
+                circulo.setShape(GradientDrawable.OVAL);
+                circulo.setColor(0x33FFFFFF);
+                circulo.setStroke(Math.round(3 * densidad), 0xFFFFFFFF);
+                h.imgIcono.setBackground(circulo);
+                h.imgIcono.setClipToOutline(true);
+                h.imgIcono.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                h.imgIcono.setRotation(0f);
+            } else {
+                h.imgIcono.setBackground(null);
+                h.imgIcono.setClipToOutline(false);
+                h.imgIcono.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                h.imgIcono.setRotation(-10f);
+            }
+
+            if (esPerfil) {
+                h.imgIcono.setImageResource(AvatarManager.obtener(ctx).dibujo);
+                h.imgIcono.setVisibility(View.VISIBLE);
+                h.tvEmoji.setVisibility(View.GONE);
+            } else if (modulo.iconoRes != 0) {
                 h.imgIcono.setImageResource(modulo.iconoRes);
                 h.imgIcono.setVisibility(View.VISIBLE);
                 h.tvEmoji.setVisibility(View.GONE);

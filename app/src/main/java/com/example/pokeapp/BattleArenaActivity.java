@@ -9,11 +9,13 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -32,6 +34,9 @@ import com.example.pokeapp.battle.BattleEngine;
 import com.example.pokeapp.battle.BattlePokemon;
 import com.example.pokeapp.battle.BattleTurn;
 import com.example.pokeapp.battle.Escenario;
+import com.example.pokeapp.battle.Movimiento;
+import com.example.pokeapp.data.MovimientoManager;
+import com.example.pokeapp.data.TypeColors;
 import com.example.pokeapp.data.HistorialManager;
 import com.example.pokeapp.data.Pokemon;
 import com.google.gson.Gson;
@@ -86,7 +91,8 @@ public class BattleArenaActivity extends AppCompatActivity {
     private FrameLayout contenedorA, contenedorB;
     private LinearLayout puntosA, puntosB;
     private ScrollView scrollBitacora;
-    private View barraAccion;
+    private View barraAccion, btnCambiar;
+    private GridLayout gridAtaques;
 
     private BattleEngine motor;
     private final List<BattlePokemon> equipoA = new ArrayList<>();
@@ -98,6 +104,7 @@ public class BattleArenaActivity extends AppCompatActivity {
     private boolean turnoDeA;
     private boolean esperandoJugador = false;
     private boolean batallaTerminada = false;
+    private boolean ataquesListos = false, pausaInicioLista = false, batallaIniciada = false;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -152,10 +159,22 @@ public class BattleArenaActivity extends AppCompatActivity {
         if (modo == null) modo = HistorialManager.MODO_EMULATOR;
 
         findViewById(R.id.btnSalirArena).setOnClickListener(v -> finish());
-        findViewById(R.id.btnAtacar).setOnClickListener(v -> atacarJugador());
+        btnCambiar.setOnClickListener(v -> cambiarPorDecision());
 
         prepararBatalla(a, b, getIntent().getIntExtra(EXTRA_ESCENARIO, -1));
-        handler.postDelayed(this::comenzarBatalla, PAUSA_INICIO);
+
+        // Mientras se ve "¡A vs B!" se cargan los 4 ataques reales de cada Pokémon
+        List<BattlePokemon> todos = new ArrayList<>(equipoA);
+        todos.addAll(equipoB);
+        MovimientoManager.asignar(todos, () -> {
+            ataquesListos = true;
+            intentarComenzar();
+        });
+        handler.postDelayed(() -> {
+            pausaInicioLista = true;
+            if (!ataquesListos) mostrarBanner("Preparando ataques…");
+            intentarComenzar();
+        }, PAUSA_INICIO);
     }
 
     @Override
@@ -205,6 +224,8 @@ public class BattleArenaActivity extends AppCompatActivity {
         tvBitacora = findViewById(R.id.tvBitacora);
         scrollBitacora = findViewById(R.id.scrollBitacora);
         barraAccion = findViewById(R.id.barraAccion);
+        btnCambiar = findViewById(R.id.btnCambiar);
+        gridAtaques = findViewById(R.id.gridAtaques);
         tvTurnoDe = findViewById(R.id.tvTurnoDe);
     }
 
@@ -401,6 +422,13 @@ public class BattleArenaActivity extends AppCompatActivity {
     // Turnos
     // ------------------------------------------------------------------
 
+    /** Empieza cuando ya pasó la presentación y ya se cargaron los ataques. */
+    private void intentarComenzar() {
+        if (!ataquesListos || !pausaInicioLista || batallaIniciada) return;
+        batallaIniciada = true;
+        comenzarBatalla();
+    }
+
     private void comenzarBatalla() {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
 
@@ -423,32 +451,91 @@ public class BattleArenaActivity extends AppCompatActivity {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
 
         if (esManual(turnoDeA)) {
-            // Turno de un jugador: espera a que toque Atacar
-            esperandoJugador = true;
-            String quien = (turnoDeA ? nombreA : nombreB);
-            tvTurnoDe.setText((quien != null ? "Turno de " + quien : "Tu turno") + "\n" + actual(turnoDeA).nombre);
-            barraAccion.setVisibility(View.VISIBLE);
+            mostrarPanelAtaques(turnoDeA);   // espera a que el jugador elija ataque o cambie
         } else {
-            ejecutarAtaque(turnoDeA);
+            ejecutarAtaque(turnoDeA, null);  // el sistema elige su mejor ataque
         }
     }
 
-    private void atacarJugador() {
+    /** Caja de ataques estilo juego: "¿Qué hará Pikachu?" + 4 botones del color de su tipo. */
+    private void mostrarPanelAtaques(boolean ladoA) {
+        esperandoJugador = true;
+        BattlePokemon p = actual(ladoA);
+        String quien = ladoA ? nombreA : nombreB;
+        tvTurnoDe.setText((quien != null ? quien + "\n" : "") + "¿Qué hará " + p.nombre + "?");
+
+        float dp = getResources().getDisplayMetrics().density;
+        gridAtaques.removeAllViews();
+        for (Movimiento m : p.getMovimientos()) {
+            LinearLayout boton = new LinearLayout(this);
+            boton.setOrientation(LinearLayout.VERTICAL);
+            boton.setPadding(Math.round(12 * dp), Math.round(8 * dp), Math.round(12 * dp), Math.round(8 * dp));
+
+            int color = m.tipo != null ? TypeColors.obtenerColor(m.tipo) : 0xFF8A93A6;
+            GradientDrawable fondo = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[]{color, oscurecer(color)});
+            fondo.setCornerRadius(14 * dp);
+            fondo.setStroke(Math.round(2 * dp), 0xCCFFFFFF);
+            boton.setBackground(fondo);
+
+            TextView nombre = new TextView(this);
+            nombre.setText(m.nombre);
+            nombre.setTextColor(0xFFFFFFFF);
+            nombre.setTextSize(15);
+            nombre.setTypeface(null, android.graphics.Typeface.BOLD);
+            nombre.setMaxLines(1);
+            nombre.setShadowLayer(3 * dp, 0, dp, 0x99000000);
+            boton.addView(nombre);
+
+            TextView detalle = new TextView(this);
+            detalle.setText(m.detalle());
+            detalle.setTextColor(0xE6FFFFFF);
+            detalle.setTextSize(11);
+            detalle.setShadowLayer(2 * dp, 0, dp, 0x99000000);
+            boton.addView(detalle);
+
+            GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
+                    GridLayout.spec(GridLayout.UNDEFINED), GridLayout.spec(GridLayout.UNDEFINED, 1f));
+            lp.width = 0;
+            lp.setMargins(Math.round(4 * dp), Math.round(4 * dp), Math.round(4 * dp), Math.round(4 * dp));
+            boton.setOnClickListener(v -> usarMovimiento(m));
+            gridAtaques.addView(boton, lp);
+        }
+
+        btnCambiar.setVisibility(otrosVivos(ladoA).isEmpty() ? View.GONE : View.VISIBLE);
+        barraAccion.setVisibility(View.VISIBLE);
+    }
+
+    private int oscurecer(int color) {
+        int r = (int) (((color >> 16) & 0xFF) * 0.7f);
+        int g = (int) (((color >> 8) & 0xFF) * 0.7f);
+        int b = (int) ((color & 0xFF) * 0.7f);
+        return 0xFF000000 | (r << 16) | (g << 8) | b;
+    }
+
+    private void usarMovimiento(Movimiento m) {
         if (!esperandoJugador || batallaTerminada) return;
         esperandoJugador = false;
         barraAccion.setVisibility(View.GONE);
-        ejecutarAtaque(turnoDeA);
+        ejecutarAtaque(turnoDeA, m);
     }
 
-    private void ejecutarAtaque(boolean ladoA) {
+    /** Ataca con el movimiento indicado (null = el sistema elige el mejor). */
+    private void ejecutarAtaque(boolean ladoA, Movimiento movimiento) {
         BattlePokemon atacante = actual(ladoA);
         BattlePokemon defensor = actual(!ladoA);
 
-        BattleTurn turno = motor.atacar(atacante, defensor);
-        tvTurno.setText("Turno " + turno.numero);
+        BattleTurn turno = motor.atacar(atacante, defensor, movimiento);
+        tvTurno.setText("Turno " + turno.numero + " · " + turno.movimiento.nombre);
 
         animarAtaque(contenedor(ladoA), ladoA ? 40f : -40f);
-        animarGolpe(contenedor(!ladoA), turno);
+        if (turno.fallo) {
+            textoFlotante(contenedor(!ladoA), "¡Falló!", 0xFF8A93A6, 22);
+        } else if (turno.sinEfecto()) {
+            textoFlotante(contenedor(!ladoA), "No le afecta", 0xFF8A93A6, 20);
+        } else {
+            animarGolpe(contenedor(!ladoA), turno);
+        }
         actualizarBarraHp(ladoA ? barraHpB : barraHpA, ladoA ? tvHpB : tvHpA, defensor, true);
         agregarBitacora(turno.descripcion());
 
@@ -468,34 +555,134 @@ public class BattleArenaActivity extends AppCompatActivity {
         handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
     }
 
+    /** Índices de los Pokémon vivos del lado, sin contar al que está peleando. */
+    private List<Integer> otrosVivos(boolean ladoA) {
+        List<Integer> vivos = new ArrayList<>();
+        List<BattlePokemon> equipo = equipo(ladoA);
+        int activo = ladoA ? activoA : activoB;
+        for (int i = 0; i < equipo.size(); i++) {
+            if (i != activo && !equipo.get(i).estaDerrotado()) vivos.add(i);
+        }
+        return vivos;
+    }
+
+    /** Botón "Cambiar": manda a otro de su equipo y el rival aprovecha el turno. */
+    private void cambiarPorDecision() {
+        if (!esperandoJugador || batallaTerminada) return;
+        boolean lado = turnoDeA;
+        if (otrosVivos(lado).isEmpty()) return;
+
+        mostrarVentanaEquipo(lado, "Cambiar Pokémon", true, indice -> {
+            esperandoJugador = false;
+            barraAccion.setVisibility(View.GONE);
+            entrarPokemon(lado, indice, true);
+        });
+    }
+
     /** El lado que perdió a su Pokémon manda otro: el jugador lo elige, el sistema toma el siguiente. */
     private void pedirReemplazo(boolean ladoA) {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
 
-        List<Integer> vivos = new ArrayList<>();
-        List<BattlePokemon> equipo = equipo(ladoA);
-        for (int i = 0; i < equipo.size(); i++) if (!equipo.get(i).estaDerrotado()) vivos.add(i);
-
+        List<Integer> vivos = otrosVivos(ladoA);
         if (!esManual(ladoA) || vivos.size() == 1) {
-            entrarPokemon(ladoA, vivos.get(0));
+            entrarPokemon(ladoA, vivos.get(0), false);
             return;
         }
-
-        String[] opciones = new String[vivos.size()];
-        for (int i = 0; i < vivos.size(); i++) {
-            BattlePokemon p = equipo.get(vivos.get(i));
-            opciones[i] = p.nombre + "   (" + p.getHpActual() + " / " + p.hpMaxima + " HP)";
-        }
-
-        String quien = ladoA ? nombreA : nombreB;
-        new AlertDialog.Builder(this)
-                .setTitle((quien != null ? quien + ": " : "") + "elige tu siguiente Pokémon")
-                .setCancelable(false)
-                .setItems(opciones, (d, cual) -> entrarPokemon(ladoA, vivos.get(cual)))
-                .show();
+        mostrarVentanaEquipo(ladoA, "Elige tu siguiente Pokémon", false,
+                indice -> entrarPokemon(ladoA, indice, false));
     }
 
-    private void entrarPokemon(boolean ladoA, int indice) {
+    private interface AlElegir {
+        void elegido(int indice);
+    }
+
+    /** Ventana decorada con el equipo: sprite, tipos y barra de vida; los debilitados no se pueden elegir. */
+    private void mostrarVentanaEquipo(boolean ladoA, String titulo, boolean cancelable, AlElegir alElegir) {
+        View vista = LayoutInflater.from(this).inflate(R.layout.dialog_elegir_pokemon_batalla, null);
+        String quien = ladoA ? nombreA : nombreB;
+        TextView tvDueno = vista.findViewById(R.id.tvDuenoDialogo);
+        tvDueno.setText(quien != null ? quien.toUpperCase(Locale.ROOT) : "");
+        tvDueno.setVisibility(quien != null ? View.VISIBLE : View.GONE);
+        ((TextView) vista.findViewById(R.id.tvTituloDialogo)).setText(titulo);
+
+        AlertDialog dialogo = new AlertDialog.Builder(this).setView(vista).setCancelable(cancelable).create();
+
+        LinearLayout lista = vista.findViewById(R.id.listaEquipoDialogo);
+        List<BattlePokemon> equipo = equipo(ladoA);
+        int activo = ladoA ? activoA : activoB;
+        float dp = getResources().getDisplayMetrics().density;
+
+        for (int i = 0; i < equipo.size(); i++) {
+            BattlePokemon p = equipo.get(i);
+            View tarjeta = LayoutInflater.from(this).inflate(R.layout.item_pokemon_batalla, lista, false);
+            Glide.with(this).load(p.imagen).into((ImageView) tarjeta.findViewById(R.id.imgPokemonBatalla));
+            ((TextView) tarjeta.findViewById(R.id.tvNombrePokemonBatalla)).setText(p.nombre);
+
+            // Fondo del sprite con el color de su tipo
+            GradientDrawable fondoSprite = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                    new int[]{TypeColors.obtenerColor(p.tipos.get(0)), 0xFFFFFFFF});
+            fondoSprite.setCornerRadius(14 * dp);
+            tarjeta.findViewById(R.id.fondoSpriteBatalla).setBackground(fondoSprite);
+
+            LinearLayout chips = tarjeta.findViewById(R.id.chipsPokemonBatalla);
+            for (String tipo : p.tipos) {
+                TextView chip = new TextView(this);
+                chip.setText(TypeColors.traducir(tipo));
+                chip.setTextColor(0xFFFFFFFF);
+                chip.setTextSize(10);
+                chip.setTypeface(null, android.graphics.Typeface.BOLD);
+                chip.setPadding(Math.round(8 * dp), Math.round(2 * dp), Math.round(8 * dp), Math.round(2 * dp));
+                GradientDrawable pastilla = new GradientDrawable();
+                pastilla.setCornerRadius(10 * dp);
+                pastilla.setColor(TypeColors.obtenerColor(tipo));
+                chip.setBackground(pastilla);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lp.setMarginEnd(Math.round(4 * dp));
+                chips.addView(chip, lp);
+            }
+
+            actualizarBarraHp(tarjeta.findViewById(R.id.barraPokemonBatalla),
+                    tarjeta.findViewById(R.id.tvHpPokemonBatalla), p, false);
+
+            TextView estado = tarjeta.findViewById(R.id.tvEstadoPokemonBatalla);
+            boolean enBatalla = i == activo && !p.estaDerrotado();
+            if (p.estaDerrotado()) {
+                estado.setText("Debilitado");
+                estado.setVisibility(View.VISIBLE);
+                tarjeta.setAlpha(0.45f);
+                tarjeta.setClickable(false);
+            } else if (enBatalla) {
+                estado.setText("En batalla");
+                estado.setVisibility(View.VISIBLE);
+                tarjeta.setAlpha(0.6f);
+                tarjeta.setClickable(false);
+            } else {
+                final int indice = i;
+                tarjeta.setOnClickListener(v -> {
+                    dialogo.dismiss();
+                    alElegir.elegido(indice);
+                });
+            }
+            lista.addView(tarjeta);
+        }
+
+        View cancelar = vista.findViewById(R.id.btnCancelarDialogo);
+        cancelar.setVisibility(cancelable ? View.VISIBLE : View.GONE);
+        cancelar.setOnClickListener(v -> dialogo.dismiss());
+
+        dialogo.show();
+        if (dialogo.getWindow() != null) {
+            dialogo.getWindow().setBackgroundDrawable(
+                    new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+    }
+
+    /**
+     * Entra un Pokémon. Si fue por decisión (botón Cambiar) el turno pasa al rival;
+     * si fue porque el anterior cayó, empieza el más rápido (regla de Speed).
+     */
+    private void entrarPokemon(boolean ladoA, int indice, boolean porDecision) {
         if (ladoA) activoA = indice;
         else activoB = indice;
 
@@ -510,8 +697,13 @@ public class BattleArenaActivity extends AppCompatActivity {
                 .setInterpolator(new OvershootInterpolator()).start();
 
         String quien = ladoA ? nombreA : nombreB;
-        agregarBitacora((quien != null ? quien : "Entra") + " envía a " + actual(ladoA).nombre
-                + ".\n" + decidirQuienEmpieza());
+        if (porDecision) {
+            agregarBitacora((quien != null ? quien : "Entra") + " cambia a " + actual(ladoA).nombre + ".");
+            turnoDeA = !ladoA;
+        } else {
+            agregarBitacora((quien != null ? quien : "Entra") + " envía a " + actual(ladoA).nombre
+                    + ".\n" + decidirQuienEmpieza());
+        }
         handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
     }
 
@@ -638,6 +830,21 @@ public class BattleArenaActivity extends AppCompatActivity {
                 .setDuration(900)
                 .withEndAction(() -> contenedor.removeView(tvDanio))
                 .start();
+    }
+
+    private void textoFlotante(FrameLayout contenedor, String texto, int color, int tamanio) {
+        TextView tv = new TextView(this);
+        tv.setText(texto);
+        tv.setTextColor(color);
+        tv.setTextSize(tamanio);
+        tv.setTypeface(null, android.graphics.Typeface.BOLD);
+        tv.setShadowLayer(6f, 0f, 2f, 0xFFFFFFFF);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = android.view.Gravity.CENTER;
+        contenedor.addView(tv, params);
+        tv.animate().translationY(-110f).alpha(0f).setStartDelay(150).setDuration(900)
+                .withEndAction(() -> contenedor.removeView(tv)).start();
     }
 
     /** Barra con % de vida: verde > 50 %, amarilla > 20 %, roja el resto. */

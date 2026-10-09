@@ -160,11 +160,14 @@ public class HistorialActivity extends AppCompatActivity {
 
             String numero = lineas[0].substring("Turno ".length()).trim();
             String ataque = lineas[1];
-            String danio = detallesEntreParentesis(lineas[2]);
             String estado = lineas[3].replace(" · ¡Se debilitó!", " y se debilita");
 
-            agregarRenglon(lista, numero + ". " + ataque
-                    + " y " + primeraMinuscula(danio) + "; " + estado);
+            // "Causa 18 puntos…" → "y causa 18 puntos…"; "¡Pero falló!" → ", pero falló"
+            String resultado = lineas[2].startsWith("Causa")
+                    ? " y " + primeraMinuscula(detallesEntreParentesis(lineas[2]))
+                    : ", " + primeraMinuscula(lineas[2].replace("¡", "").replace("!", ""));
+
+            agregarRenglon(lista, numero + ". " + ataque + resultado + "; " + estado);
         }
 
         lista.append("\n");
