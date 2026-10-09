@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Selector de Pokémon reutilizable (lo controla SelectorPokemon.java):
+  buscador con sugerencias, 🎲 al azar, populares y vista previa con botón Aceptar.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/selectorPokemon"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/etBuscarSel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_dex_search"
+            android:hint="Nombre o número..."
+            android:textColorHint="#8A8A8A"
+            android:textColor="#14213D"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:singleLine="true" />
+
+        <com.example.pokeapp.PokeBoton
+            android:id="@+id/btnBuscarSel"
+            app:tema="pikachu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="18dp"
+            android:text="Buscar" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerSugerenciasSel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_dex_suggestions"
+        android:overScrollMode="never"
+        android:visibility="gone" />
+
+    <com.example.pokeapp.PokeBoton
+        android:id="@+id/btnSorprendemeSel"
+        app:tema="ditto"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_marginTop="26dp"
+        android:text="🎲 Sorpréndeme" />
+
+    <LinearLayout
+        android:id="@+id/seccionPopularesSel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="⭐ POPULARES · toca uno para elegirlo"
+            android:textColor="@color/menu_text_soft"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.06" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerPopularesSel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:nestedScrollingEnabled="false"
+            android:overScrollMode="never" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressSel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvMensajeSel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/menu_red"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/cardPreviaSel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:background="@drawable/bg_card_menu"
+        android:padding="18dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgPreviaSel"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:scaleType="fitCenter"
+            android:contentDescription="Pokémon encontrado" />
+
+        <TextView
+            android:id="@+id/tvNombrePreviaSel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="#000 Nombre"
+            android:textColor="@color/menu_text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvTiposPreviaSel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="Tipo"
+            android:textColor="@color/menu_text_soft"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvStatsPreviaSel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/menu_text"
+            android:textSize="12sp"
+            android:lineSpacingExtra="3dp" />
+
+        <com.example.pokeapp.PokeBoton
+            android:id="@+id/btnAceptarSel"
+            app:tema="eevee"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="30dp"
+            android:text="Aceptar" />
+    </LinearLayout>
+</LinearLayout>

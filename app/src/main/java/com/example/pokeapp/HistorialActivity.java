@@ -144,8 +144,16 @@ public class HistorialActivity extends AppCompatActivity {
             posicion++;
             String[] lineas = movimiento.split("\n");
 
+            // Equipos de cada jugador (Versus / Torre): renglones tal cual, sin número
+            if (!lineas[0].startsWith("Turno ")) {
+                for (String linea : lineas) agregarRenglon(lista, "👥 " + linea);
+                lista.append("\n");
+                posicion--;
+                continue;
+            }
+
             // Formato viejo (una sola línea): se agrega tal cual con su número
-            if (lineas.length < 4 || !lineas[0].startsWith("Turno ")) {
+            if (lineas.length < 4) {
                 agregarRenglon(lista, posicion + ". " + movimiento.replace("\n", " "));
                 continue;
             }

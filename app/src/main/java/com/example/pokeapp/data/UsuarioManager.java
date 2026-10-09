@@ -2,6 +2,7 @@ package com.example.pokeapp.data;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -102,5 +103,41 @@ public class UsuarioManager {
             Long medallas = snapshot.getLong("medallas");
             callback.alTerminar(medallas == null ? 0 : medallas.intValue());
         }).addOnFailureListener(e -> callback.alTerminar(0));
+    }
+
+    public static final int MAX_MEDALLAS = 10;
+
+    /**
+     * Se llama al completar la Torre Pokémon: desbloquea la siguiente medalla
+     * (máximo 10) y guarda su número y fecha en "medallasObtenidas" para el
+     * módulo Medallas. Devuelve el nuevo total, o -1 si no se pudo guardar.
+     */
+    public static void otorgarMedalla(@NonNull FavoritosManager.Resultado<Integer> callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(-1);
+            return;
+        }
+
+        doc.get().addOnSuccessListener(snapshot -> {
+            int actuales = valor(snapshot.getLong("medallas"));
+            if (actuales >= MAX_MEDALLAS) {
+                callback.alTerminar(actuales);   // ya tiene las 10
+                return;
+            }
+
+            int nueva = actuales + 1;
+            Map<String, Object> medalla = new HashMap<>();
+            medalla.put("numero", nueva);
+            medalla.put("fecha", Timestamp.now());
+
+            Map<String, Object> datos = new HashMap<>();
+            datos.put("medallas", nueva);
+            datos.put("medallasObtenidas", FieldValue.arrayUnion(medalla));
+
+            doc.set(datos, SetOptions.merge())
+                    .addOnSuccessListener(v -> callback.alTerminar(nueva))
+                    .addOnFailureListener(e -> callback.alTerminar(-1));
+        }).addOnFailureListener(e -> callback.alTerminar(-1));
     }
 }

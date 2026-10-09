@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Avatar: Chico 1 — gorra azul hacia atrás, cabello café, playera verde -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- visera de la gorra (va hacia atrás, asoma detrás de la cabeza) -->
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M66,36 C78,32 90,36 92,42 C84,44 74,43 68,42 Z" />
+    <!-- playera -->
+    <path
+        android:fillColor="#2E9E4F"
+        android:pathData="M10,108 C10,92 30,82 54,82 C78,82 98,92 98,108 Z" />
+    <path
+        android:strokeColor="#1E7A3A"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:pathData="M44,84 Q54,92 64,84" />
+    <!-- cuello -->
+    <path android:fillColor="#E9B98C" android:pathData="M47,70 H61 V86 H47 Z" />
+    <!-- cabeza -->
+    <path
+        android:fillColor="#F6D3AE"
+        android:pathData="M33,58 A21,22 0 1 0 75,58 A21,22 0 1 0 33,58 Z" />
+    <!-- ojos y sonrisa -->
+    <path android:fillColor="#2B1B17" android:pathData="M44,63 A2.4,2.6 0 1 0 48.8,63 A2.4,2.6 0 1 0 44,63 Z" />
+    <path android:fillColor="#2B1B17" android:pathData="M59.2,63 A2.4,2.6 0 1 0 64,63 A2.4,2.6 0 1 0 59.2,63 Z" />
+    <path
+        android:strokeColor="#8A4B38"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:pathData="M48,71 Q54,75.5 60,71" />
+    <!-- fleco café -->
+    <path
+        android:fillColor="#6B3E26"
+        android:pathData="M33,53 C33,39 42,33 54,33 C66,33 75,39 75,53 C70,46 64,44 60,48 C57,43 51,43 48,48 C44,44 38,46 33,53 Z" />
+    <!-- copa de la gorra -->
+    <path
+        android:fillColor="#1D4ED8"
+        android:strokeColor="#1E3A8A"
+        android:strokeWidth="1.8"
+        android:pathData="M34,42 C34,27 44,20 54,20 C64,20 74,27 74,42 C66,38 42,38 34,42 Z" />
+    <path android:fillColor="#FFFFFF" android:pathData="M52,21 A2,2 0 1 0 56,21 A2,2 0 1 0 52,21 Z" />
+</vector>

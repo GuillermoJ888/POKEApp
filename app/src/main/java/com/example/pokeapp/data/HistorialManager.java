@@ -31,6 +31,8 @@ import java.util.Map;
 public class HistorialManager {
 
     public static final String MODO_EMULATOR = "Battle Emulator";
+    public static final String MODO_VERSUS = "Battle Versus";
+    public static final String MODO_TORRE = "Torre Pokémon";
 
     private static final int MAX_LEIDAS = 50;
 

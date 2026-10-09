@@ -2,6 +2,7 @@ package com.example.pokeapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pokeapp.data.AvatarManager;
 import com.example.pokeapp.data.FavoritosManager;
 import com.example.pokeapp.data.UsuarioManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,10 +39,18 @@ public class MenuActivity extends AppCompatActivity {
         mostrarSaludo();
         configurarModulos();
 
-        // La pokébola de arriba a la derecha abre el perfil del usuario.
+        // El avatar de arriba a la derecha abre el perfil del usuario.
         // Cerrar sesión ahora vive solo ahí, no repetido en este Menú.
         findViewById(R.id.imgAvatar).setOnClickListener(v ->
                 startActivity(new Intent(this, PerfilActivity.class)));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Al volver del perfil se muestra el avatar que se haya elegido ahí
+        ImageView imgAvatar = findViewById(R.id.imgAvatar);
+        imgAvatar.setImageResource(AvatarManager.obtener(this).dibujo);
     }
 
     private void mostrarSaludo() {

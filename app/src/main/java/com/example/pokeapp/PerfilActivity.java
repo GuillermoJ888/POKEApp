@@ -1,12 +1,20 @@
 package com.example.pokeapp;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pokeapp.data.AvatarManager;
 import com.example.pokeapp.data.FavoritosManager;
 import com.example.pokeapp.data.UsuarioManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +24,7 @@ public class PerfilActivity extends AppCompatActivity {
 
     private TextView tvFavoritos, tvMedallas, tvVictorias, tvDerrotas, tvNivel;
     private ProgressBar progressNivel;
+    private ImageView imgAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +48,11 @@ public class PerfilActivity extends AppCompatActivity {
             tvCorreo.setText(usuario.getEmail());
         }
 
+        // Avatar elegido (guardado solo en el celular); al tocarlo se puede cambiar
+        imgAvatar = findViewById(R.id.imgAvatarPerfil);
+        imgAvatar.setImageResource(AvatarManager.obtener(this).dibujo);
+        findViewById(R.id.contenedorAvatar).setOnClickListener(v -> elegirAvatar());
+
         findViewById(R.id.btnRegresar).setOnClickListener(v -> finish());
 
         findViewById(R.id.btnCerrarSesionPerfil).setOnClickListener(v -> {
@@ -48,6 +62,37 @@ public class PerfilActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    /** Ventana con todos los avatares; el elegido lleva ✓ y se guarda solo en el celular. */
+    private void elegirAvatar() {
+        View vista = LayoutInflater.from(this).inflate(R.layout.dialog_avatares, null);
+        GridLayout grid = vista.findViewById(R.id.gridAvatares);
+
+        AlertDialog dialogo = new AlertDialog.Builder(this).setView(vista).create();
+        String actual = AvatarManager.obtener(this).clave;
+
+        for (AvatarManager.Avatar avatar : AvatarManager.TODOS) {
+            View opcion = LayoutInflater.from(this).inflate(R.layout.item_avatar, grid, false);
+            ImageView img = opcion.findViewById(R.id.imgOpcionAvatar);
+            img.setImageResource(avatar.dibujo);
+            img.setClipToOutline(true);
+            ((TextView) opcion.findViewById(R.id.tvOpcionNombre)).setText(avatar.nombre);
+            opcion.findViewById(R.id.tvOpcionElegida)
+                    .setVisibility(avatar.clave.equals(actual) ? View.VISIBLE : View.GONE);
+
+            opcion.setOnClickListener(v -> {
+                AvatarManager.guardar(this, avatar);
+                imgAvatar.setImageResource(avatar.dibujo);
+                dialogo.dismiss();
+            });
+            grid.addView(opcion);
+        }
+
+        dialogo.show();
+        if (dialogo.getWindow() != null) {
+            dialogo.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
     }
 
     @Override

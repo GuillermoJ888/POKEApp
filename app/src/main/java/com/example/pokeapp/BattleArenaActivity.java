@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,11 +15,13 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -35,52 +38,95 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
 /**
- * Batalla a pantalla completa del Battle Emulator.
+ * Arena de batalla a pantalla completa, compartida por Battle Emulator, Battle Versus
+ * y Torre Pokémon (todas usan el mismo BattleEngine).
  *
- * Recibe los dos Pokémon (como JSON), la pelea corre sola con el motor compartido,
- * guarda el resumen en el Historial y, 2 segundos después de que uno cae,
- * regresa al Emulator con el resultado para mostrar la ventana del ganador.
+ * - Cada lado tiene un equipo (1 Pokémon en el Emulator, 3 en Versus, 1–4 en la Torre).
+ * - Cada lado puede ser "manual" (un jugador toca Atacar y elige quién entra al caer uno)
+ *   o automático (el sistema ataca solo y manda al siguiente vivo).
+ * - Empieza el Pokémon con mayor Speed; también al entrar un reemplazo.
+ * - Al terminar guarda el resumen en el Historial y regresa con el resultado.
  */
 public class BattleArenaActivity extends AppCompatActivity {
 
-    private static final String EXTRA_POKEMON_A = "extra_pokemon_a";
-    private static final String EXTRA_POKEMON_B = "extra_pokemon_b";
+    private static final String EXTRA_EQUIPO_A = "extra_equipo_a";
+    private static final String EXTRA_EQUIPO_B = "extra_equipo_b";
+    private static final String EXTRA_NOMBRE_A = "extra_nombre_a";
+    private static final String EXTRA_NOMBRE_B = "extra_nombre_b";
+    private static final String EXTRA_MANUAL_A = "extra_manual_a";
+    private static final String EXTRA_MANUAL_B = "extra_manual_b";
+    private static final String EXTRA_MODO = "extra_modo";
+    private static final String EXTRA_ESCENARIO = "extra_escenario";
 
-    // Resultado que recibe el Emulator
+    // Resultado que reciben las pantallas que abren la arena
     public static final String RESULTADO_GANO_A = "resultado_gano_a";
     public static final String RESULTADO_HP_GANADOR = "resultado_hp_ganador";
     public static final String RESULTADO_TURNOS = "resultado_turnos";
+    /** Posición, dentro de su equipo, del Pokémon que dio el golpe final. */
+    public static final String RESULTADO_INDICE_GANADOR = "resultado_indice_ganador";
 
     private static final long PAUSA_INICIO = 1500;
     private static final long PAUSA_TURNO = 1300;
+    private static final long PAUSA_REEMPLAZO = 900;
     private static final long PAUSA_REGRESO = 2000;
 
     private static final Gson gson = new Gson();
     private static final Random random = new Random();
 
     private ImageView imgA, imgB;
-    private TextView tvNombreA, tvNombreB, tvTiposA, tvTiposB, tvHpA, tvHpB;
-    private TextView tvTurno, tvBanner, tvBitacora;
+    private TextView tvNombreA, tvNombreB, tvTiposA, tvTiposB, tvHpA, tvHpB, tvDuenoA, tvDuenoB;
+    private TextView tvTurno, tvBanner, tvBitacora, tvTurnoDe;
     private ProgressBar barraHpA, barraHpB;
     private FrameLayout contenedorA, contenedorB;
+    private LinearLayout puntosA, puntosB;
     private ScrollView scrollBitacora;
+    private View barraAccion;
 
     private BattleEngine motor;
-    private BattlePokemon pokemonA, pokemonB, turnoDe;
+    private final List<BattlePokemon> equipoA = new ArrayList<>();
+    private final List<BattlePokemon> equipoB = new ArrayList<>();
+    private int activoA = 0, activoB = 0;
+    private String nombreA, nombreB, modo;
+    private boolean manualA, manualB;
+
+    private boolean turnoDeA;
+    private boolean esperandoJugador = false;
     private boolean batallaTerminada = false;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
-    /** Intent para abrir la arena con los dos Pokémon ya cargados. */
+    /** Battle Emulator: un Pokémon por lado y todo automático. */
     public static Intent crearIntent(Context context, Pokemon a, Pokemon b) {
+        return crearIntentEquipos(context, Collections.singletonList(a), Collections.singletonList(b),
+                null, null, false, false, HistorialManager.MODO_EMULATOR, -1);
+    }
+
+    /**
+     * Batalla por equipos.
+     *
+     * @param nombreA   nombre del dueño del equipo A ("Jugador 1", "Tú"); null = sin dueño
+     * @param manualA   true = un jugador toca Atacar y elige reemplazos del equipo A
+     * @param escenario índice en Escenario.TODOS, o -1 para uno al azar
+     */
+    public static Intent crearIntentEquipos(Context context, List<Pokemon> a, List<Pokemon> b,
+                                            String nombreA, String nombreB,
+                                            boolean manualA, boolean manualB,
+                                            String modo, int escenario) {
         return new Intent(context, BattleArenaActivity.class)
-                .putExtra(EXTRA_POKEMON_A, gson.toJson(a))
-                .putExtra(EXTRA_POKEMON_B, gson.toJson(b));
+                .putExtra(EXTRA_EQUIPO_A, gson.toJson(a))
+                .putExtra(EXTRA_EQUIPO_B, gson.toJson(b))
+                .putExtra(EXTRA_NOMBRE_A, nombreA)
+                .putExtra(EXTRA_NOMBRE_B, nombreB)
+                .putExtra(EXTRA_MANUAL_A, manualA)
+                .putExtra(EXTRA_MANUAL_B, manualB)
+                .putExtra(EXTRA_MODO, modo)
+                .putExtra(EXTRA_ESCENARIO, escenario);
     }
 
     @Override
@@ -90,17 +136,25 @@ public class BattleArenaActivity extends AppCompatActivity {
         pantallaCompleta();
         enlazarVistas();
 
-        Pokemon a = leerPokemon(EXTRA_POKEMON_A);
-        Pokemon b = leerPokemon(EXTRA_POKEMON_B);
-        if (a == null || b == null) {
+        Pokemon[] a = leerEquipo(EXTRA_EQUIPO_A);
+        Pokemon[] b = leerEquipo(EXTRA_EQUIPO_B);
+        if (a == null || b == null || a.length == 0 || b.length == 0) {
             Toast.makeText(this, "No se pudieron cargar los Pokémon", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        findViewById(R.id.btnSalirArena).setOnClickListener(v -> finish());
+        nombreA = getIntent().getStringExtra(EXTRA_NOMBRE_A);
+        nombreB = getIntent().getStringExtra(EXTRA_NOMBRE_B);
+        manualA = getIntent().getBooleanExtra(EXTRA_MANUAL_A, false);
+        manualB = getIntent().getBooleanExtra(EXTRA_MANUAL_B, false);
+        modo = getIntent().getStringExtra(EXTRA_MODO);
+        if (modo == null) modo = HistorialManager.MODO_EMULATOR;
 
-        prepararBatalla(a, b);
+        findViewById(R.id.btnSalirArena).setOnClickListener(v -> finish());
+        findViewById(R.id.btnAtacar).setOnClickListener(v -> atacarJugador());
+
+        prepararBatalla(a, b, getIntent().getIntExtra(EXTRA_ESCENARIO, -1));
         handler.postDelayed(this::comenzarBatalla, PAUSA_INICIO);
     }
 
@@ -110,11 +164,11 @@ public class BattleArenaActivity extends AppCompatActivity {
         handler.removeCallbacksAndMessages(null);
     }
 
-    private Pokemon leerPokemon(String extra) {
+    private Pokemon[] leerEquipo(String extra) {
         String json = getIntent().getStringExtra(extra);
         if (json == null) return null;
         try {
-            return gson.fromJson(json, Pokemon.class);
+            return gson.fromJson(json, Pokemon[].class);
         } catch (Exception e) {
             return null;
         }
@@ -138,41 +192,119 @@ public class BattleArenaActivity extends AppCompatActivity {
         tvTiposB = findViewById(R.id.tvTiposB);
         tvHpA = findViewById(R.id.tvHpA);
         tvHpB = findViewById(R.id.tvHpB);
+        tvDuenoA = findViewById(R.id.tvDuenoA);
+        tvDuenoB = findViewById(R.id.tvDuenoB);
         barraHpA = findViewById(R.id.barraHpA);
         barraHpB = findViewById(R.id.barraHpB);
         contenedorA = findViewById(R.id.contenedorA);
         contenedorB = findViewById(R.id.contenedorB);
+        puntosA = findViewById(R.id.equipoA);
+        puntosB = findViewById(R.id.equipoB);
         tvTurno = findViewById(R.id.tvTurno);
         tvBanner = findViewById(R.id.tvBanner);
         tvBitacora = findViewById(R.id.tvBitacora);
         scrollBitacora = findViewById(R.id.scrollBitacora);
+        barraAccion = findViewById(R.id.barraAccion);
+        tvTurnoDe = findViewById(R.id.tvTurnoDe);
     }
 
     // ------------------------------------------------------------------
-    // Batalla
+    // Ayudas por lado (A = abajo a la izquierda, B = arriba a la derecha)
     // ------------------------------------------------------------------
 
-    private void prepararBatalla(Pokemon a, Pokemon b) {
-        motor = new BattleEngine(random);
-        pokemonA = new BattlePokemon(a);
-        pokemonB = new BattlePokemon(b);
+    private List<BattlePokemon> equipo(boolean ladoA) { return ladoA ? equipoA : equipoB; }
 
-        // Escenario al azar: fondo, plataformas y posición de cada Pokémon
-        Escenario escenario = Escenario.aleatorio(random);
+    private BattlePokemon actual(boolean ladoA) { return ladoA ? equipoA.get(activoA) : equipoB.get(activoB); }
+
+    private boolean esManual(boolean ladoA) { return ladoA ? manualA : manualB; }
+
+    private FrameLayout contenedor(boolean ladoA) { return ladoA ? contenedorA : contenedorB; }
+
+    /** "Jugador 1" si el lado tiene dueño; si no, el nombre del Pokémon. */
+    private String dueno(boolean ladoA) {
+        String nombre = ladoA ? nombreA : nombreB;
+        return nombre != null ? nombre : actual(ladoA).nombre;
+    }
+
+    private boolean quedanVivos(boolean ladoA) {
+        for (BattlePokemon p : equipo(ladoA)) if (!p.estaDerrotado()) return true;
+        return false;
+    }
+
+    private boolean esPorEquipos() {
+        return equipoA.size() > 1 || equipoB.size() > 1 || nombreA != null || nombreB != null;
+    }
+
+    // ------------------------------------------------------------------
+    // Preparación
+    // ------------------------------------------------------------------
+
+    private void prepararBatalla(Pokemon[] a, Pokemon[] b, int indiceEscenario) {
+        motor = new BattleEngine(random);
+        for (Pokemon p : a) equipoA.add(new BattlePokemon(p));
+        for (Pokemon p : b) equipoB.add(new BattlePokemon(p));
+
+        Escenario escenario = indiceEscenario >= 0 && indiceEscenario < Escenario.TODOS.size()
+                ? Escenario.TODOS.get(indiceEscenario)
+                : Escenario.aleatorio(random);
         tvTurno.setText("📍 " + escenario.nombre);
         acomodarEscenario(escenario);
 
-        tvNombreA.setText(pokemonA.nombre);
-        tvNombreB.setText(pokemonB.nombre);
-        tvTiposA.setText(pokemonA.tiposTexto());
-        tvTiposB.setText(pokemonB.tiposTexto());
-        Glide.with(this).load(pokemonA.imagen).into(imgA);
-        Glide.with(this).load(pokemonB.imagen).into(imgB);
+        mostrarDueno(tvDuenoA, nombreA);
+        mostrarDueno(tvDuenoB, nombreB);
+        pintarPokemon(true);
+        pintarPokemon(false);
 
-        actualizarBarraHp(barraHpA, tvHpA, pokemonA, false);
-        actualizarBarraHp(barraHpB, tvHpB, pokemonB, false);
+        if (esPorEquipos()) {
+            mostrarBanner("¡" + dueno(true) + " vs " + dueno(false) + "!");
+        } else {
+            mostrarBanner("¡" + actual(true).nombre + " vs " + actual(false).nombre + "!");
+        }
+    }
 
-        mostrarBanner("¡" + pokemonA.nombre + " vs " + pokemonB.nombre + "!");
+    private void mostrarDueno(TextView tv, String nombre) {
+        tv.setVisibility(nombre != null ? View.VISIBLE : View.GONE);
+        if (nombre != null) tv.setText(nombre.toUpperCase(Locale.ROOT));
+    }
+
+    /** Imagen, nombre, tipos, HP y puntitos del equipo del Pokémon activo de un lado. */
+    private void pintarPokemon(boolean ladoA) {
+        BattlePokemon p = actual(ladoA);
+        Glide.with(this).load(p.imagen).into(ladoA ? imgA : imgB);
+        (ladoA ? tvNombreA : tvNombreB).setText(p.nombre);
+        (ladoA ? tvTiposA : tvTiposB).setText(p.tiposTexto());
+        actualizarBarraHp(ladoA ? barraHpA : barraHpB, ladoA ? tvHpA : tvHpB, p, false);
+        actualizarPuntos(ladoA);
+    }
+
+    /** Un puntito por Pokémon del equipo: rojo vivo, gris debilitado; el activo con borde. */
+    private void actualizarPuntos(boolean ladoA) {
+        LinearLayout puntos = ladoA ? puntosA : puntosB;
+        List<BattlePokemon> equipo = equipo(ladoA);
+        puntos.removeAllViews();
+        if (equipo.size() <= 1) {
+            puntos.setVisibility(View.GONE);
+            return;
+        }
+
+        float dp = getResources().getDisplayMetrics().density;
+        int activo = ladoA ? activoA : activoB;
+        for (int i = 0; i < equipo.size(); i++) {
+            GradientDrawable circulo = new GradientDrawable();
+            circulo.setShape(GradientDrawable.OVAL);
+            circulo.setColor(equipo.get(i).estaDerrotado() ? 0xFFB8B8B8 : 0xFFE3350D);
+            if (i == activo && !equipo.get(i).estaDerrotado()) {
+                circulo.setStroke(Math.round(2 * dp), 0xFF3A1410);
+            }
+
+            View punto = new View(this);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(Math.round(11 * dp), Math.round(11 * dp));
+            lp.setMarginEnd(Math.round(5 * dp));
+            punto.setLayoutParams(lp);
+            punto.setBackground(circulo);
+            puntos.addView(punto);
+        }
+        puntos.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -265,68 +397,143 @@ public class BattleArenaActivity extends AppCompatActivity {
         vista.setLayoutParams(lp);
     }
 
+    // ------------------------------------------------------------------
+    // Turnos
+    // ------------------------------------------------------------------
+
     private void comenzarBatalla() {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
 
         ocultarBanner();
-
-        turnoDe = motor.quienEmpieza(pokemonA, pokemonB);
-        boolean porVelocidad = pokemonA.velocidad != pokemonB.velocidad;
-
-        agregarBitacora("¡" + pokemonA.nombre + " vs " + pokemonB.nombre + "!\nEmpieza "
-                + turnoDe.nombre + (porVelocidad
-                ? " por tener mayor Speed (" + turnoDe.velocidad + ")."
-                : " por sorteo (misma Speed)."));
-
+        agregarBitacora("¡" + dueno(true) + " vs " + dueno(false) + "!\n" + decidirQuienEmpieza());
         handler.postDelayed(this::siguienteTurno, 700);
+    }
+
+    /** Regla del proyecto: empieza el Pokémon activo con mayor Speed (empate: al azar). */
+    private String decidirQuienEmpieza() {
+        BattlePokemon a = actual(true), b = actual(false);
+        turnoDeA = motor.quienEmpieza(a, b) == a;
+        BattlePokemon primero = actual(turnoDeA);
+        return "Empieza " + primero.nombre + (a.velocidad != b.velocidad
+                ? " por tener mayor Speed (" + primero.velocidad + ")."
+                : " por sorteo (misma Speed).");
     }
 
     private void siguienteTurno() {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
 
-        BattlePokemon atacante = turnoDe;
-        BattlePokemon defensor = atacante == pokemonA ? pokemonB : pokemonA;
+        if (esManual(turnoDeA)) {
+            // Turno de un jugador: espera a que toque Atacar
+            esperandoJugador = true;
+            String quien = (turnoDeA ? nombreA : nombreB);
+            tvTurnoDe.setText((quien != null ? "Turno de " + quien : "Tu turno") + "\n" + actual(turnoDeA).nombre);
+            barraAccion.setVisibility(View.VISIBLE);
+        } else {
+            ejecutarAtaque(turnoDeA);
+        }
+    }
+
+    private void atacarJugador() {
+        if (!esperandoJugador || batallaTerminada) return;
+        esperandoJugador = false;
+        barraAccion.setVisibility(View.GONE);
+        ejecutarAtaque(turnoDeA);
+    }
+
+    private void ejecutarAtaque(boolean ladoA) {
+        BattlePokemon atacante = actual(ladoA);
+        BattlePokemon defensor = actual(!ladoA);
 
         BattleTurn turno = motor.atacar(atacante, defensor);
         tvTurno.setText("Turno " + turno.numero);
 
-        boolean ataqueDeA = atacante == pokemonA;
-        animarAtaque(ataqueDeA ? contenedorA : contenedorB, ataqueDeA ? 40f : -40f);
-        animarGolpe(ataqueDeA ? contenedorB : contenedorA, turno);
-
-        if (ataqueDeA) actualizarBarraHp(barraHpB, tvHpB, pokemonB, true);
-        else actualizarBarraHp(barraHpA, tvHpA, pokemonA, true);
-
+        animarAtaque(contenedor(ladoA), ladoA ? 40f : -40f);
+        animarGolpe(contenedor(!ladoA), turno);
+        actualizarBarraHp(ladoA ? barraHpB : barraHpA, ladoA ? tvHpB : tvHpA, defensor, true);
         agregarBitacora(turno.descripcion());
 
         if (turno.derrotado) {
-            terminarBatalla(atacante, defensor);
+            actualizarPuntos(!ladoA);
+            contenedor(!ladoA).animate().translationY(80f).alpha(0f).setDuration(700).setStartDelay(300).start();
+
+            if (!quedanVivos(!ladoA)) {
+                terminarBatalla(ladoA);
+            } else {
+                handler.postDelayed(() -> pedirReemplazo(!ladoA), PAUSA_REEMPLAZO);
+            }
             return;
         }
 
-        turnoDe = defensor;
+        turnoDeA = !ladoA;
         handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
     }
 
-    private void terminarBatalla(BattlePokemon ganador, BattlePokemon perdedor) {
+    /** El lado que perdió a su Pokémon manda otro: el jugador lo elige, el sistema toma el siguiente. */
+    private void pedirReemplazo(boolean ladoA) {
+        if (batallaTerminada || isFinishing() || isDestroyed()) return;
+
+        List<Integer> vivos = new ArrayList<>();
+        List<BattlePokemon> equipo = equipo(ladoA);
+        for (int i = 0; i < equipo.size(); i++) if (!equipo.get(i).estaDerrotado()) vivos.add(i);
+
+        if (!esManual(ladoA) || vivos.size() == 1) {
+            entrarPokemon(ladoA, vivos.get(0));
+            return;
+        }
+
+        String[] opciones = new String[vivos.size()];
+        for (int i = 0; i < vivos.size(); i++) {
+            BattlePokemon p = equipo.get(vivos.get(i));
+            opciones[i] = p.nombre + "   (" + p.getHpActual() + " / " + p.hpMaxima + " HP)";
+        }
+
+        String quien = ladoA ? nombreA : nombreB;
+        new AlertDialog.Builder(this)
+                .setTitle((quien != null ? quien + ": " : "") + "elige tu siguiente Pokémon")
+                .setCancelable(false)
+                .setItems(opciones, (d, cual) -> entrarPokemon(ladoA, vivos.get(cual)))
+                .show();
+    }
+
+    private void entrarPokemon(boolean ladoA, int indice) {
+        if (ladoA) activoA = indice;
+        else activoB = indice;
+
+        pintarPokemon(ladoA);
+
+        View vista = contenedor(ladoA);
+        vista.animate().cancel();
+        vista.setAlpha(1f);
+        vista.setTranslationY(0f);
+        vista.setTranslationX(ladoA ? -vista.getWidth() * 2f : vista.getWidth() * 2f);
+        vista.animate().translationX(0f).setDuration(500).setStartDelay(0)
+                .setInterpolator(new OvershootInterpolator()).start();
+
+        String quien = ladoA ? nombreA : nombreB;
+        agregarBitacora((quien != null ? quien : "Entra") + " envía a " + actual(ladoA).nombre
+                + ".\n" + decidirQuienEmpieza());
+        handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
+    }
+
+    private void terminarBatalla(boolean ganoA) {
         batallaTerminada = true;
+        esperandoJugador = false;
+        barraAccion.setVisibility(View.GONE);
 
         int totalTurnos = motor.getTurnos().size();
-        agregarBitacora("🏆 ¡" + ganador.nombre + " gana la batalla en " + totalTurnos + " turnos!");
-
-        // El perdedor cae y se desvanece
-        View vistaPerdedor = perdedor == pokemonA ? contenedorA : contenedorB;
-        vistaPerdedor.animate().translationY(80f).alpha(0f).setDuration(700).setStartDelay(300).start();
+        String ganador = esPorEquipos() ? dueno(ganoA) : actual(ganoA).nombre;
+        agregarBitacora("🏆 ¡" + ganador + " gana la batalla en " + totalTurnos + " turnos!");
 
         tvTurno.setText("Fin · " + totalTurnos + " turnos");
-        mostrarBanner("🏆 ¡" + ganador.nombre + " gana!");
+        mostrarBanner("🏆 ¡" + ganador + " gana!");
 
-        guardarEnHistorial(ganador);
+        guardarEnHistorial(ganoA);
 
         Intent resultado = new Intent()
-                .putExtra(RESULTADO_GANO_A, ganador == pokemonA)
-                .putExtra(RESULTADO_HP_GANADOR, ganador.getHpActual())
-                .putExtra(RESULTADO_TURNOS, totalTurnos);
+                .putExtra(RESULTADO_GANO_A, ganoA)
+                .putExtra(RESULTADO_HP_GANADOR, actual(ganoA).getHpActual())
+                .putExtra(RESULTADO_TURNOS, totalTurnos)
+                .putExtra(RESULTADO_INDICE_GANADOR, ganoA ? activoA : activoB);
         setResult(RESULT_OK, resultado);
 
         handler.postDelayed(() -> {
@@ -335,25 +542,37 @@ public class BattleArenaActivity extends AppCompatActivity {
         }, PAUSA_REGRESO);
     }
 
-    private void guardarEnHistorial(BattlePokemon ganador) {
+    private void guardarEnHistorial(boolean ganoA) {
         List<String> movimientos = new ArrayList<>();
+        if (esPorEquipos()) {
+            movimientos.add(dueno(true) + ": " + nombresEquipo(equipoA) + "\n"
+                    + dueno(false) + ": " + nombresEquipo(equipoB));
+        }
         for (BattleTurn t : motor.getTurnos()) movimientos.add(t.descripcion());
+
+        // Por equipos se guarda el nombre de cada jugador y el primer Pokémon de cada equipo
+        List<String> lados = esPorEquipos()
+                ? Arrays.asList(dueno(true), dueno(false))
+                : Arrays.asList(actual(true).nombre, actual(false).nombre);
+        List<Integer> ids = Arrays.asList(equipoA.get(0).id, equipoB.get(0).id);
+        String ganador = esPorEquipos() ? dueno(ganoA) : actual(ganoA).nombre;
 
         // Se usa el contexto de la aplicación: la arena puede cerrarse antes de que responda
         Context app = getApplicationContext();
+        HistorialManager.guardarBatalla(modo, lados, ids, ganador, movimientos, guardado -> {
+            if (!Boolean.TRUE.equals(guardado)) {
+                Toast.makeText(app, "No se pudo guardar la batalla en el Historial", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
-        HistorialManager.guardarBatalla(
-                HistorialManager.MODO_EMULATOR,
-                Arrays.asList(pokemonA.nombre, pokemonB.nombre),
-                Arrays.asList(pokemonA.id, pokemonB.id),
-                ganador.nombre,
-                movimientos,
-                guardado -> {
-                    if (!Boolean.TRUE.equals(guardado)) {
-                        Toast.makeText(app, "No se pudo guardar la batalla en el Historial",
-                                Toast.LENGTH_LONG).show();
-                    }
-                });
+    private String nombresEquipo(List<BattlePokemon> equipo) {
+        StringBuilder sb = new StringBuilder();
+        for (BattlePokemon p : equipo) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(p.nombre);
+        }
+        return sb.toString();
     }
 
     // ------------------------------------------------------------------

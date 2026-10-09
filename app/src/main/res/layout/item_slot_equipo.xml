@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Un lugar del equipo (Versus / Torre): vacío muestra "+", lleno muestra el Pokémon -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:clickable="true"
+    android:focusable="true">
+
+    <FrameLayout
+        android:id="@+id/fondoSlot"
+        android:layout_width="68dp"
+        android:layout_height="68dp"
+        android:background="@drawable/bg_mini_normal">
+
+        <ImageView
+            android:id="@+id/imgSlot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="4dp"
+            android:scaleType="fitCenter"
+            android:contentDescription="Pokémon del equipo" />
+
+        <TextView
+            android:id="@+id/tvVacioSlot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="@color/menu_text_soft"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/tvQuitarSlot"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="end|top"
+            android:background="@drawable/bg_modulo_etiqueta"
+            android:gravity="center"
+            android:text="✕"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tvNombreSlot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text=""
+        android:textColor="@color/menu_text"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+</LinearLayout>

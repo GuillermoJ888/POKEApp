@@ -17,6 +17,13 @@ public class ListaPokemon {
 
     private static final int ID_MAXIMO_BASE = 10000;   // arriba de esto son formas alternas (mega, etc.)
 
+    /** Pokémon que se muestran en los buscadores mientras están vacíos. */
+    public static final List<PokemonMini> POPULARES = java.util.Collections.unmodifiableList(java.util.Arrays.asList(
+            new PokemonMini(25, "Pikachu"), new PokemonMini(6, "Charizard"), new PokemonMini(150, "Mewtwo"),
+            new PokemonMini(448, "Lucario"), new PokemonMini(94, "Gengar"), new PokemonMini(9, "Blastoise"),
+            new PokemonMini(3, "Venusaur"), new PokemonMini(149, "Dragonite"), new PokemonMini(143, "Snorlax"),
+            new PokemonMini(133, "Eevee"), new PokemonMini(248, "Tyranitar"), new PokemonMini(445, "Garchomp")));
+
     private static final List<PokemonMini> todos = new ArrayList<>();
     private static final List<String> normalizados = new ArrayList<>();
     private static boolean cargando = false;

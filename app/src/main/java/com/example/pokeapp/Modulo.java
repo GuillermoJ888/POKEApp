@@ -44,9 +44,8 @@ public class Modulo {
         List<Modulo> m = new ArrayList<>();
         m.add(new Modulo("pokedex", "a", "Pokédex", "Busca Pokémon", "📱", R.drawable.ic_pokedex, 0xFFC81E0A, 0xFFFF7A45, PokedexActivity.class));
         m.add(new Modulo("emulator", "b", "Battle Emulator", "Duelo simulado", "⚔️", 0, 0xFF5B21B6, 0xFFA855F7, BattleEmulatorActivity.class));
-        m.add(new Modulo("versus", "c", "Battle Versus", "2 jugadores", "🆚", 0, 0xFF1D4ED8, 0xFF60A5FA, null));
-        m.add(new Modulo("torre_batalla", "", "Torre de Batalla", "Un jefe por piso", "🏰", 0, 0xFF7C2D12, 0xFFEA580C, null));
-        m.add(new Modulo("torre", "d", "Torre Pokémon", "6 niveles", "🗼", 0, 0xFF0F766E, 0xFF2DD4BF, null));
+        m.add(new Modulo("versus", "c", "Battle Versus", "2 jugadores", "🆚", 0, 0xFF1D4ED8, 0xFF60A5FA, VersusActivity.class));
+        m.add(new Modulo("torre", "d", "Torre Pokémon", "6 niveles", "🏰", R.drawable.ic_torre_pisa, 0xFF0F766E, 0xFF2DD4BF, TorreActivity.class));
         m.add(new Modulo("quien", "e", "¿Quién es ese Pokémon?", "Adivina la silueta", "❓", 0, 0xFF1E1B4B, 0xFF4F46E5, null));
         m.add(new Modulo("safari", "f", "Safari Pokémon", "Captura Pokémon", "🌿", 0, 0xFF166534, 0xFF4ADE80, null));
         m.add(new Modulo("tipos", "g", "Maestro de Tipos", "Ventajas de tipo", "🔥", 0, 0xFFB91C1C, 0xFFF59E0B, null));

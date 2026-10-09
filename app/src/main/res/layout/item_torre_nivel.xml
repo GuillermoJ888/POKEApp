@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Un nivel en la escalera de la Torre: docente, nivel, rival y estado -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filaNivel"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_card_menu"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/imgDocenteNivel"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_avatar_perfil"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_docente_silueta"
+        android:contentDescription="Docente del nivel" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTituloNivel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nivel 1 · Docente CESBA 1"
+            android:textColor="@color/menu_text"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDetalleNivel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 Pokémon rival"
+            android:textColor="@color/menu_text_soft"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvEstadoNivel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🔒"
+        android:textSize="20sp" />
+</LinearLayout>

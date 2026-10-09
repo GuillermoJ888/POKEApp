@@ -71,15 +71,35 @@
                 android:background="@drawable/bg_card_perfil"
                 android:layout_marginTop="26dp">
 
-                <!-- Avatar de entrenador con gorra -->
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:background="@drawable/bg_avatar_perfil"
-                    android:clipToOutline="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_avatar_entrenador"
-                    android:contentDescription="Avatar del entrenador con gorra" />
+                <!-- Avatar del entrenador: al tocarlo se elige otro (se guarda local) -->
+                <FrameLayout
+                    android:id="@+id/contenedorAvatar"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="Cambiar avatar">
+
+                    <ImageView
+                        android:id="@+id/imgAvatarPerfil"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_avatar_perfil"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_avatar_entrenador"
+                        android:importantForAccessibility="no" />
+
+                    <TextView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_gravity="end|bottom"
+                        android:background="@drawable/bg_avatar_editar"
+                        android:gravity="center"
+                        android:text="✏️"
+                        android:textSize="15sp" />
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/tvNombrePerfil"

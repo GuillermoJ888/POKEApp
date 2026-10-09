@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono de la Torre Pokémon: torre de arcos (estilo Pisa) con banderita roja -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- pasto -->
+    <path
+        android:fillColor="#5FAE4E"
+        android:fillAlpha="0.9"
+        android:pathData="M18,99 A36,6 0 1 0 90,99 A36,6 0 1 0 18,99 Z" />
+
+    <!-- 10° para compensar el giro de -10° del menú: en el botón se ve derecha -->
+    <group
+        android:rotation="10"
+        android:pivotX="54"
+        android:pivotY="98">
+
+        <!-- cuerpo y sombra del lado derecho -->
+        <path
+            android:fillColor="#F5EBD8"
+            android:pathData="M37,98 H71 V29 H37 Z" />
+        <path
+            android:fillColor="#E2D3B3"
+            android:pathData="M62,98 H71 V29 H62 Z" />
+
+        <!-- arcos de cada piso -->
+        <path
+            android:fillColor="#A8936A"
+            android:pathData="M41,95 v-5 a3,3 0 0,1 6,0 v5 z M51,95 v-5 a3,3 0 0,1 6,0 v5 z M61,95 v-5 a3,3 0 0,1 6,0 v5 z
+                M41,84 v-5 a3,3 0 0,1 6,0 v5 z M51,84 v-5 a3,3 0 0,1 6,0 v5 z M61,84 v-5 a3,3 0 0,1 6,0 v5 z
+                M41,73 v-5 a3,3 0 0,1 6,0 v5 z M51,73 v-5 a3,3 0 0,1 6,0 v5 z M61,73 v-5 a3,3 0 0,1 6,0 v5 z
+                M41,62 v-5 a3,3 0 0,1 6,0 v5 z M51,62 v-5 a3,3 0 0,1 6,0 v5 z M61,62 v-5 a3,3 0 0,1 6,0 v5 z
+                M41,51 v-5 a3,3 0 0,1 6,0 v5 z M51,51 v-5 a3,3 0 0,1 6,0 v5 z M61,51 v-5 a3,3 0 0,1 6,0 v5 z
+                M41,40 v-5 a3,3 0 0,1 6,0 v5 z M51,40 v-5 a3,3 0 0,1 6,0 v5 z M61,40 v-5 a3,3 0 0,1 6,0 v5 z" />
+
+        <!-- cornisas entre pisos -->
+        <path
+            android:fillColor="#E6D7B8"
+            android:strokeColor="#8A7350"
+            android:strokeWidth="1"
+            android:pathData="M35,84 h38 v3 h-38 z M35,73 h38 v3 h-38 z M35,62 h38 v3 h-38 z M35,51 h38 v3 h-38 z M35,40 h38 v3 h-38 z M35,29 h38 v3 h-38 z" />
+
+        <!-- contorno del cuerpo -->
+        <path
+            android:strokeColor="#8A7350"
+            android:strokeWidth="1.8"
+            android:pathData="M37,98 H71 V32 H37 Z" />
+
+        <!-- campanario -->
+        <path
+            android:fillColor="#F5EBD8"
+            android:strokeColor="#8A7350"
+            android:strokeWidth="1.6"
+            android:pathData="M42,29 H66 V18 H42 Z" />
+        <path
+            android:fillColor="#A8936A"
+            android:pathData="M46,27 v-4 a3,3 0 0,1 6,0 v4 z M56,27 v-4 a3,3 0 0,1 6,0 v4 z" />
+        <path
+            android:fillColor="#C9B48A"
+            android:strokeColor="#8A7350"
+            android:strokeWidth="1.4"
+            android:pathData="M40,18 H68 V15 H40 Z M44,15 Q54,8 64,15 Z" />
+
+        <!-- banderita -->
+        <path
+            android:strokeColor="#5A4630"
+            android:strokeWidth="1.6"
+            android:strokeLineCap="round"
+            android:pathData="M54,11 V2" />
+        <path
+            android:fillColor="#E3350D"
+            android:pathData="M54,2 L63,4.5 L54,7 Z" />
+    </group>
+</vector>

@@ -87,13 +87,14 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:contentDescription="Abrir mi perfil"
-                    android:padding="10dp"
-                    android:background="@drawable/bg_avatar_menu"
-                    android:src="@drawable/ic_pokeball_logo" />
+                    android:background="@drawable/bg_avatar_perfil"
+                    android:clipToOutline="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_avatar_entrenador" />
             </LinearLayout>
         </FrameLayout>
 
-        <!-- Los 14 botones, encimados un poco sobre la cabecera -->
+        <!-- Los 13 botones (A–M), encimados un poco sobre la cabecera -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerModulos"
             android:layout_width="match_parent"

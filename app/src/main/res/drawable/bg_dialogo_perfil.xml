@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de la ventana "Elige tu avatar" (colores del perfil) -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="24dp" />
+    <gradient
+        android:angle="270"
+        android:startColor="#3D1F94"
+        android:endColor="#120E33" />
+    <stroke android:width="2dp" android:color="#A78BFA" />
+</shape>
