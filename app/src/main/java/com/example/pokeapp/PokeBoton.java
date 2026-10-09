@@ -137,8 +137,9 @@ public class PokeBoton extends AppCompatButton {
 
         switch (tema) {
             case PIKACHU:
-                oreja(canvas, h * 0.55f, h * 0.34f, h * 0.65f, -h * 0.22f, tema.cuerpo, 0xFF222222, 0.45f);
-                oreja(canvas, h * 1.08f, h * 0.34f, h * 0.65f, h * 0.12f, tema.cuerpo, 0xFF222222, 0.45f);
+                // Orejas con la punta redondeada (no tan puntiagudas)
+                oreja(canvas, h * 0.55f, h * 0.38f, h * 0.65f, -h * 0.20f, tema.cuerpo, 0xFF222222, 0.42f, 0.32f);
+                oreja(canvas, h * 1.08f, h * 0.38f, h * 0.65f, h * 0.12f, tema.cuerpo, 0xFF222222, 0.42f, 0.32f);
                 colaRayo(canvas, w, h);
                 break;
             case CHARMANDER:
@@ -191,10 +192,26 @@ public class PokeBoton extends AppCompatButton {
     /** Oreja triangular que nace del borde de arriba; puede llevar punta de otro color. */
     private void oreja(Canvas c, float cx, float base, float alto, float inclinacion,
                        int color, int colorPunta, float fraccionPunta) {
+        oreja(c, cx, base, alto, inclinacion, color, colorPunta, fraccionPunta, 0f);
+    }
+
+    /**
+     * Igual, pero con la punta redondeada: redondez es el radio de la punta
+     * como fracción de la base (0 = puntiaguda).
+     */
+    private void oreja(Canvas c, float cx, float base, float alto, float inclinacion,
+                       int color, int colorPunta, float fraccionPunta, float redondez) {
         float metida = getHeight() * 0.18f;   // parte que queda escondida bajo el cuerpo
+        float px = cx + inclinacion, py = -alto, r = base * redondez;
+
         path.reset();
         path.moveTo(cx - base / 2f, metida);
-        path.quadTo(cx - base * 0.35f + inclinacion * 0.5f, -alto * 0.45f, cx + inclinacion, -alto);
+        if (r > 0) {
+            path.quadTo(cx - base * 0.35f + inclinacion * 0.5f, -alto * 0.45f, px - r, py + r);
+            path.quadTo(px, py - r * 0.6f, px + r, py + r);   // punta redonda
+        } else {
+            path.quadTo(cx - base * 0.35f + inclinacion * 0.5f, -alto * 0.45f, px, py);
+        }
         path.quadTo(cx + base * 0.35f + inclinacion * 0.5f, -alto * 0.45f, cx + base / 2f, metida);
         path.close();
 
@@ -225,6 +242,14 @@ public class PokeBoton extends AppCompatButton {
         path.close();
         relleno.setColor(tema.cuerpo);
         c.drawPath(path, relleno);
+
+        // La base de la cola (la parte que sale del cuerpo) es café, como la de Pikachu
+        c.save();
+        c.clipRect(w - h, h * 0.40f, w + h, h * 2f);
+        relleno.setColor(0xFF8B5A00);
+        c.drawPath(path, relleno);
+        c.restore();
+
         c.drawPath(path, trazo);
     }
 

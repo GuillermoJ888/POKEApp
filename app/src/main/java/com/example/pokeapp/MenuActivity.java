@@ -6,6 +6,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,6 +71,15 @@ public class MenuActivity extends AppCompatActivity {
 
         recycler.setLayoutManager(layout);
         recycler.setAdapter(new ModuloAdapter(modulos, this::abrirModulo));
+
+        // Android 15+ dibuja la app detrás de la barra de navegación: se suma su alto
+        // al espacio final para que los últimos botones no queden tapados
+        int espacioFinal = recycler.getPaddingBottom();
+        ViewCompat.setOnApplyWindowInsetsListener(recycler, (v, insets) -> {
+            int barra = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), espacioFinal + barra);
+            return insets;
+        });
     }
 
     private void abrirModulo(Modulo modulo) {
