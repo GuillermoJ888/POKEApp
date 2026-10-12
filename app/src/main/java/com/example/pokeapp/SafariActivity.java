@@ -39,7 +39,8 @@ import java.util.Random;
  *   A los Pokémon fuertes (suma de stats alta) se les resta hasta 25 puntos.
  * - Cada safari empieza con 8 Poké Ball, 4 Super Ball y 2 Ultra Ball; termina al acabarse.
  * - Lanzamiento estilo Pokémon GO: se elige la Pokéball con su botón y se desliza con el dedo hacia
- *   el Pokémon. Si va floja o desviada, se pierde. Bola curva (trazo en arco): +10 %; tiro al centro: +5 %.
+ *   el Pokémon. Si va floja o desviada, se pierde. Tiro al centro: +5 %.
+ * - Bola curva (+10 %): antes de lanzarla se gira en círculos con el dedo hasta que empieza a brillar.
  *   Tocar otra vez el botón de la bola elegida la lanza recta, sin bonos.
  * - Si no queda atrapado, el Pokémon puede escapar (25 %). También se puede huir del encuentro.
  * - Los capturados se guardan en la colección del usuario (Firestore: usuarios/{uid}.capturados).
@@ -56,8 +57,10 @@ public class SafariActivity extends AppCompatActivity {
     // Lanzamiento con el dedo (medidas en dp)
     private static final float ARRASTRE_MINIMO = 40f;      // menos que esto no cuenta como lanzamiento
     private static final float VELOCIDAD_MINIMA = 250f;    // dp/s hacia arriba para soltar la bola
-    private static final float VELOCIDAD_ALCANCE = 600f;   // dp/s para que llegue hasta el Pokémon
-    private static final float DESVIO_CURVA = 22f;         // cuánto se arquea el trazo para ser bola curva
+    private static final float VELOCIDAD_ALCANCE = 500f;   // dp/s para que llegue hasta el Pokémon
+    private static final float PASO_GIRO = 8f;             // cada cuántos dp se mide hacia dónde va el dedo
+    private static final double GIRO_CURVA = Math.PI * 1.6;   // casi una vuelta completa = bola curva
+    private static final float AYUDA_PUNTERIA = 0.6f;      // 1 = sin ayuda; menos = se acerca más al Pokémon
 
     private final Random random = new Random();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -71,6 +74,12 @@ public class SafariActivity extends AppCompatActivity {
 
     // Recorrido del dedo mientras arrastra la bola (para sacar velocidad y curva)
     private final List<float[]> trazo = new ArrayList<>();   // {x, y, milisegundos}
+
+    // Giro de la bola: se suman las vueltas que da el dedo; al pasar GIRO_CURVA queda "cargada"
+    private float giroX, giroY;        // último punto donde se midió el rumbo
+    private double rumbo, giro;        // rumbo anterior y vueltas acumuladas (radianes; + = sentido del reloj)
+    private boolean hayRumbo;
+    private int curva;                 // 0 = recta; +1 / −1 = bola curva hacia la derecha / izquierda
     private int capturadosHoy;
     private List<PokemonMini> coleccion = new ArrayList<>();
 
@@ -208,7 +217,8 @@ public class SafariActivity extends AppCompatActivity {
         tvNombre.setText(p.nombre + (yaCapturado(p.id) ? " ✔" : ""));
         tvDatos.setText(String.format(Locale.ROOT, "N.º %d · %s\nHP %d · Ataque %d · Defensa %d · Velocidad %d",
                 p.id, p.tiposTexto(), p.hpMaxima, p.ataque, p.defensa, p.velocidad));
-        tvMensaje.setText("¡Un " + p.nombre + " salvaje apareció!\nDesliza la Pokéball hacia él.");
+        tvMensaje.setText("¡Un " + p.nombre + " salvaje apareció!\nDesliza la Pokéball hacia él. "
+                + "Si antes la giras en círculos sale bola curva (+" + BONO_CURVA + " %).");
         ocupado = false;
         prepararBola();
         pintar();
@@ -227,7 +237,7 @@ public class SafariActivity extends AppCompatActivity {
     private void elegirBola(int tipo) {
         if (ocupado || salvaje == null || bolas[tipo] <= 0) return;
         if (tipo == seleccionada) {
-            lanzar(0f, 1f, 0f, false);
+            lanzar(0f, 1f, 0, false);
             return;
         }
         seleccionada = tipo;
@@ -253,10 +263,12 @@ public class SafariActivity extends AppCompatActivity {
         imgBola.setScaleX(1f);
         imgBola.setScaleY(1f);
         imgBola.setAlpha(1f);
+        imgBola.clearColorFilter();
+        curva = 0;
         imgBola.setVisibility(bolas[seleccionada] > 0 ? View.VISIBLE : View.INVISIBLE);
     }
 
-    /** El dedo arrastra la bola; al soltarla hacia arriba con impulso, sale lanzada. */
+    /** El dedo arrastra la bola (y puede girarla); al soltarla hacia arriba con impulso, sale lanzada. */
     private boolean alTocarBola(View bola, MotionEvent e) {
         switch (e.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
@@ -264,6 +276,10 @@ public class SafariActivity extends AppCompatActivity {
                 bola.getParent().requestDisallowInterceptTouchEvent(true);   // que la pantalla no se desplace
                 trazo.clear();
                 trazo.add(new float[]{e.getRawX(), e.getRawY(), e.getEventTime()});
+                giroX = e.getRawX();
+                giroY = e.getRawY();
+                giro = 0;
+                hayRumbo = false;
                 return true;
 
             case MotionEvent.ACTION_MOVE:
@@ -271,6 +287,7 @@ public class SafariActivity extends AppCompatActivity {
                 trazo.add(new float[]{e.getRawX(), e.getRawY(), e.getEventTime()});
                 bola.setTranslationX(e.getRawX() - trazo.get(0)[0]);
                 bola.setTranslationY(e.getRawY() - trazo.get(0)[1]);
+                medirGiro(e.getRawX(), e.getRawY());
                 return true;
 
             case MotionEvent.ACTION_UP:
@@ -284,6 +301,34 @@ public class SafariActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Suma cuánto va dando vuelta el dedo. Un trazo recto casi no suma; los círculos suman una vuelta
+     * cada uno. Al juntar casi una vuelta la bola queda cargada como bola curva (brilla y vibra).
+     */
+    private void medirGiro(float x, float y) {
+        float dx = x - giroX, dy = y - giroY;
+        if (Math.hypot(dx, dy) < PASO_GIRO * dp) return;
+        double nuevo = Math.atan2(dy, dx);
+        if (hayRumbo) {
+            double cambio = nuevo - rumbo;
+            if (cambio > Math.PI) cambio -= 2 * Math.PI;
+            if (cambio < -Math.PI) cambio += 2 * Math.PI;
+            giro += cambio;
+            imgBola.setRotation((float) Math.toDegrees(giro));   // la bola gira junto con el dedo
+        }
+        rumbo = nuevo;
+        hayRumbo = true;
+        giroX = x;
+        giroY = y;
+
+        if (curva == 0 && Math.abs(giro) >= GIRO_CURVA) {
+            curva = giro > 0 ? 1 : -1;
+            imgBola.setColorFilter(0x66FFE066);   // brillo dorado: ya es bola curva
+            Efectos.vibrar(this, 40);
+            tvMensaje.setText("🌀 ¡Bola curva lista! Ahora lánzala hacia " + salvaje.nombre + ".");
+        }
+    }
+
     private void soltarBola(boolean cancelado) {
         float[] inicio = trazo.get(0), fin = trazo.get(trazo.size() - 1);
 
@@ -294,34 +339,28 @@ public class SafariActivity extends AppCompatActivity {
         float vx = (fin[0] - trazo.get(i)[0]) / segundos / dp;
         float vy = (fin[1] - trazo.get(i)[1]) / segundos / dp;
 
-        boolean lanzada = !cancelado && fin[1] - inicio[1] < -ARRASTRE_MINIMO * dp && vy < -VELOCIDAD_MINIMA;
+        // Cuenta como lanzamiento solo si el último impulso va claramente hacia arriba
+        // (soltarla a media vuelta, yendo de lado o hacia abajo, no la lanza)
+        boolean lanzada = !cancelado && fin[1] - inicio[1] < -ARRASTRE_MINIMO * dp
+                && vy < -VELOCIDAD_MINIMA && Math.abs(vx) < -vy;
         if (!lanzada) {
-            // Solo la movió: regresa a su lugar y no se gasta
+            // Solo la movió: regresa a su lugar, no se gasta y conserva el giro si ya estaba cargada
             imgBola.animate().translationX(0f).translationY(0f).setDuration(180).start();
             return;
         }
 
-        // Curva: qué tanto se separó el trazo de la línea recta entre el inicio y el final (+ derecha, − izquierda)
-        float cx = fin[0] - inicio[0], cy = fin[1] - inicio[1];
-        float largo = (float) Math.hypot(cx, cy);
-        float desvio = 0f;
-        for (float[] p : trazo) {
-            float d = (cx * (p[1] - inicio[1]) - cy * (p[0] - inicio[0])) / largo;
-            if (Math.abs(d) > Math.abs(desvio)) desvio = d;
-        }
-        desvio /= dp;
-
-        float inclinacion = Math.max(-1.5f, Math.min(1.5f, vx / -vy));   // hacia dónde apuntaba el dedo al soltar
+        float inclinacion = vx / -vy;   // hacia dónde apuntaba el dedo al soltar (entre −1 y 1)
         float fuerza = Math.min(1f, -vy / VELOCIDAD_ALCANCE);
-        lanzar(inclinacion, fuerza, Math.abs(desvio) >= DESVIO_CURVA ? desvio : 0f, true);
+        lanzar(inclinacion, fuerza, curva, true);
     }
 
     /**
      * 1) La bola vuela desde donde está hasta la altura del Pokémon.
      * inclinacion = cuánto se va de lado por cada tramo que sube; fuerza 0–1 (menos de 1 se queda corta);
-     * curva = arco del trazo en dp (0 = recta); conBonos = false en el lanzamiento con botón.
+     * curva = 0 recta, +1 / −1 bola curva (solo cambia el vuelo y el bono, no a dónde cae);
+     * conBonos = false en el lanzamiento con botón.
      */
-    private void lanzar(float inclinacion, float fuerza, float curva, boolean conBonos) {
+    private void lanzar(float inclinacion, float fuerza, int curva, boolean conBonos) {
         ocupado = true;
         int tipo = seleccionada;
         bolas[tipo]--;
@@ -334,15 +373,17 @@ public class SafariActivity extends AppCompatActivity {
         float centroPokemonY = imgPokemon.getTop() + imgPokemon.getHeight() / 2f
                 - (imgBola.getTop() + imgBola.getHeight() / 2f);
         float subida = Math.min(0f, centroPokemonY - y0);            // negativo: hacia arriba
-        float x1 = conBonos ? x0 + inclinacion * -subida * fuerza : centroPokemonX;
+        // Cae hacia donde apuntó el dedo, con un poco de ayuda para acercarla al Pokémon
+        float apuntado = x0 + inclinacion * -subida * fuerza;
+        float x1 = conBonos ? centroPokemonX + (apuntado - centroPokemonX) * AYUDA_PUNTERIA : centroPokemonX;
         float y1 = y0 + subida * fuerza;
 
         float distancia = Math.abs(x1 - centroPokemonX);
         boolean llega = fuerza >= 1f;
-        boolean acierta = llega && distancia <= imgPokemon.getWidth() * 0.42f;
-        boolean alCentro = conBonos && acierta && distancia <= imgPokemon.getWidth() * 0.14f;
-        boolean esCurva = conBonos && curva != 0f;
-        float arco = Math.max(-90f, Math.min(90f, curva * 1.6f)) * dp;
+        boolean acierta = llega && distancia <= imgPokemon.getWidth() * 0.5f;
+        boolean alCentro = conBonos && acierta && distancia <= imgPokemon.getWidth() * 0.16f;
+        boolean esCurva = conBonos && curva != 0;
+        float arco = curva * 85f * dp;
 
         tvMensaje.setText(esCurva ? "¡Bola curva con " + BOLAS[tipo] + "!" : "¡Lanzaste una " + BOLAS[tipo] + "!");
 

@@ -21,6 +21,9 @@ public class SplashActivity extends AppCompatActivity {
     private static final long DURACION_SPLASH_MS = 1800;
     private static final long DURACION_MAXIMA_VIDEO_MS = 12000;
 
+    /** true = reproducir res/raw/splash_video.mp4 al abrir la app; false = solo la imagen con la barra. */
+    private static final boolean USAR_VIDEO = false;
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private boolean yaSalio;
 
@@ -41,6 +44,7 @@ public class SplashActivity extends AppCompatActivity {
      * se entra a la app. Si no existe o falla, queda la imagen con la barra de carga de siempre.
      */
     private boolean reproducirVideo() {
+        if (!USAR_VIDEO) return false;
         int video = getResources().getIdentifier("splash_video", "raw", getPackageName());
         if (video == 0) return false;
 
