@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/bg_splash"
-        android:contentDescription="Splash PokéApp V2" />
+        android:contentDescription="@string/t_splash_pokeapp_v2" />
 
     <!-- Barra de carga abajo -->
     <LinearLayout
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Cargando aventuras..."
+            android:text="@string/t_cargando_aventuras"
             android:textColor="@color/poke_white"
             android:textSize="12sp" />
     </LinearLayout>

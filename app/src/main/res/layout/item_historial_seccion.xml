@@ -12,7 +12,7 @@
         android:id="@+id/tvSeccion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="HOY"
+        android:text="@string/t_hoy"
         android:textColor="@color/menu_red"
         android:textSize="12sp"
         android:textStyle="bold"

@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:text="←  Regresar"
+            android:text="@string/t_regresar_2"
             android:textColor="@color/poke_gray_text"
             android:layout_marginTop="12dp" />
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="24dp"
-            android:text="Crear una cuenta"
+            android:text="@string/t_crear_una_cuenta"
             android:textColor="@color/poke_white"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_field_rounded"
-            android:hint="Nombre de entrenador"
+            android:hint="@string/t_nombre_de_entrenador"
             android:textColorHint="@color/poke_gray_text"
             android:textColor="@color/poke_white"
             android:inputType="textPersonName" />
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_field_rounded"
-            android:hint="Correo electrónico"
+            android:hint="@string/t_correo_electronico"
             android:textColorHint="@color/poke_gray_text"
             android:textColor="@color/poke_white"
             android:inputType="textEmailAddress" />
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_field_rounded"
-            android:hint="Contraseña (mínimo 6 caracteres)"
+            android:hint="@string/t_contrasena_minimo_6_caracteres"
             android:textColorHint="@color/poke_gray_text"
             android:textColor="@color/poke_white"
             android:inputType="textPassword" />
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:background="@drawable/bg_field_rounded"
-            android:hint="Confirmar contraseña"
+            android:hint="@string/t_confirmar_contrasena"
             android:textColorHint="@color/poke_gray_text"
             android:textColor="@color/poke_white"
             android:inputType="textPassword" />
@@ -88,7 +88,7 @@
             android:layout_height="52dp"
             android:layout_marginTop="36dp"
             android:layout_marginBottom="24dp"
-            android:text="CREAR CUENTA"
+            android:text="@string/t_crear_cuenta"
             android:textColor="@color/poke_blue_dark"
             android:textStyle="bold" />
 

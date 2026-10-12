@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Vibración en golpes y capturas (se puede apagar en Configuración) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Batalla entre dispositivos (Nearby Connections: Bluetooth + WiFi, cambian según Android) -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -20,6 +22,7 @@
 
     <!-- Toda la app va en vertical: al girar el teléfono no se recrea la pantalla ni se pierde lo elegido -->
     <application
+        android:name=".PokeApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -28,6 +31,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.POKEApp">
+
+        <!-- Recuerda el idioma elegido en Configuración (Android 12 o anterior) -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
 
         <!-- Splash = pantalla de inicio -->
         <activity

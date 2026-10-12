@@ -209,7 +209,8 @@ public class QuienEsActivity extends AppCompatActivity {
                     + " · Defensa " + secreto.defensa + " · Velocidad " + secreto.velocidad);
             btnStats.setAlpha(0.4f);
         } else if (cual == 3) {
-            if (!pistaCry) {
+            // Con el sonido apagado no se cobra la pista (reproducirCry avisa por qué no suena)
+            if (!pistaCry && com.example.pokeapp.data.Preferencias.sonido(this)) {
                 pistaCry = true;
                 valorPregunta -= COSTO_CRY;
                 btnCry.setAlpha(0.4f);
@@ -224,6 +225,10 @@ public class QuienEsActivity extends AppCompatActivity {
     }
 
     private void reproducirCry() {
+        if (!com.example.pokeapp.data.Preferencias.sonido(this)) {
+            Toast.makeText(this, "El sonido está desactivado en Configuración", Toast.LENGTH_SHORT).show();
+            return;
+        }
         soltarCry();
         cry = new MediaPlayer();
         try {

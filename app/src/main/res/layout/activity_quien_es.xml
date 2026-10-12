@@ -34,7 +34,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:contentDescription="Regresar" />
+                android:contentDescription="@string/t_regresar" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -46,7 +46,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="❓ ¿Quién es ese Pokémon?"
+                    android:text="@string/t_quien_es_ese_pokemon"
                     android:textColor="#FFFFFF"
                     android:textSize="19sp"
                     android:textStyle="bold" />
@@ -55,7 +55,7 @@
                     android:id="@+id/tvRecordQuien"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🏆 Récord: 0"
+                    android:text="@string/t_record_0"
                     android:textColor="#FFD9D2"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -89,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="14dp"
-                    android:text="🔥 Racha 0"
+                    android:text="@string/t_racha_0"
                     android:textColor="@color/menu_red"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -118,7 +118,7 @@
                     android:layout_height="190dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_pokeball_logo"
-                    android:contentDescription="Silueta del Pokémon" />
+                    android:contentDescription="@string/t_silueta_del_pokemon" />
 
                 <TextView
                     android:id="@+id/tvPistasQuien"
@@ -138,7 +138,7 @@
                 android:layout_marginTop="14dp"
                 android:gravity="center"
                 android:minLines="2"
-                android:text="Adivina el Pokémon por su silueta. Cada acierto vale 100 puntos; las pistas ayudan, pero restan. Tienes 3 vidas."
+                android:text="@string/t_adivina_el_pokemon_por_su_silueta_"
                 android:textColor="@color/menu_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -160,7 +160,7 @@
                     android:layout_margin="4dp"
                     android:gravity="center"
                     android:background="@drawable/bg_boton_cambiar"
-                    android:text="Tipo"
+                    android:text="@string/t_tipo"
                     android:textColor="#142036"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -173,7 +173,7 @@
                     android:layout_margin="4dp"
                     android:gravity="center"
                     android:background="@drawable/bg_boton_cambiar"
-                    android:text="Stats"
+                    android:text="@string/t_stats"
                     android:textColor="#142036"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -186,7 +186,7 @@
                     android:layout_margin="4dp"
                     android:gravity="center"
                     android:background="@drawable/bg_boton_cambiar"
-                    android:text="Cry"
+                    android:text="@string/t_cry"
                     android:textColor="#142036"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -205,7 +205,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="40dp"
-                android:text="▶ Jugar"
+                android:text="@string/t_jugar"
                 android:textSize="17sp" />
         </LinearLayout>
     </LinearLayout>

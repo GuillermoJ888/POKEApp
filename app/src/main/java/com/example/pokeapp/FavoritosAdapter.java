@@ -19,15 +19,20 @@ import java.util.Locale;
 /** Adaptador del RecyclerView de favoritos: recicla las filas en vez de crearlas todas. */
 public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.FavoritoViewHolder> {
 
-    public interface OnFavoritoClick {
+    /** Lo que se puede hacer con cada favorito: abrir su detalle, oír su cry o quitarlo. */
+    public interface Acciones {
         void alTocar(Favorito favorito);
+
+        void alEscuchar(Favorito favorito);
+
+        void alEliminar(Favorito favorito);
     }
 
     private final List<Favorito> items = new ArrayList<>();
-    private final OnFavoritoClick listener;
+    private final Acciones acciones;
 
-    public FavoritosAdapter(OnFavoritoClick listener) {
-        this.listener = listener;
+    public FavoritosAdapter(Acciones acciones) {
+        this.acciones = acciones;
     }
 
     public void actualizar(List<Favorito> nuevos) {
@@ -55,7 +60,9 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.Favo
                 .load(favorito.getSpriteUrl())
                 .into(holder.imgSprite);
 
-        holder.itemView.setOnClickListener(v -> listener.alTocar(favorito));
+        holder.itemView.setOnClickListener(v -> acciones.alTocar(favorito));
+        holder.btnCry.setOnClickListener(v -> acciones.alEscuchar(favorito));
+        holder.btnEliminar.setOnClickListener(v -> acciones.alEliminar(favorito));
     }
 
     @Override
@@ -66,12 +73,15 @@ public class FavoritosAdapter extends RecyclerView.Adapter<FavoritosAdapter.Favo
     static class FavoritoViewHolder extends RecyclerView.ViewHolder {
         final ImageView imgSprite;
         final TextView tvNombre, tvNumero;
+        final View btnCry, btnEliminar;
 
         FavoritoViewHolder(@NonNull View itemView) {
             super(itemView);
             imgSprite = itemView.findViewById(R.id.imgSpriteFavorito);
             tvNombre = itemView.findViewById(R.id.tvNombreFavorito);
             tvNumero = itemView.findViewById(R.id.tvNumeroFavorito);
+            btnCry = itemView.findViewById(R.id.btnCryFavorito);
+            btnEliminar = itemView.findViewById(R.id.btnEliminarFavorito);
         }
     }
 }

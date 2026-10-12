@@ -126,6 +126,22 @@ public class FavoritosManager {
         });
     }
 
+    /** Quita un Pokémon de favoritos. Devuelve true si se pudo (ver ultimoError() si no). */
+    public static void quitar(int id, @NonNull Resultado<Boolean> callback) {
+        CollectionReference col = coleccion();
+        if (col == null) {
+            callback.alTerminar(false);
+            return;
+        }
+
+        col.document(String.valueOf(id)).delete()
+                .addOnSuccessListener(v -> callback.alTerminar(true))
+                .addOnFailureListener(e -> {
+                    registrarError(e);
+                    callback.alTerminar(false);
+                });
+    }
+
     public static void obtenerTodos(@NonNull Resultado<List<Favorito>> callback) {
         CollectionReference col = coleccion();
         if (col == null) {

@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:gravity="center"
-        android:text="¡Nivel superado!"
+        android:text="@string/t_nivel_superado"
         android:textColor="@color/menu_text"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:layout_marginTop="40dp"
-        android:text="Siguiente nivel" />
+        android:text="@string/t_siguiente_nivel" />
 
     <com.example.pokeapp.PokeBoton
         android:id="@+id/btnSecundarioResultado"
@@ -52,5 +52,5 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
-        android:text="Salir" />
+        android:text="@string/t_salir" />
 </LinearLayout>

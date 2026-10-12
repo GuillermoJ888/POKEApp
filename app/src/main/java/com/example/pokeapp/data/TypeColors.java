@@ -35,7 +35,12 @@ public class TypeColors {
         return Color.parseColor(hex != null ? hex : "#777777");
     }
 
+    /** Nombre del tipo en el idioma de la app (español o inglés). */
     public static String traducir(String tipo) {
+        // La PokéAPI ya da los tipos en inglés: solo se pone la primera letra en mayúscula
+        if (Preferencias.esIngles()) {
+            return tipo.isEmpty() ? tipo : Character.toUpperCase(tipo.charAt(0)) + tipo.substring(1);
+        }
         switch (tipo) {
             case "normal": return "Normal";
             case "fire": return "Fuego";

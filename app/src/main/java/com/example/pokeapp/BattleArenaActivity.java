@@ -529,6 +529,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
 
         ocultarBanner();
+        Efectos.cry(this, actual(true).id);   // grito del Pokémon de abajo al empezar
         if (espejo) {
             // El anfitrión decide quién empieza y lo avisa con el primer "turno"
             agregarBitacora("¡" + dueno(true) + " vs " + dueno(false) + "!");
@@ -701,10 +702,13 @@ public class BattleArenaActivity extends AppCompatActivity {
         animarAtaque(contenedor(ladoA), ladoA ? 40f : -40f);
         if (turno.fallo) {
             textoFlotante(contenedor(!ladoA), "¡Falló!", 0xFF8A93A6, 22);
+            Efectos.fallo(this);
         } else if (turno.sinEfecto()) {
             textoFlotante(contenedor(!ladoA), "No le afecta", 0xFF8A93A6, 20);
+            Efectos.fallo(this);
         } else {
             animarGolpe(contenedor(!ladoA), turno);
+            Efectos.golpe(this, turno.critico);   // sonido y vibración (según Configuración)
         }
         actualizarBarraHp(ladoA ? barraHpB : barraHpA, ladoA ? tvHpB : tvHpA, defensor, true);
         agregarBitacora(turno.descripcion());
@@ -874,6 +878,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         else activoB = indice;
 
         pintarPokemon(ladoA);
+        Efectos.cry(this, actual(ladoA).id);   // su grito al entrar
 
         View vista = contenedor(ladoA);
         vista.animate().cancel();
@@ -901,6 +906,8 @@ public class BattleArenaActivity extends AppCompatActivity {
 
         tvTurno.setText("Fin · " + totalTurnos + " turnos");
         mostrarBanner("🏆 ¡" + ganador + " gana!");
+        Efectos.victoria(this);
+        Efectos.cry(this, actual(ganoA).id);
 
         guardarEnHistorial(ganoA);
 

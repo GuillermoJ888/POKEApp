@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:padding="4dp"
             android:scaleType="fitCenter"
-            android:contentDescription="Pokémon del equipo" />
+            android:contentDescription="@string/t_pokemon_del_equipo" />
 
         <TextView
             android:id="@+id/tvVacioSlot"

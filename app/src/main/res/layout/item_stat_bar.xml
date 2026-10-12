@@ -10,7 +10,7 @@
         android:id="@+id/tvEtiquetaStat"
         android:layout_width="78dp"
         android:layout_height="wrap_content"
-        android:text="HP"
+        android:text="@string/t_hp"
         android:textColor="@color/poke_gray_text"
         android:textSize="11sp" />
 

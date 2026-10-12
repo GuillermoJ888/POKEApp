@@ -56,8 +56,8 @@ public class ModuloAdapter extends RecyclerView.Adapter<ModuloAdapter.ModuloView
         boolean activo = modulo.estaActivo();
         float densidad = ctx.getResources().getDisplayMetrics().density;
 
-        h.tvTitulo.setText(modulo.titulo);
-        h.tvDescripcion.setText(modulo.descripcion);
+        h.tvTitulo.setText(modulo.titulo(ctx));
+        h.tvDescripcion.setText(modulo.descripcion(ctx));
         h.tvProximamente.setVisibility(activo ? View.GONE : View.VISIBLE);
 
         // Fondo a toda la tarjeta: degradado del módulo con esquinas redondeadas
@@ -107,7 +107,7 @@ public class ModuloAdapter extends RecyclerView.Adapter<ModuloAdapter.ModuloView
             }
 
             if (esPerfil) {
-                h.imgIcono.setImageResource(AvatarManager.obtener(ctx).dibujo);
+                AvatarManager.mostrar(ctx, h.imgIcono);   // dibujo o foto propia
                 h.imgIcono.setVisibility(View.VISIBLE);
                 h.tvEmoji.setVisibility(View.GONE);
             } else if (modulo.iconoRes != 0) {

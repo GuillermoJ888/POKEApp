@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ventana de confirmación con el estilo de la app (la muestra Dialogos.confirmar) -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="@drawable/bg_card_menu"
+    android:padding="22dp">
+
+    <!-- Emoji dentro de un círculo -->
+    <TextView
+        android:id="@+id/tvEmojiConfirmar"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:background="@drawable/bg_confirmar_icono"
+        android:gravity="center"
+        android:text="❓"
+        android:textSize="40sp" />
+
+    <TextView
+        android:id="@+id/tvTituloConfirmar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="@string/t_seguro"
+        android:textColor="@color/menu_text"
+        android:textSize="21sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvMensajeConfirmar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/menu_text_soft"
+        android:textSize="14sp"
+        android:lineSpacingExtra="3dp" />
+
+    <com.example.pokeapp.PokeBoton
+        android:id="@+id/btnAceptarConfirmar"
+        app:tema="charmander"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="34dp"
+        android:text="@string/t_aceptar" />
+
+    <com.example.pokeapp.PokeBoton
+        android:id="@+id/btnCancelarConfirmar"
+        app:tema="snorlax"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="26dp"
+        android:text="@string/t_cancelar" />
+</LinearLayout>

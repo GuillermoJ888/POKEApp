@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="¡RIVAL ENCONTRADO!"
+        android:text="@string/t_rival_encontrado"
         android:textColor="#FACC15"
         android:textSize="12sp"
         android:textStyle="bold"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:gravity="center"
-        android:text="¿Pelear contra Rival?"
+        android:text="@string/t_pelear_contra_rival"
         android:textColor="#FFFFFF"
         android:textSize="21sp"
         android:textStyle="bold" />
@@ -48,7 +48,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CÓDIGO"
+            android:text="@string/t_codigo"
             android:textColor="#C9D1E8"
             android:textSize="11sp"
             android:textStyle="bold"
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Debe ser el mismo en los dos celulares"
+        android:text="@string/t_debe_ser_el_mismo_en_los_dos_celul"
         android:textColor="#C9D1E8"
         android:textSize="13sp" />
 
@@ -89,7 +89,7 @@
             android:layout_marginEnd="6dp"
             android:gravity="center"
             android:background="@drawable/bg_button_outline"
-            android:text="Rechazar"
+            android:text="@string/t_rechazar"
             android:textColor="#FFFFFF"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -102,7 +102,7 @@
             android:layout_marginStart="6dp"
             android:gravity="center"
             android:background="@drawable/bg_boton_cambiar"
-            android:text="⚔️ Aceptar"
+            android:text="@string/t_aceptar_2"
             android:textColor="#142036"
             android:textSize="15sp"
             android:textStyle="bold" />

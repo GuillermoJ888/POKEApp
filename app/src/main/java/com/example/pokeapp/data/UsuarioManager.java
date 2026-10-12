@@ -6,9 +6,11 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -195,6 +197,84 @@ public class UsuarioManager {
             }
             callback.alTerminar(lista);
         }).addOnFailureListener(e -> callback.alTerminar(new ArrayList<>()));
+    }
+
+    // Campos de usuarios/{uid} donde cada minijuego guarda su mejor marca
+    public static final String RECORD_QUIEN = "recordQuien";
+    public static final String RACHA_QUIEN = "rachaQuien";
+    public static final String RECORD_TIPOS = "recordTipos";
+    public static final String RECORD_MEMORY = "recordMemory";
+
+    /** Récords de los minijuegos y tamaño de la colección del Safari, para Mi perfil. */
+    public static class ResumenJuegos {
+        public final int recordQuien, rachaQuien, recordTipos, recordMemory, capturados;
+
+        ResumenJuegos(int recordQuien, int rachaQuien, int recordTipos, int recordMemory, int capturados) {
+            this.recordQuien = recordQuien;
+            this.rachaQuien = rachaQuien;
+            this.recordTipos = recordTipos;
+            this.recordMemory = recordMemory;
+            this.capturados = capturados;
+        }
+    }
+
+    /** Lee todo en una sola consulta (si falla o no hay sesión, todo en 0). */
+    public static void obtenerResumenJuegos(@NonNull FavoritosManager.Resultado<ResumenJuegos> callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(new ResumenJuegos(0, 0, 0, 0, 0));
+            return;
+        }
+
+        doc.get().addOnSuccessListener(snapshot -> {
+            Object capturados = snapshot.get("capturados");
+            callback.alTerminar(new ResumenJuegos(
+                    valor(snapshot.getLong(RECORD_QUIEN)),
+                    valor(snapshot.getLong(RACHA_QUIEN)),
+                    valor(snapshot.getLong(RECORD_TIPOS)),
+                    valor(snapshot.getLong(RECORD_MEMORY)),
+                    capturados instanceof List ? ((List<?>) capturados).size() : 0));
+        }).addOnFailureListener(e -> callback.alTerminar(new ResumenJuegos(0, 0, 0, 0, 0)));
+    }
+
+    /**
+     * Configuración → Reiniciar progreso: deja en cero victorias, derrotas y medallas,
+     * borra los récords de minijuegos, la colección del Safari y el historial de batallas.
+     * NO borra la cuenta ni los favoritos. Devuelve true si se pudo.
+     */
+    public static void reiniciarProgreso(@NonNull FavoritosManager.Resultado<Boolean> callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(false);
+            return;
+        }
+
+        Map<String, Object> datos = new HashMap<>();
+        datos.put("victorias", 0);
+        datos.put("derrotas", 0);
+        datos.put("medallas", 0);
+        datos.put("medallasObtenidas", FieldValue.delete());
+        datos.put("capturados", FieldValue.delete());
+        datos.put(RECORD_QUIEN, FieldValue.delete());
+        datos.put(RACHA_QUIEN, FieldValue.delete());
+        datos.put(RECORD_TIPOS, FieldValue.delete());
+        datos.put(RECORD_MEMORY, FieldValue.delete());
+
+        doc.set(datos, SetOptions.merge()).addOnSuccessListener(v ->
+                // El historial es una subcolección: se borra documento por documento, en un lote
+                doc.collection("historial").get().addOnSuccessListener(batallas -> {
+                    WriteBatch lote = FirebaseFirestore.getInstance().batch();
+                    int enLote = 0;
+                    for (DocumentSnapshot batalla : batallas.getDocuments()) {
+                        if (enLote == 450) break;   // un lote admite hasta 500 operaciones
+                        lote.delete(batalla.getReference());
+                        enLote++;
+                    }
+                    lote.commit()
+                            .addOnSuccessListener(x -> callback.alTerminar(true))
+                            .addOnFailureListener(e -> callback.alTerminar(false));
+                }).addOnFailureListener(e -> callback.alTerminar(false))
+        ).addOnFailureListener(e -> callback.alTerminar(false));
     }
 
     public static final int MAX_MEDALLAS = 10;

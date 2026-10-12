@@ -52,9 +52,9 @@ public class MenuActivity extends AppCompatActivity {
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
 
         if (usuario != null && usuario.getDisplayName() != null && !usuario.getDisplayName().isEmpty()) {
-            tvSaludo.setText("¡Hola, " + usuario.getDisplayName() + "!");
+            tvSaludo.setText(getString(R.string.menu_hola, usuario.getDisplayName()));
         } else {
-            tvSaludo.setText("¡Hola, Entrenador!");
+            tvSaludo.setText(getString(R.string.menu_hola, getString(R.string.menu_entrenador)));
         }
     }
 
@@ -99,7 +99,7 @@ public class MenuActivity extends AppCompatActivity {
         } else {
             Toast.makeText(
                     this,
-                    modulo.titulo + " llega en una próxima fase del proyecto",
+                    getString(R.string.menu_proximamente, modulo.titulo(this)),
                     Toast.LENGTH_SHORT
             ).show();
         }

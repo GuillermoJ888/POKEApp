@@ -34,7 +34,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:contentDescription="Regresar" />
+                android:contentDescription="@string/t_regresar" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -46,7 +46,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🔥 Maestro de Tipos"
+                    android:text="@string/t_maestro_de_tipos_2"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -55,7 +55,7 @@
                     android:id="@+id/tvRecordTipos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🏆 Récord: 0"
+                    android:text="@string/t_record_0"
                     android:textColor="#FFD9D2"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -89,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="14dp"
-                    android:text="Nivel 1"
+                    android:text="@string/t_nivel_1"
                     android:textColor="@color/menu_red"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -128,14 +128,14 @@
                     android:layout_height="150dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_pokeball_logo"
-                    android:contentDescription="Pokémon rival" />
+                    android:contentDescription="@string/t_pokemon_rival" />
 
                 <TextView
                     android:id="@+id/tvNombreTipos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Maestro de Tipos"
+                    android:text="@string/t_maestro_de_tipos"
                     android:textColor="@color/menu_text"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -144,7 +144,7 @@
                     android:id="@+id/tvTiposRival"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ventajas y desventajas"
+                    android:text="@string/t_ventajas_y_desventajas"
                     android:textColor="@color/menu_text_soft"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -157,7 +157,7 @@
                 android:layout_marginTop="14dp"
                 android:gravity="center"
                 android:minLines="2"
-                android:text="Toca el tipo de ataque súper eficaz contra el Pokémon antes de que se acabe el tiempo. Entre más rápido, más puntos. Tienes 3 vidas."
+                android:text="@string/t_toca_el_tipo_de_ataque_super_efica"
                 android:textColor="@color/menu_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -175,7 +175,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="40dp"
-                android:text="▶ Jugar"
+                android:text="@string/t_jugar"
                 android:textSize="17sp" />
         </LinearLayout>
     </LinearLayout>

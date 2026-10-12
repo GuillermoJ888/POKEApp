@@ -50,14 +50,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="26sp"
                     android:textStyle="bold"
-                    android:contentDescription="Regresar" />
+                    android:contentDescription="@string/t_regresar" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="10dp"
-                    android:text="📡 Entre dispositivos"
+                    android:text="@string/t_entre_dispositivos"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -73,7 +73,7 @@
                     android:paddingEnd="18dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="📜 Historial"
+                    android:text="@string/t_historial"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -89,7 +89,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dos celulares cercanos, cada quien con su equipo de 3 Pokémon. Uno crea la sala y el otro la busca; no hace falta internet para conectarse."
+                android:text="@string/t_dos_celulares_cercanos_cada_quien_"
                 android:textColor="@color/menu_text_soft"
                 android:textSize="13sp" />
 
@@ -106,7 +106,7 @@
                     android:id="@+id/tvTituloMiEquipo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🔴 Tu equipo · 0/3"
+                    android:text="@string/t_tu_equipo_0_3"
                     android:textColor="@color/menu_text"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -131,7 +131,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📶 Conexión"
+                    android:text="@string/t_conexion"
                     android:textColor="@color/menu_text"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -159,7 +159,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="40dp"
-                android:text="📡 Crear sala"
+                android:text="@string/t_crear_sala"
                 android:textSize="17sp" />
 
             <com.example.pokeapp.PokeBoton
@@ -168,7 +168,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="40dp"
-                android:text="🔍 Buscar sala"
+                android:text="@string/t_buscar_sala"
                 android:textSize="17sp" />
 
             <com.example.pokeapp.PokeBoton
@@ -177,7 +177,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="40dp"
-                android:text="⚔️ Revancha"
+                android:text="@string/t_revancha"
                 android:textSize="17sp"
                 android:visibility="gone" />
 
@@ -188,7 +188,7 @@
                 android:layout_marginTop="18dp"
                 android:minHeight="48dp"
                 android:gravity="center"
-                android:text="Cancelar"
+                android:text="@string/t_cancelar"
                 android:textColor="@color/menu_red"
                 android:textSize="15sp"
                 android:textStyle="bold"

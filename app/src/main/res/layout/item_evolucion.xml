@@ -14,7 +14,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:scaleType="fitCenter"
-        android:contentDescription="Pokémon de la línea evolutiva" />
+        android:contentDescription="@string/t_pokemon_de_la_linea_evolutiva" />
 
     <TextView
         android:id="@+id/tvNumeroEvolucion"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="Nombre"
+        android:text="@string/t_nombre_2"
         android:textColor="#14213D"
         android:textSize="12sp"
         android:textStyle="bold" />

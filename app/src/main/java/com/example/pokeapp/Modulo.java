@@ -1,5 +1,7 @@
 package com.example.pokeapp;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,20 @@ public class Modulo {
         this.colorInicio = colorInicio;
         this.colorFin = colorFin;
         this.destino = destino;
+    }
+
+    /** Título en el idioma de la app: string mod_<clave>_titulo (si no existe, el de aquí). */
+    public String titulo(Context ctx) {
+        return texto(ctx, "_titulo", titulo);
+    }
+
+    public String descripcion(Context ctx) {
+        return texto(ctx, "_desc", descripcion);
+    }
+
+    private String texto(Context ctx, String sufijo, String porDefecto) {
+        int id = ctx.getResources().getIdentifier("mod_" + clave + sufijo, "string", ctx.getPackageName());
+        return id != 0 ? ctx.getString(id) : porDefecto;
     }
 
     public boolean estaActivo() {

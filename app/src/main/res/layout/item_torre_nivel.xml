@@ -17,7 +17,7 @@
         android:background="@drawable/bg_avatar_perfil"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_docente_silueta"
-        android:contentDescription="Docente del nivel" />
+        android:contentDescription="@string/t_docente_del_nivel" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -30,7 +30,7 @@
             android:id="@+id/tvTituloNivel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nivel 1 · Docente CESBA 1"
+            android:text="@string/t_nivel_1_docente_cesba_1"
             android:textColor="@color/menu_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -39,7 +39,7 @@
             android:id="@+id/tvDetalleNivel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 Pokémon rival"
+            android:text="@string/t_n_1_pokemon_rival"
             android:textColor="@color/menu_text_soft"
             android:textSize="12sp" />
     </LinearLayout>

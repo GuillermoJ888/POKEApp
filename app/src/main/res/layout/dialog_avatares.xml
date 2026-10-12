@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Elige tu avatar"
+        android:text="@string/t_elige_tu_avatar"
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
-        android:text="Se guarda solo en este celular"
+        android:text="@string/t_se_guarda_solo_en_este_celular"
         android:textColor="@color/perfil_text_soft"
         android:textSize="12sp" />
 

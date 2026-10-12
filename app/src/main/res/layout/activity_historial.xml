@@ -47,7 +47,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="26sp"
                     android:textStyle="bold"
-                    android:contentDescription="Regresar" />
+                    android:contentDescription="@string/t_regresar" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -59,7 +59,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📜 Historial"
+                        android:text="@string/t_historial"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -68,7 +68,7 @@
                         android:id="@+id/tvModo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Battle Emulator"
+                        android:text="@string/t_battle_emulator"
                         android:textColor="#FFD9D2"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -111,7 +111,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Batallas"
+                        android:text="@string/t_batallas"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -140,7 +140,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="Turnos promedio"
+                        android:text="@string/t_turnos_promedio"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="11sp" />
                 </LinearLayout>
@@ -160,7 +160,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:scaleType="fitCenter"
-                        android:contentDescription="Pokémon con más victorias" />
+                        android:contentDescription="@string/t_pokemon_con_mas_victorias" />
 
                     <TextView
                         android:id="@+id/tvCampeon"
@@ -177,7 +177,7 @@
                         android:id="@+id/tvCampeonVictorias"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="👑 Más victorias"
+                        android:text="@string/t_mas_victorias"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="10sp" />
                 </LinearLayout>
@@ -205,7 +205,7 @@
                     android:layout_height="90dp"
                     android:alpha="0.35"
                     android:src="@drawable/ic_pokeball_logo"
-                    android:contentDescription="Sin batallas" />
+                    android:contentDescription="@string/t_sin_batallas" />
 
                 <TextView
                     android:id="@+id/tvVacio"
@@ -213,7 +213,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:gravity="center"
-                    android:text="Aún no tienes batallas.\n¡Haz la primera!"
+                    android:text="@string/t_aun_no_tienes_batallas_n_haz_la_pr"
                     android:textColor="@color/menu_text_soft"
                     android:textSize="15sp" />
             </LinearLayout>

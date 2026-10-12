@@ -10,7 +10,11 @@ import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,6 +29,18 @@ public class PerfilActivity extends AppCompatActivity {
     private TextView tvFavoritos, tvMedallas, tvVictorias, tvDerrotas, tvNivel;
     private ProgressBar progressNivel;
     private ImageView imgAvatar;
+
+    /** Selector de fotos de Android (no pide permisos): regresa la imagen elegida. */
+    private final ActivityResultLauncher<PickVisualMediaRequest> lanzadorFoto = registerForActivityResult(
+            new ActivityResultContracts.PickVisualMedia(),
+            uri -> {
+                if (uri == null) return;   // canceló
+                if (AvatarManager.guardarFoto(this, uri)) {
+                    AvatarManager.mostrar(this, imgAvatar);
+                } else {
+                    Toast.makeText(this, "No se pudo usar esa imagen", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,18 +66,26 @@ public class PerfilActivity extends AppCompatActivity {
 
         // Avatar elegido (guardado solo en el celular); al tocarlo se puede cambiar
         imgAvatar = findViewById(R.id.imgAvatarPerfil);
-        imgAvatar.setImageResource(AvatarManager.obtener(this).dibujo);
+        AvatarManager.mostrar(this, imgAvatar);
         findViewById(R.id.contenedorAvatar).setOnClickListener(v -> elegirAvatar());
+
+        // El contador de favoritos abre la lista de favoritos
+        findViewById(R.id.tarjetaFavoritosPerfil).setOnClickListener(v ->
+                startActivity(new Intent(this, FavoritosActivity.class)));
 
         findViewById(R.id.btnRegresar).setOnClickListener(v -> finish());
 
-        findViewById(R.id.btnCerrarSesionPerfil).setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        });
+        findViewById(R.id.btnCerrarSesionPerfil).setOnClickListener(v ->
+                Dialogos.confirmar(this, "🚪", "¿Cerrar sesión?",
+                        "Tendrás que volver a entrar con tu correo o con Google.",
+                        "Cerrar sesión", "Cancelar",
+                        () -> {
+                            FirebaseAuth.getInstance().signOut();
+                            Intent intent = new Intent(this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }, null));
     }
 
     /** Ventana con todos los avatares; el elegido lleva ✓ y se guarda solo en el celular. */
@@ -75,7 +99,7 @@ public class PerfilActivity extends AppCompatActivity {
         for (AvatarManager.Avatar avatar : AvatarManager.todos(this)) {
             View opcion = LayoutInflater.from(this).inflate(R.layout.item_avatar, grid, false);
             ImageView img = opcion.findViewById(R.id.imgOpcionAvatar);
-            img.setImageResource(avatar.dibujo);
+            AvatarManager.pintar(this, img, avatar);
             img.setClipToOutline(true);
             ((TextView) opcion.findViewById(R.id.tvOpcionNombre)).setText(avatar.nombre);
             opcion.findViewById(R.id.tvOpcionElegida)
@@ -83,11 +107,26 @@ public class PerfilActivity extends AppCompatActivity {
 
             opcion.setOnClickListener(v -> {
                 AvatarManager.guardar(this, avatar);
-                imgAvatar.setImageResource(avatar.dibujo);
+                AvatarManager.pintar(this, imgAvatar, avatar);
                 dialogo.dismiss();
             });
             grid.addView(opcion);
         }
+
+        // Última opción: subir una foto propia de la galería
+        View subir = LayoutInflater.from(this).inflate(R.layout.item_avatar, grid, false);
+        ImageView imgSubir = subir.findViewById(R.id.imgOpcionAvatar);
+        imgSubir.setImageResource(android.R.drawable.ic_menu_camera);
+        imgSubir.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imgSubir.setPadding(40, 40, 40, 40);
+        ((TextView) subir.findViewById(R.id.tvOpcionNombre)).setText("📷 Subir foto");
+        subir.setOnClickListener(v -> {
+            dialogo.dismiss();
+            lanzadorFoto.launch(new PickVisualMediaRequest.Builder()
+                    .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE)
+                    .build());
+        });
+        grid.addView(subir);
 
         dialogo.show();
         if (dialogo.getWindow() != null) {
@@ -107,6 +146,18 @@ public class PerfilActivity extends AppCompatActivity {
             tvDerrotas.setText(String.valueOf(est.derrotas));
             tvNivel.setText("Nivel " + est.nivel());
             progressNivel.setProgress(est.progresoNivel());
+        });
+
+        // Récords de minijuegos y colección del Safari
+        UsuarioManager.obtenerResumenJuegos(r -> {
+            if (isFinishing() || isDestroyed()) return;
+            ((TextView) findViewById(R.id.tvRecordQuienPerfil)).setText(r.recordQuien > 0
+                    ? r.recordQuien + " pts · racha " + r.rachaQuien : "Sin jugar");
+            ((TextView) findViewById(R.id.tvRecordTiposPerfil)).setText(r.recordTipos > 0
+                    ? r.recordTipos + " pts" : "Sin jugar");
+            ((TextView) findViewById(R.id.tvRecordMemoryPerfil)).setText(r.recordMemory > 0
+                    ? r.recordMemory + " pts" : "Sin jugar");
+            ((TextView) findViewById(R.id.tvCapturadosPerfil)).setText(String.valueOf(r.capturados));
         });
     }
 }

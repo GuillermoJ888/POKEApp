@@ -49,7 +49,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="26sp"
                     android:textStyle="bold"
-                    android:contentDescription="Regresar" />
+                    android:contentDescription="@string/t_regresar" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -61,7 +61,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Elegir Pokémon"
+                        android:text="@string/t_elegir_pokemon"
                         android:textColor="#FFFFFF"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -70,7 +70,7 @@
                         android:id="@+id/tvSubtituloElegir"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Jugador 1 · lugar 1 de 3"
+                        android:text="@string/t_jugador_1_lugar_1_de_3"
                         android:textColor="#FFD9D2"
                         android:textSize="13sp" />
                 </LinearLayout>

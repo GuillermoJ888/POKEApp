@@ -34,7 +34,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:contentDescription="Regresar" />
+                android:contentDescription="@string/t_regresar" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -46,7 +46,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🃏 PokéMemory"
+                    android:text="@string/t_pokememory"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -55,7 +55,7 @@
                     android:id="@+id/tvRecordMemory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="🏆 Récord: 0"
+                    android:text="@string/t_record_0"
                     android:textColor="#FFD9D2"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:gravity="center"
-                android:text="Voltea las cartas de dos en dos y encuentra las parejas de Pokémon con los menos intentos posibles."
+                android:text="@string/t_voltea_las_cartas_de_dos_en_dos_y_"
                 android:textColor="@color/menu_text"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -136,7 +136,7 @@
                 android:gravity="center"
                 android:background="@drawable/bg_card_menu"
                 android:padding="10dp"
-                android:text="Dificultad: Normal"
+                android:text="@string/t_dificultad_normal"
                 android:textColor="@color/menu_red"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -147,7 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="40dp"
-                android:text="▶ Jugar"
+                android:text="@string/t_jugar"
                 android:textSize="17sp" />
         </LinearLayout>
     </LinearLayout>

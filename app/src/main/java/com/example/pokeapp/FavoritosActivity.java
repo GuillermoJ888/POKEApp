@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pokeapp.data.Favorito;
 import com.example.pokeapp.data.FavoritosManager;
 
 public class FavoritosActivity extends AppCompatActivity {
@@ -29,10 +30,26 @@ public class FavoritosActivity extends AppCompatActivity {
         tvVacio = findViewById(R.id.tvVacio);
         progressFavoritos = findViewById(R.id.progressFavoritos);
 
-        adapter = new FavoritosAdapter(favorito -> {
-            Intent intent = new Intent(this, PokedexActivity.class);
-            intent.putExtra(PokedexActivity.EXTRA_BUSQUEDA_INICIAL, String.valueOf(favorito.getId()));
-            startActivity(intent);
+        adapter = new FavoritosAdapter(new FavoritosAdapter.Acciones() {
+            @Override
+            public void alTocar(Favorito favorito) {   // abre su detalle en la Pokédex
+                Intent intent = new Intent(FavoritosActivity.this, PokedexActivity.class);
+                intent.putExtra(PokedexActivity.EXTRA_BUSQUEDA_INICIAL, String.valueOf(favorito.getId()));
+                startActivity(intent);
+            }
+
+            @Override
+            public void alEscuchar(Favorito favorito) {
+                if (!Efectos.cry(FavoritosActivity.this, favorito.getId())) {
+                    Toast.makeText(FavoritosActivity.this,
+                            "El sonido está desactivado en Configuración", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void alEliminar(Favorito favorito) {
+                confirmarEliminar(favorito);
+            }
         });
 
         recyclerFavoritos.setLayoutManager(new LinearLayoutManager(this));
@@ -45,6 +62,27 @@ public class FavoritosActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         cargarFavoritos();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Efectos.soltarCry();
+    }
+
+    private void confirmarEliminar(Favorito favorito) {
+        Dialogos.confirmar(this, "🗑️", "¿Quitar a " + favorito.getNombre() + "?",
+                "Dejará de aparecer en tus favoritos. Puedes volver a marcarlo con la estrella en la Pokédex.",
+                "Quitar de favoritos", "Cancelar",
+                () -> FavoritosManager.quitar(favorito.getId(), ok -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    if (Boolean.TRUE.equals(ok)) {
+                        cargarFavoritos();
+                    } else {
+                        Toast.makeText(this, "No se pudo quitar: " + FavoritosManager.ultimoError(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                }), null);
     }
 
     private void cargarFavoritos() {

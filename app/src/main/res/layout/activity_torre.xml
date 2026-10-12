@@ -49,14 +49,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="26sp"
                     android:textStyle="bold"
-                    android:contentDescription="Regresar" />
+                    android:contentDescription="@string/t_regresar" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="10dp"
-                    android:text="🏰 Torre Pokémon"
+                    android:text="@string/t_torre_pokemon"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -72,7 +72,7 @@
                     android:paddingEnd="18dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="📜 Historial"
+                    android:text="@string/t_historial"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -95,7 +95,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Elige 3 de 6 Pokémon al azar y supera los 6 niveles seguidos. El nivel 6 es el jefe final con 4 legendarios. Si conquistas la Torre ganas una medalla."
+                    android:text="@string/t_elige_3_de_6_pokemon_al_azar_y_sup"
                     android:textColor="@color/menu_text_soft"
                     android:textSize="13sp"
                     android:lineSpacingExtra="2dp" />
@@ -106,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_chip_turnos"
-                    android:text="🏅 Medallas: 0 / 10"
+                    android:text="@string/t_medallas_0_10"
                     android:textColor="@color/menu_red"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -124,7 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:layout_marginTop="44dp"
-                    android:text="🏰 Comenzar campaña"
+                    android:text="@string/t_comenzar_campana"
                     android:textSize="17sp" />
             </LinearLayout>
 
@@ -139,7 +139,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Elige 3 Pokémon para tu equipo"
+                    android:text="@string/t_elige_3_pokemon_para_tu_equipo"
                     android:textColor="@color/menu_text"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -149,7 +149,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Elegidos: 0 / 3"
+                    android:text="@string/t_elegidos_0_3"
                     android:textColor="@color/menu_red"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -174,7 +174,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
                     android:layout_marginTop="40dp"
-                    android:text="Confirmar equipo" />
+                    android:text="@string/t_confirmar_equipo" />
             </LinearLayout>
 
             <!-- ===== NIVEL: docente, rivales y tu equipo ===== -->
@@ -198,7 +198,7 @@
                         android:id="@+id/tvNivelActual"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="NIVEL 1 DE 6"
+                        android:text="@string/t_nivel_1_de_6"
                         android:textColor="@color/menu_red"
                         android:textSize="13sp"
                         android:textStyle="bold"
@@ -213,14 +213,14 @@
                         android:clipToOutline="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_docente_silueta"
-                        android:contentDescription="Docente del nivel" />
+                        android:contentDescription="@string/t_docente_del_nivel" />
 
                     <TextView
                         android:id="@+id/tvDocente"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Docente CESBA 1"
+                        android:text="@string/t_docente_cesba_1"
                         android:textColor="@color/menu_text"
                         android:textSize="19sp"
                         android:textStyle="bold" />
@@ -229,7 +229,7 @@
                         android:id="@+id/tvEscenarioNivel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📍 Bosque"
+                        android:text="@string/t_bosque"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="12sp" />
 
@@ -237,7 +237,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:text="SU EQUIPO"
+                        android:text="@string/t_su_equipo"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -260,7 +260,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:text="TU EQUIPO (se cura al empezar cada nivel)"
+                        android:text="@string/t_tu_equipo_se_cura_al_empezar_cada_"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -291,7 +291,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
                     android:layout_marginTop="44dp"
-                    android:text="⚔️ ¡Pelear!"
+                    android:text="@string/t_pelear"
                     android:textSize="17sp" />
 
                 <com.example.pokeapp.PokeBoton
@@ -300,7 +300,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="34dp"
-                    android:text="Abandonar campaña" />
+                    android:text="@string/t_abandonar_campana" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

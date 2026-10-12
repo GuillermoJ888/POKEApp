@@ -36,6 +36,11 @@ public class MovimientoManager {
     private static final Set<String> SIN_DANIO = new HashSet<>();
     private static final Random random = new Random();
 
+    /** Al cambiar el idioma se olvidan los ataques guardados, para pedirlos con su nuevo nombre. */
+    public static void olvidarNombres() {
+        CACHE.clear();
+    }
+
     /** Asigna los ataques y avisa una sola vez cuando terminó (aunque haya fallas). */
     public static void asignar(List<BattlePokemon> pokemon, Runnable listo) {
         // 1) Candidatos de cada Pokémon

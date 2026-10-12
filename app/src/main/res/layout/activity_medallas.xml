@@ -33,14 +33,14 @@
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:contentDescription="Regresar" />
+                android:contentDescription="@string/t_regresar" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
-                android:text="🏅 Medallas"
+                android:text="@string/t_medallas"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -64,7 +64,7 @@
                     android:id="@+id/tvProgresoMedallas"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="0 de 10"
+                    android:text="@string/t_n_0_de_10"
                     android:textColor="@color/menu_text"
                     android:textSize="14sp"
                     android:textStyle="bold" />

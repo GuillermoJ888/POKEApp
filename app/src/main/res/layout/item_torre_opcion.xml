@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitCenter"
-            android:contentDescription="Pokémon" />
+            android:contentDescription="@string/t_pokemon_2" />
 
         <TextView
             android:id="@+id/tvMarcaOpcion"
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="Nombre"
+        android:text="@string/t_nombre_2"
         android:textColor="#14213D"
         android:textSize="12sp"
         android:textStyle="bold" />
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Tipo"
+        android:text="@string/t_tipo"
         android:textColor="#7A1507"
         android:textSize="10sp" />
 
@@ -63,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="HP 0 · ATK 0"
+        android:text="@string/t_hp_0_atk_0"
         android:textColor="#5B6478"
         android:textSize="9sp" />
 </LinearLayout>

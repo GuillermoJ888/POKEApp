@@ -53,14 +53,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="26sp"
                     android:textStyle="bold"
-                    android:contentDescription="Regresar" />
+                    android:contentDescription="@string/t_regresar" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    android:text="Mi perfil"
+                    android:text="@string/t_mi_perfil"
                     android:textColor="@color/perfil_lavender"
                     android:textSize="22sp"
                     android:textStyle="bold" />
@@ -82,7 +82,7 @@
                     android:layout_height="128dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:contentDescription="Cambiar avatar">
+                    android:contentDescription="@string/t_cambiar_avatar">
 
                     <ImageView
                         android:id="@+id/imgAvatarPerfil"
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Entrenador"
+                    android:text="@string/t_entrenador"
                     android:textColor="@color/poke_white"
                     android:textSize="23sp"
                     android:textStyle="bold" />
@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="correo@ejemplo.com"
+                    android:text="@string/t_correo_ejemplo_com"
                     android:textColor="@color/perfil_text_soft"
                     android:textSize="13sp" />
 
@@ -133,7 +133,7 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     android:background="@drawable/bg_chip_perfil"
-                    android:text="☁️ Progreso guardado en la nube"
+                    android:text="@string/t_progreso_guardado_en_la_nube"
                     android:textColor="@color/perfil_lavender"
                     android:textSize="11sp" />
 
@@ -154,7 +154,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Nivel 1"
+                            android:text="@string/t_nivel_1"
                             android:textColor="@color/perfil_lavender"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -162,7 +162,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Entrenador Pokémon"
+                            android:text="@string/t_entrenador_pokemon"
                             android:textColor="@color/perfil_text_soft"
                             android:textSize="11sp" />
                     </LinearLayout>
@@ -185,7 +185,9 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="22dp">
 
+                <!-- Al tocarla abre la lista de favoritos -->
                 <LinearLayout
+                    android:id="@+id/tarjetaFavoritosPerfil"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -193,6 +195,8 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:padding="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:background="@drawable/bg_stat_perfil">
 
                     <TextView
@@ -207,7 +211,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⭐ Favoritos"
+                        android:text="@string/t_favoritos"
                         android:textColor="@color/perfil_text_soft"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -234,7 +238,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🏅 Medallas"
+                        android:text="@string/t_medallas"
                         android:textColor="@color/perfil_text_soft"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -268,7 +272,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🏆 Victorias"
+                        android:text="@string/t_victorias"
                         android:textColor="@color/perfil_text_soft"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -295,12 +299,131 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💥 Derrotas"
+                        android:text="@string/t_derrotas"
                         android:textColor="@color/perfil_text_soft"
                         android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
+            <!-- Récords de minijuegos y colección del Safari -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:padding="18dp"
+                android:background="@drawable/bg_card_perfil">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/t_records_de_minijuegos"
+                    android:textColor="@color/perfil_text_soft"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/t_quien_es_ese_pokemon"
+                        android:textColor="@color/poke_white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvRecordQuienPerfil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/perfil_sky"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/t_maestro_de_tipos_2"
+                        android:textColor="@color/poke_white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvRecordTiposPerfil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/perfil_sky"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/t_pokememory"
+                        android:textColor="@color/poke_white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvRecordMemoryPerfil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/perfil_sky"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/t_capturados_en_el_safari"
+                        android:textColor="@color/poke_white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvCapturadosPerfil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/perfil_sky"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
 
             <com.example.pokeapp.PokeBoton
                 android:id="@+id/btnCerrarSesionPerfil"
@@ -309,7 +432,7 @@
                 android:layout_height="52dp"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="16dp"
-                android:text="Cerrar sesión"
+                android:text="@string/t_cerrar_sesion"
                 android:textColor="@color/poke_white"
                 android:textStyle="bold" />
 

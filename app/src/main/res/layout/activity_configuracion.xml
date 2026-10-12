@@ -33,14 +33,14 @@
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:contentDescription="Regresar" />
+                android:contentDescription="@string/t_regresar" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
-                android:text="⚙️ Configuración"
+                android:text="@string/t_configuracion"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -52,14 +52,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="14dp"
-                android:text="Estas opciones estarán disponibles en una próxima versión."
-                android:textColor="@color/menu_text_soft"
-                android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tema oscuro: mismos nombres que values/colors.xml, con tonos oscuros.
+     Android usa este archivo solo cuando el tema oscuro está activo. -->
+<resources>
+    <color name="menu_bg">#15111C</color>
+    <color name="menu_text">#F7ECE9</color>
+    <color name="menu_text_soft">#B9A19C</color>
+
+    <color name="tarjeta_fondo">#241D2E</color>
+    <color name="tarjeta_borde">#3D3149</color>
+    <color name="chip_fondo">#3B2530</color>
+    <color name="vida_fondo">#F2241D2E</color>
+    <color name="vida_borde">#FACC15</color>
+</resources>

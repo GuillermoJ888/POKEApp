@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="🏆 GANADOR"
+        android:text="@string/t_ganador"
         android:textColor="@color/menu_red"
         android:textSize="13sp"
         android:textStyle="bold"
@@ -35,7 +35,7 @@
             android:layout_height="150dp"
             android:layout_gravity="center_horizontal|top"
             android:scaleType="fitCenter"
-            android:contentDescription="Pokémon ganador" />
+            android:contentDescription="@string/t_pokemon_ganador" />
     </FrameLayout>
 
     <TextView
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="Nombre"
+        android:text="@string/t_nombre_2"
         android:textColor="@color/menu_text"
         android:textSize="26sp"
         android:textStyle="bold" />
@@ -52,7 +52,7 @@
         android:id="@+id/tvContra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="venció a ..."
+        android:text="@string/t_vencio_a"
         android:textColor="@color/menu_text_soft"
         android:textSize="13sp" />
 
@@ -85,7 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="HP restante"
+                android:text="@string/t_hp_restante"
                 android:textColor="@color/menu_text_soft"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -112,7 +112,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Número de turnos"
+                android:text="@string/t_numero_de_turnos"
                 android:textColor="@color/menu_text_soft"
                 android:textSize="11sp" />
         </LinearLayout>
@@ -124,7 +124,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="32dp"
-        android:text="🔁 Revancha"
+        android:text="@string/t_revancha_2"
         android:textColor="@color/poke_blue_dark"
         android:textStyle="bold" />
 
@@ -134,7 +134,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
-        android:text="Elegir otro Pokémon"
+        android:text="@string/t_elegir_otro_pokemon"
         android:textColor="@color/poke_blue_dark"
         android:textStyle="bold" />
 
@@ -144,7 +144,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="24dp"
-        android:text="Regresar al menú"
+        android:text="@string/t_regresar_al_menu"
         android:textColor="@color/menu_red"
         android:textStyle="bold" />
 </LinearLayout>

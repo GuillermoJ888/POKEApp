@@ -32,7 +32,7 @@
                 android:textColor="#FFFFFF"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:contentDescription="Regresar" />
+                android:contentDescription="@string/t_regresar" />
 
             <View
                 android:layout_width="58dp"
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:text="POKÉDEX"
+                android:text="@string/t_pokedex"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/bg_dex_search"
-                android:hint="Nombre o número..."
+                android:hint="@string/t_nombre_o_numero"
                 android:textColorHint="#8A8A8A"
                 android:textColor="#14213D"
                 android:imeOptions="actionSearch"
@@ -97,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="Buscar"
+                android:text="@string/t_buscar"
                 android:textColor="#FACC15"
                 android:textStyle="bold"
                 android:paddingLeft="18dp"
@@ -126,7 +126,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="POKÉMON"
+                android:text="@string/t_pokemon"
                 android:textColor="#FFD9D2"
                 android:textSize="11sp"
                 android:textStyle="bold"
@@ -141,7 +141,7 @@
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 android:background="@drawable/bg_dex_button"
-                android:text="Ver más +5"
+                android:text="@string/t_ver_mas_5"
                 android:textColor="#FACC15"
                 android:textSize="11sp"
                 android:textStyle="bold" />
@@ -232,7 +232,7 @@
                                 android:layout_height="38dp"
                                 android:background="@android:color/transparent"
                                 android:src="@android:drawable/btn_star_big_off"
-                                android:contentDescription="Marcar como favorito" />
+                                android:contentDescription="@string/t_marcar_como_favorito" />
 
                             <ImageButton
                                 android:id="@+id/btnCry"
@@ -242,7 +242,7 @@
                                 android:background="@android:color/transparent"
                                 android:src="@android:drawable/ic_lock_silent_mode_off"
                                 app:tint="#14213D"
-                                android:contentDescription="Escuchar cry" />
+                                android:contentDescription="@string/t_escuchar_cry" />
                         </LinearLayout>
                     </FrameLayout>
 
@@ -262,7 +262,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:paddingBottom="8dp"
-                        android:text="← Desliza para ver su versión shiny →"
+                        android:text="@string/t_desliza_para_ver_su_version_shiny"
                         android:textColor="#3F6B55"
                         android:textSize="10sp" />
                 </LinearLayout>
@@ -274,7 +274,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:gravity="center"
-                android:text="NOMBRE"
+                android:text="@string/t_nombre"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -316,7 +316,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Altura"
+                        android:text="@string/t_altura"
                         android:textColor="#8FA0C8"
                         android:textSize="12sp" />
 
@@ -325,7 +325,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Peso"
+                        android:text="@string/t_peso"
                         android:textColor="#8FA0C8"
                         android:textSize="12sp" />
 
@@ -334,7 +334,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Habilidad"
+                        android:text="@string/t_habilidad"
                         android:textColor="#8FA0C8"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -352,7 +352,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="-- m"
+                        android:text="@string/t_m"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
 
@@ -362,7 +362,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="-- kg"
+                        android:text="@string/t_kg"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
 
@@ -381,7 +381,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="ESTADÍSTICAS BASE"
+                    android:text="@string/t_estadisticas_base"
                     android:textColor="#FACC15"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -406,7 +406,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="LÍNEA EVOLUTIVA"
+                    android:text="@string/t_linea_evolutiva"
                     android:textColor="#FACC15"
                     android:textSize="11sp"
                     android:textStyle="bold"
@@ -417,7 +417,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Cargando..."
+                    android:text="@string/t_cargando"
                     android:textColor="#C9D1E8"
                     android:textSize="13sp" />
 

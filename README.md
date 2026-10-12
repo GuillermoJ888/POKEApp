@@ -12,12 +12,16 @@ Aplicación Android en **Java + XML** que consume la [PokéAPI](https://pokeapi.
 | B | **Battle Emulator**: elegir Pokémon A y B, batalla automática a pantalla completa, historial | ✅ |
 | C | **Battle Versus**: 2 jugadores, equipos de 3, ataques reales y cambios | ✅ |
 | D | **Torre Pokémon**: 3 de 6 al azar, 6 niveles, jefe con 4 legendarios, medallas | ✅ |
-| E–H | ¿Quién es ese Pokémon?, Safari, Maestro de Tipos, PokéMemory | ⏳ |
-| I | **Favoritos** (en la nube) | ✅ |
-| J | Historial | ⏳ (el del Battle Emulator ya funciona) |
-| K | Medallas | ⏳ |
-| L | **Mi perfil** | ✅ |
-| M | Configuración | ⏳ |
+| — | **Batalla entre dispositivos**: dos celulares cercanos con Nearby Connections (extra, no viene en el documento) | ✅ |
+| E | **¿Quién es ese Pokémon?**: silueta, pistas (tipo, stats, cry) que restan puntos, vidas y mejor racha | ✅ |
+| F | **Safari Pokémon**: aparición al azar, distintas Pokéballs, huir y colección de capturados | ✅ |
+| G | **Maestro de Tipos**: ventajas de tipo contra reloj y mejor puntuación | ✅ |
+| H | **PokéMemory**: parejas de cartas, tiempo, intentos y niveles de dificultad | ✅ |
+| I | **Favoritos** (en la nube): abrir detalle, escuchar cry y eliminar | ✅ |
+| J | **Historial**: batallas de todos los modos, por día, con el detalle de los turnos | ✅ |
+| K | **Medallas**: las 10 medallas, obtenidas o bloqueadas, con su fecha | ✅ |
+| L | **Mi perfil**: avatar, nivel, favoritos, medallas, victorias/derrotas, récords de minijuegos y capturados | ✅ |
+| M | **Configuración**: sonido, vibración, reiniciar progreso y cerrar sesión | ✅ (idioma y tema pendientes) |
 
 ## Battle Emulator
 

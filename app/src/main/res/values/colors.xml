@@ -24,4 +24,11 @@
     <color name="perfil_lavender">#DDD6FE</color>
     <color name="perfil_sky">#93C5FD</color>
     <color name="perfil_text_soft">#B9B4E6</color>
+
+    <!-- Colores que cambian con el tema (su versión oscura está en values-night/colors.xml) -->
+    <color name="tarjeta_fondo">#FFFFFF</color>
+    <color name="tarjeta_borde">#FFD3CB</color>
+    <color name="chip_fondo">#FFE4DE</color>
+    <color name="vida_fondo">#F2FFFDF5</color>
+    <color name="vida_borde">#3A1410</color>
 </resources>

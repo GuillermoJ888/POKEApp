@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:contentDescription="Imagen del módulo"
+            android:contentDescription="@string/t_imagen_del_modulo"
             android:visibility="gone" />
 
         <!-- Pokébola de marca de agua -->
@@ -46,7 +46,7 @@
             android:layout_marginEnd="8dp"
             android:rotation="-10"
             android:scaleType="fitCenter"
-            android:contentDescription="Icono del módulo"
+            android:contentDescription="@string/t_icono_del_modulo"
             android:visibility="gone" />
 
         <TextView
@@ -78,7 +78,7 @@
             android:paddingEnd="8dp"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
-            android:text="Próximamente"
+            android:text="@string/t_proximamente"
             android:textColor="#FFFFFF"
             android:textSize="10sp"
             android:textStyle="bold"
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:text="Módulo"
+                android:text="@string/t_modulo"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -113,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
                 android:maxLines="1"
-                android:text="Descripción"
+                android:text="@string/t_descripcion"
                 android:textColor="#E6FFFFFF"
                 android:textSize="11sp"
                 android:shadowColor="#80000000"

@@ -55,7 +55,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="POKÉAPP V2"
+                        android:text="@string/t_pokeapp_v2"
                         android:textColor="#FFD2CA"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -66,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="¡Hola, Entrenador!"
+                        android:text="@string/t_hola_entrenador"
                         android:textColor="#FFFFFF"
                         android:textSize="25sp"
                         android:textStyle="bold" />
@@ -75,7 +75,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="¿Listo para tu próxima aventura?"
+                        android:text="@string/t_listo_para_tu_proxima_aventura"
                         android:textColor="#FFE3DE"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -86,7 +86,7 @@
                     android:layout_height="64dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:contentDescription="Abrir mi perfil"
+                    android:contentDescription="@string/t_abrir_mi_perfil"
                     android:padding="10dp"
                     android:background="@drawable/bg_avatar_menu"
                     android:src="@drawable/ic_pokeball_logo" />

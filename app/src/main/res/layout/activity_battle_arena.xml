@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/bg_escenario_bosque"
-            android:contentDescription="Escenario de batalla" />
+            android:contentDescription="@string/t_escenario_de_batalla" />
 
         <!-- Plataformas (solo en fondos que no las traen dibujadas) -->
         <View
@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"
-                android:contentDescription="Pokémon B" />
+                android:contentDescription="@string/t_pokemon_b_2" />
         </FrameLayout>
 
         <!-- Pokémon A (volteado para que mire hacia el rival) -->
@@ -72,7 +72,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter"
                 android:scaleX="-1"
-                android:contentDescription="Pokémon A" />
+                android:contentDescription="@string/t_pokemon_a_2" />
         </FrameLayout>
 
         <!-- Tarjeta de vida de B: arriba a la izquierda -->
@@ -91,7 +91,7 @@
                 android:id="@+id/tvDuenoB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Jugador"
+                android:text="@string/t_jugador"
                 android:textColor="@color/menu_red"
                 android:textSize="10sp"
                 android:textStyle="bold"
@@ -104,7 +104,7 @@
                 android:id="@+id/tvNombreB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="B"
+                android:text="@string/t_b"
                 android:textColor="@color/menu_text"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -115,7 +115,7 @@
                 android:id="@+id/tvTiposB"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tipo"
+                android:text="@string/t_tipo"
                 android:textColor="@color/menu_text_soft"
                 android:textSize="11sp"
                 android:maxLines="1" />
@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:gravity="end"
-                android:text="100 / 100 HP · 100%"
+                android:text="@string/t_n_100_100_hp_100"
                 android:textColor="@color/menu_text"
                 android:textSize="11sp"
                                 android:textStyle="bold" />
@@ -167,7 +167,7 @@
                 android:id="@+id/tvDuenoA"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Jugador"
+                android:text="@string/t_jugador"
                 android:textColor="@color/menu_red"
                 android:textSize="10sp"
                 android:textStyle="bold"
@@ -180,7 +180,7 @@
                 android:id="@+id/tvNombreA"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="A"
+                android:text="@string/t_a"
                 android:textColor="@color/menu_text"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -191,7 +191,7 @@
                 android:id="@+id/tvTiposA"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tipo"
+                android:text="@string/t_tipo"
                 android:textColor="@color/menu_text_soft"
                 android:textSize="11sp"
                 android:maxLines="1" />
@@ -212,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:gravity="end"
-                android:text="100 / 100 HP · 100%"
+                android:text="@string/t_n_100_100_hp_100"
                 android:textColor="@color/menu_text"
                 android:textSize="11sp"
                                 android:textStyle="bold" />
@@ -264,7 +264,7 @@
                 android:paddingEnd="14dp"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:text="Preparando..."
+                android:text="@string/t_preparando"
                 android:textColor="#FACC15"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -282,7 +282,7 @@
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
             android:gravity="center"
-            android:text="¡Comienza la batalla!"
+            android:text="@string/t_comienza_la_batalla"
             android:textColor="#FFFFFF"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -309,7 +309,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="REGISTRO DE BATALLA"
+                android:text="@string/t_registro_de_batalla"
                 android:textColor="#FACC15"
                 android:textSize="11sp"
                 android:textStyle="bold"
@@ -360,7 +360,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="¿Qué hará Pikachu?"
+                    android:text="@string/t_que_hara_pikachu"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -374,7 +374,7 @@
                     android:background="@drawable/bg_boton_cambiar"
                     android:paddingStart="14dp"
                     android:paddingEnd="14dp"
-                    android:text="🔄 Cambiar"
+                    android:text="@string/t_cambiar_2"
                     android:textColor="#142036"
                     android:textSize="13sp"
                     android:textStyle="bold" />

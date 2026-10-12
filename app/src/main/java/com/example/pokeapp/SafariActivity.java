@@ -246,6 +246,7 @@ public class SafariActivity extends AppCompatActivity {
             boolean nuevo = !yaCapturado(salvaje.id);
             if (nuevo) coleccion.add(new PokemonMini(salvaje.id, salvaje.nombre));
             UsuarioManager.registrarCaptura(salvaje.id, salvaje.nombre);
+            Efectos.victoria(this);   // sonido y vibración (según Configuración)
             tvMensaje.setText("⭐ ¡" + salvaje.nombre + " fue capturado!"
                     + (nuevo ? "\nSe agregó a tu colección." : "\nYa lo tenías en tu colección."));
             imgBola.animate().scaleX(1.25f).scaleY(1.25f).setDuration(200).withEndAction(() ->

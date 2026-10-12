@@ -49,14 +49,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="26sp"
                     android:textStyle="bold"
-                    android:contentDescription="Regresar" />
+                    android:contentDescription="@string/t_regresar" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="10dp"
-                    android:text="⚔️ Battle Emulator"
+                    android:text="@string/t_battle_emulator_2"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -73,7 +73,7 @@
                     android:paddingEnd="18dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="📜 Historial"
+                    android:text="@string/t_historial"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -102,7 +102,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:scaleType="fitCenter"
-                    android:contentDescription="Pokémon A" />
+                    android:contentDescription="@string/t_pokemon_a_2" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -114,7 +114,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="POKÉMON A"
+                        android:text="@string/t_pokemon_a"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="10sp"
                         android:textStyle="bold"
@@ -124,7 +124,7 @@
                         android:id="@+id/tvNombreElegidoA"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nombre"
+                        android:text="@string/t_nombre_2"
                         android:textColor="@color/menu_text"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -133,7 +133,7 @@
                         android:id="@+id/tvTiposElegidoA"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tipo"
+                        android:text="@string/t_tipo"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -143,7 +143,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="Cambiar"
+                    android:text="@string/t_cambiar"
                     android:textColor="@color/menu_red"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -157,7 +157,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
-                android:text="VS"
+                android:text="@string/t_vs"
                 android:textColor="@color/menu_red"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -179,7 +179,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:scaleType="fitCenter"
-                    android:contentDescription="Pokémon B" />
+                    android:contentDescription="@string/t_pokemon_b_2" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -191,7 +191,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="POKÉMON B"
+                        android:text="@string/t_pokemon_b"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="10sp"
                         android:textStyle="bold"
@@ -201,7 +201,7 @@
                         android:id="@+id/tvNombreElegidoB"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nombre"
+                        android:text="@string/t_nombre_2"
                         android:textColor="@color/menu_text"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -210,7 +210,7 @@
                         android:id="@+id/tvTiposElegidoB"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tipo"
+                        android:text="@string/t_tipo"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -220,7 +220,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="Cambiar"
+                    android:text="@string/t_cambiar"
                     android:textColor="@color/menu_red"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -232,7 +232,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="58dp"
                 android:layout_marginTop="40dp"
-                android:text="⚔️ Iniciar batalla"
+                android:text="@string/t_iniciar_batalla"
                 android:textColor="@color/poke_blue_dark"
                 android:textSize="17sp"
                 android:textStyle="bold"
@@ -250,7 +250,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Paso 1 de 2 · Elige al Pokémon A"
+                    android:text="@string/t_paso_1_de_2_elige_al_pokemon_a"
                     android:textColor="@color/menu_text"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -268,7 +268,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/bg_dex_search"
-                        android:hint="Nombre o número..."
+                        android:hint="@string/t_nombre_o_numero"
                         android:textColorHint="#8A8A8A"
                         android:textColor="#14213D"
                         android:imeOptions="actionSearch"
@@ -281,7 +281,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:text="Buscar"
+                        android:text="@string/t_buscar"
                         android:textColor="@color/poke_blue_dark"
                         android:textStyle="bold"
                         android:paddingLeft="18dp"
@@ -303,7 +303,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="46dp"
                     android:layout_marginTop="26dp"
-                    android:text="🎲 Sorpréndeme"
+                    android:text="@string/t_sorprendeme"
                     android:textColor="@color/menu_red"
                     android:textStyle="bold" />
 
@@ -318,7 +318,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="⭐ POPULARES · toca uno para elegirlo"
+                        android:text="@string/t_populares_toca_uno_para_elegirlo"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="11sp"
                         android:textStyle="bold"
@@ -374,7 +374,7 @@
                         android:background="@drawable/bg_modulo_etiqueta"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp"
-                        android:text="✕ Ver otros"
+                        android:text="@string/t_ver_otros"
                         android:textColor="#FFFFFF"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -384,14 +384,14 @@
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:scaleType="fitCenter"
-                        android:contentDescription="Pokémon encontrado" />
+                        android:contentDescription="@string/t_pokemon_encontrado" />
 
                     <TextView
                         android:id="@+id/tvNombrePrevia"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="#000 Nombre"
+                        android:text="@string/t_n_000_nombre"
                         android:textColor="@color/menu_text"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -401,7 +401,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Tipo"
+                        android:text="@string/t_tipo"
                         android:textColor="@color/menu_text_soft"
                         android:textSize="13sp" />
 
@@ -422,7 +422,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="54dp"
                         android:layout_marginTop="30dp"
-                        android:text="Aceptar"
+                        android:text="@string/t_aceptar"
                         android:textColor="@color/poke_blue_dark"
                         android:textStyle="bold" />
                 </LinearLayout>

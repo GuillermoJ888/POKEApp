@@ -715,6 +715,10 @@ public class PokedexActivity extends AppCompatActivity {
     // ------------------------------------------------------------------
 
     private void reproducirCry() {
+        if (!com.example.pokeapp.data.Preferencias.sonido(this)) {
+            Toast.makeText(this, "El sonido está desactivado en Configuración", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (pokemonActual == null) return;
 
         String url = "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/"

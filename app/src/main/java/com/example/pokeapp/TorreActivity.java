@@ -106,12 +106,10 @@ public class TorreActivity extends AppCompatActivity {
         findViewById(R.id.btnComenzarTorre).setOnClickListener(v -> comenzarCampania());
         btnConfirmar.setOnClickListener(v -> confirmarEquipo());
         btnPelear.setOnClickListener(v -> pelear());
-        findViewById(R.id.btnAbandonar).setOnClickListener(v -> new AlertDialog.Builder(this)
-                .setTitle("¿Abandonar la campaña?")
-                .setMessage("Perderás el avance de esta Torre.")
-                .setPositiveButton("Abandonar", (d, w) -> mostrarInicio())
-                .setNegativeButton("Seguir", null)
-                .show());
+        findViewById(R.id.btnAbandonar).setOnClickListener(v ->
+                Dialogos.confirmar(this, "🏳️", "¿Abandonar la campaña?",
+                        "Perderás el avance de esta Torre y tendrás que empezar desde el nivel 1.",
+                        "Abandonar", "Seguir peleando", this::mostrarInicio, null));
 
         mostrarInicio();
     }
@@ -323,13 +321,31 @@ public class TorreActivity extends AppCompatActivity {
         scroll.post(() -> scroll.scrollTo(0, 0));
     }
 
+    /**
+     * DOCENTES DE LA TORRE (uno por nivel, del 1 al 6).
+     *
+     * Nombres: cámbialos aquí por el nombre real de cada docente.
+     * Fotos:   copia cada foto AUTORIZADA en  app/src/main/res/drawable-nodpi/
+     *          con el nombre  foto_prof1.jpg, foto_prof2.jpg … foto_prof6.jpg
+     *          (también sirve .png). No hay que cambiar código: si el archivo existe,
+     *          la app lo usa; si no, muestra la silueta.
+     */
+    private static final String[] NOMBRES_DOCENTES = {
+            "Docente CESBA 1",   // nivel 1  → foto_prof1
+            "Docente CESBA 2",   // nivel 2  → foto_prof2
+            "Docente CESBA 3",   // nivel 3  → foto_prof3
+            "Docente CESBA 4",   // nivel 4  → foto_prof4
+            "Docente CESBA 5",   // nivel 5  → foto_prof5
+            "Docente CESBA 6"    // nivel 6 (jefe final) → foto_prof6
+    };
+
     private String nombreDocente(int n) {
-        return "Docente CESBA " + n;
+        return NOMBRES_DOCENTES[Math.max(0, Math.min(n - 1, NOMBRES_DOCENTES.length - 1))];
     }
 
-    /** Foto autorizada res/drawable-nodpi/docente_<n> si existe; si no, la silueta. */
+    /** Foto del docente del nivel (res/drawable-nodpi/foto_prof<n>) o la silueta si aún no está. */
     private int fotoDocente(int n) {
-        int foto = getResources().getIdentifier("docente_" + n, "drawable", getPackageName());
+        int foto = getResources().getIdentifier("foto_prof" + n, "drawable", getPackageName());
         return foto != 0 ? foto : R.drawable.ic_docente_silueta;
     }
 
@@ -350,12 +366,9 @@ public class TorreActivity extends AppCompatActivity {
     }
 
     private void avisoSinConexion(Runnable reintentar) {
-        new AlertDialog.Builder(this)
-                .setTitle("Sin conexión")
-                .setMessage("No se pudieron cargar los Pokémon de la PokéAPI.")
-                .setPositiveButton("Reintentar", (d, w) -> reintentar.run())
-                .setNegativeButton("Salir", (d, w) -> mostrarInicio())
-                .show();
+        Dialogos.confirmar(this, "📡", "Sin conexión",
+                "No se pudieron cargar los Pokémon de la PokéAPI. Revisa tu Internet.",
+                "Reintentar", "Salir", reintentar, this::mostrarInicio);
     }
 
     private void mostrarResultado(String emoji, String titulo, String mensaje,

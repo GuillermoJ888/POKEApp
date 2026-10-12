@@ -14,7 +14,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:scaleType="fitCenter"
-        android:contentDescription="Sprite del Pokémon" />
+        android:contentDescription="@string/t_sprite_del_pokemon" />
 
     <TextView
         android:id="@+id/tvNumeroMini"
@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="Nombre"
+        android:text="@string/t_nombre_2"
         android:textColor="#14213D"
         android:textSize="12sp"
         android:textStyle="bold" />

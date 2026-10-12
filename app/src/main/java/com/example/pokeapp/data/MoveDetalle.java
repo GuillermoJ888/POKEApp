@@ -28,11 +28,12 @@ public class MoveDetalle {
                 && (damageClass == null || !"status".equals(damageClass.getName()));
     }
 
-    /** "Rayo" (nombre en español) o, si no lo trae, "Thunderbolt". */
+    /** "Rayo" (nombre en el idioma de la app) o, si no lo trae, "Thunderbolt". */
     public String getNombreEspanol() {
+        String idioma = Preferencias.esIngles() ? "en" : "es";
         if (names != null) {
             for (Nombre n : names) {
-                if (n.language != null && "es".equals(n.language.getName()) && n.name != null) return n.name;
+                if (n.language != null && idioma.equals(n.language.getName()) && n.name != null) return n.name;
             }
         }
         return ListaPokemon.nombreBonito(name);
