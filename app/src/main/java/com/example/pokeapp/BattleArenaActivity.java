@@ -39,7 +39,12 @@ import com.example.pokeapp.data.MovimientoManager;
 import com.example.pokeapp.data.TypeColors;
 import com.example.pokeapp.data.HistorialManager;
 import com.example.pokeapp.data.Pokemon;
+import com.example.pokeapp.red.ConexionBatalla;
+import com.example.pokeapp.red.Protocolo;
 import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +62,11 @@ import java.util.Random;
  *   o automático (el sistema ataca solo y manda al siguiente vivo).
  * - Empieza el Pokémon con mayor Speed; también al entrar un reemplazo.
  * - Al terminar guarda el resumen en el Historial y regresa con el resultado.
+ *
+ * Batalla entre dispositivos (dos celulares, ver red/Protocolo): el lado A siempre es
+ * el jugador de este celular. El ANFITRIÓN pelea igual que en Versus, pero las decisiones
+ * del lado B llegan por la red y cada cosa que pasa se le avisa al otro celular.
+ * El INVITADO ("espejo") no calcula nada: solo dibuja lo que el anfitrión le manda.
  */
 public class BattleArenaActivity extends AppCompatActivity {
 
@@ -68,6 +78,9 @@ public class BattleArenaActivity extends AppCompatActivity {
     private static final String EXTRA_MANUAL_B = "extra_manual_b";
     private static final String EXTRA_MODO = "extra_modo";
     private static final String EXTRA_ESCENARIO = "extra_escenario";
+    private static final String EXTRA_RED = "extra_red";
+
+    private static final int RED_NO = 0, RED_ANFITRION = 1, RED_INVITADO = 2;
 
     // Resultado que reciben las pantallas que abren la arena
     public static final String RESULTADO_GANO_A = "resultado_gano_a";
@@ -105,6 +118,17 @@ public class BattleArenaActivity extends AppCompatActivity {
     private boolean esperandoJugador = false;
     private boolean batallaTerminada = false;
     private boolean ataquesListos = false, pausaInicioLista = false, batallaIniciada = false;
+    private int indiceEscenario = -1;
+
+    // Batalla entre dispositivos (red == null en los demás modos)
+    private ConexionBatalla red;
+    private boolean soyAnfitrion;
+    private boolean espejo;                 // invitado: solo dibuja lo que manda el anfitrión
+    private boolean rivalListo;             // (anfitrión) el invitado ya dibujó la batalla
+    private boolean esperandoRival;         // (anfitrión) falta la decisión del invitado
+    private boolean rivalEligeReemplazo;    // …y esa decisión es quién entra por el que cayó
+    private Pokemon[] datosA, datosB;
+    private final List<BattleTurn> turnosEspejo = new ArrayList<>();
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -136,6 +160,17 @@ public class BattleArenaActivity extends AppCompatActivity {
                 .putExtra(EXTRA_ESCENARIO, escenario);
     }
 
+    /**
+     * Batalla entre dispositivos: la conexión (ConexionBatalla) ya debe estar abierta.
+     * "mio" siempre se ve del lado A; quien creó la sala es el anfitrión.
+     */
+    public static Intent crearIntentRed(Context context, List<Pokemon> mio, List<Pokemon> rival,
+                                        String miNombre, String nombreRival, boolean soyAnfitrion) {
+        return crearIntentEquipos(context, mio, rival, miNombre, nombreRival, true, false,
+                HistorialManager.MODO_DISPOSITIVOS, -1)
+                .putExtra(EXTRA_RED, soyAnfitrion ? RED_ANFITRION : RED_INVITADO);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,15 +196,38 @@ public class BattleArenaActivity extends AppCompatActivity {
         findViewById(R.id.btnSalirArena).setOnClickListener(v -> finish());
         btnCambiar.setOnClickListener(v -> cambiarPorDecision());
 
+        int tipoRed = getIntent().getIntExtra(EXTRA_RED, RED_NO);
+        if (tipoRed != RED_NO) {
+            red = ConexionBatalla.obtener(this);
+            soyAnfitrion = tipoRed == RED_ANFITRION;
+            espejo = !soyAnfitrion;
+            if (!red.estaConectado()) {
+                red = null;
+                Toast.makeText(this, "Se perdió la conexión con el otro celular", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+        }
+        datosA = a;
+        datosB = b;
+
         prepararBatalla(a, b, getIntent().getIntExtra(EXTRA_ESCENARIO, -1));
 
-        // Mientras se ve "¡A vs B!" se cargan los 4 ataques reales de cada Pokémon
-        List<BattlePokemon> todos = new ArrayList<>(equipoA);
-        todos.addAll(equipoB);
-        MovimientoManager.asignar(todos, () -> {
-            ataquesListos = true;
-            intentarComenzar();
-        });
+        if (red != null) red.setEscucha(escuchaRed);
+
+        // Al invitado, los ataques y el HP le llegan del anfitrión en el mensaje "inicio"
+        if (!espejo) {
+            // Mientras se ve "¡A vs B!" se cargan los 4 ataques reales de cada Pokémon
+            List<BattlePokemon> todos = new ArrayList<>(equipoA);
+            todos.addAll(equipoB);
+            MovimientoManager.asignar(todos, () -> {
+                ataquesListos = true;
+                if (red != null) {
+                    red.enviar(Protocolo.inicio(indiceEscenario, describirEquipo(equipoA), describirEquipo(equipoB)));
+                }
+                intentarComenzar();
+            });
+        }
         handler.postDelayed(() -> {
             pausaInicioLista = true;
             if (!ataquesListos) mostrarBanner("Preparando ataques…");
@@ -177,10 +235,21 @@ public class BattleArenaActivity extends AppCompatActivity {
         }, PAUSA_INICIO);
     }
 
+    /** Salir a media batalla entre dispositivos corta la conexión: el otro celular se entera y también sale. */
+    @Override
+    public void finish() {
+        if (red != null && !batallaTerminada) red.desconectar();
+        super.finish();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+        if (red != null) {
+            red.quitarEscucha(escuchaRed);
+            if (!batallaTerminada) red.desconectar();
+        }
     }
 
     private Pokemon[] leerEquipo(String extra) {
@@ -265,9 +334,11 @@ public class BattleArenaActivity extends AppCompatActivity {
         for (Pokemon p : a) equipoA.add(new BattlePokemon(p));
         for (Pokemon p : b) equipoB.add(new BattlePokemon(p));
 
-        Escenario escenario = indiceEscenario >= 0 && indiceEscenario < Escenario.TODOS.size()
-                ? Escenario.TODOS.get(indiceEscenario)
-                : Escenario.aleatorio(random);
+        if (indiceEscenario < 0 || indiceEscenario >= Escenario.TODOS.size()) {
+            indiceEscenario = random.nextInt(Escenario.TODOS.size());
+        }
+        this.indiceEscenario = indiceEscenario;
+        Escenario escenario = Escenario.TODOS.get(indiceEscenario);
         tvTurno.setText("📍 " + escenario.nombre);
         acomodarEscenario(escenario);
 
@@ -446,6 +517,10 @@ public class BattleArenaActivity extends AppCompatActivity {
     /** Empieza cuando ya pasó la presentación y ya se cargaron los ataques. */
     private void intentarComenzar() {
         if (!ataquesListos || !pausaInicioLista || batallaIniciada) return;
+        if (red != null && soyAnfitrion && !rivalListo) {
+            mostrarBanner("Esperando a " + dueno(false) + "…");
+            return;
+        }
         batallaIniciada = true;
         comenzarBatalla();
     }
@@ -454,6 +529,13 @@ public class BattleArenaActivity extends AppCompatActivity {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
 
         ocultarBanner();
+        if (espejo) {
+            // El anfitrión decide quién empieza y lo avisa con el primer "turno"
+            agregarBitacora("¡" + dueno(true) + " vs " + dueno(false) + "!");
+            tvTurno.setText("⏳ Esperando a " + dueno(false) + "…");
+            red.enviar(Protocolo.listo());
+            return;
+        }
         agregarBitacora("¡" + dueno(true) + " vs " + dueno(false) + "!\n" + decidirQuienEmpieza());
         handler.postDelayed(this::siguienteTurno, 700);
     }
@@ -470,6 +552,14 @@ public class BattleArenaActivity extends AppCompatActivity {
 
     private void siguienteTurno() {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
+
+        if (red != null) {
+            red.enviar(Protocolo.turno(ladoRed(turnoDeA), Protocolo.PIDE_ACCION));
+            if (!turnoDeA) {
+                esperarRival(false);   // el invitado elige en su celular
+                return;
+            }
+        }
 
         if (esManual(turnoDeA)) {
             mostrarPanelAtaques(turnoDeA);   // espera a que el jugador elija ataque o cambie
@@ -567,6 +657,12 @@ public class BattleArenaActivity extends AppCompatActivity {
         if (!esperandoJugador || batallaTerminada) return;
         esperandoJugador = false;
         barraAccion.setVisibility(View.GONE);
+        if (espejo) {
+            // El invitado solo avisa qué eligió; el resultado regresa como "ataque"
+            red.enviar(Protocolo.atacar(actual(true).getMovimientos().indexOf(m)));
+            tvTurno.setText("⏳ " + m.nombre + "…");
+            return;
+        }
         ejecutarAtaque(turnoDeA, m);
     }
 
@@ -576,6 +672,30 @@ public class BattleArenaActivity extends AppCompatActivity {
         BattlePokemon defensor = actual(!ladoA);
 
         BattleTurn turno = motor.atacar(atacante, defensor, movimiento);
+        if (red != null) {
+            Movimiento m = turno.movimiento;
+            red.enviar(Protocolo.ataque(ladoRed(ladoA), turno.numero, m.nombre, m.tipo, m.potencia,
+                    m.precision, turno.danio, turno.efectividad, turno.critico, turno.fallo,
+                    turno.hpRestante));
+        }
+        mostrarAtaque(ladoA, turno);
+
+        if (turno.derrotado) {
+            if (!quedanVivos(!ladoA)) {
+                terminarBatalla(ladoA);
+            } else {
+                handler.postDelayed(() -> pedirReemplazo(!ladoA), PAUSA_REEMPLAZO);
+            }
+            return;
+        }
+
+        turnoDeA = !ladoA;
+        handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
+    }
+
+    /** Dibuja un ataque ya calculado: animaciones, barra de vida y bitácora. */
+    private void mostrarAtaque(boolean ladoA, BattleTurn turno) {
+        BattlePokemon defensor = turno.defensor;
         tvTurno.setText("Turno " + turno.numero + " · " + turno.movimiento.nombre);
 
         animarAtaque(contenedor(ladoA), ladoA ? 40f : -40f);
@@ -592,17 +712,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         if (turno.derrotado) {
             actualizarPuntos(!ladoA);
             contenedor(!ladoA).animate().translationY(80f).alpha(0f).setDuration(700).setStartDelay(300).start();
-
-            if (!quedanVivos(!ladoA)) {
-                terminarBatalla(ladoA);
-            } else {
-                handler.postDelayed(() -> pedirReemplazo(!ladoA), PAUSA_REEMPLAZO);
-            }
-            return;
         }
-
-        turnoDeA = !ladoA;
-        handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
     }
 
     /** Índices de los Pokémon vivos del lado, sin contar al que está peleando. */
@@ -625,6 +735,10 @@ public class BattleArenaActivity extends AppCompatActivity {
         mostrarVentanaEquipo(lado, "Cambiar Pokémon", true, indice -> {
             esperandoJugador = false;
             barraAccion.setVisibility(View.GONE);
+            if (espejo) {
+                red.enviar(Protocolo.cambiar(indice));   // regresa como "entra"
+                return;
+            }
             entrarPokemon(lado, indice, true);
         });
     }
@@ -634,6 +748,13 @@ public class BattleArenaActivity extends AppCompatActivity {
         if (batallaTerminada || isFinishing() || isDestroyed()) return;
 
         List<Integer> vivos = otrosVivos(ladoA);
+        if (red != null && vivos.size() > 1) {
+            red.enviar(Protocolo.turno(ladoRed(ladoA), Protocolo.PIDE_REEMPLAZO));
+            if (!ladoA) {
+                esperarRival(true);   // el invitado elige en su celular
+                return;
+            }
+        }
         if (!esManual(ladoA) || vivos.size() == 1) {
             entrarPokemon(ladoA, vivos.get(0), false);
             return;
@@ -733,18 +854,8 @@ public class BattleArenaActivity extends AppCompatActivity {
      * si fue porque el anterior cayó, empieza el más rápido (regla de Speed).
      */
     private void entrarPokemon(boolean ladoA, int indice, boolean porDecision) {
-        if (ladoA) activoA = indice;
-        else activoB = indice;
-
-        pintarPokemon(ladoA);
-
-        View vista = contenedor(ladoA);
-        vista.animate().cancel();
-        vista.setAlpha(1f);
-        vista.setTranslationY(0f);
-        vista.setTranslationX(ladoA ? -vista.getWidth() * 2f : vista.getWidth() * 2f);
-        vista.animate().translationX(0f).setDuration(500).setStartDelay(0)
-                .setInterpolator(new OvershootInterpolator()).start();
+        if (red != null) red.enviar(Protocolo.entra(ladoRed(ladoA), indice, porDecision));
+        mostrarEntrada(ladoA, indice);
 
         String quien = ladoA ? nombreA : nombreB;
         if (porDecision) {
@@ -757,12 +868,34 @@ public class BattleArenaActivity extends AppCompatActivity {
         handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
     }
 
+    /** Pone al Pokémon "indice" como activo de su lado y lo hace entrar desde su orilla. */
+    private void mostrarEntrada(boolean ladoA, int indice) {
+        if (ladoA) activoA = indice;
+        else activoB = indice;
+
+        pintarPokemon(ladoA);
+
+        View vista = contenedor(ladoA);
+        vista.animate().cancel();
+        vista.setAlpha(1f);
+        vista.setTranslationY(0f);
+        vista.setTranslationX(ladoA ? -vista.getWidth() * 2f : vista.getWidth() * 2f);
+        vista.animate().translationX(0f).setDuration(500).setStartDelay(0)
+                .setInterpolator(new OvershootInterpolator()).start();
+    }
+
     private void terminarBatalla(boolean ganoA) {
         batallaTerminada = true;
         esperandoJugador = false;
         barraAccion.setVisibility(View.GONE);
 
-        int totalTurnos = motor.getTurnos().size();
+        int totalTurnos = turnos().size();
+        if (red != null) {
+            if (soyAnfitrion) red.enviar(Protocolo.fin(ladoRed(ganoA), totalTurnos));
+            // Lo que llegue desde ahora (por ejemplo, una revancha) es para la sala
+            red.quitarEscucha(escuchaRed);
+        }
+
         String ganador = esPorEquipos() ? dueno(ganoA) : actual(ganoA).nombre;
         agregarBitacora("🏆 ¡" + ganador + " gana la batalla en " + totalTurnos + " turnos!");
 
@@ -790,7 +923,7 @@ public class BattleArenaActivity extends AppCompatActivity {
             movimientos.add(dueno(true) + ": " + nombresEquipo(equipoA) + "\n"
                     + dueno(false) + ": " + nombresEquipo(equipoB));
         }
-        for (BattleTurn t : motor.getTurnos()) movimientos.add(t.descripcion());
+        for (BattleTurn t : turnos()) movimientos.add(t.descripcion());
 
         // Por equipos se guarda el nombre de cada jugador y el primer Pokémon de cada equipo
         List<String> lados = esPorEquipos()
@@ -806,6 +939,172 @@ public class BattleArenaActivity extends AppCompatActivity {
                 Toast.makeText(app, "No se pudo guardar la batalla en el Historial", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    // ------------------------------------------------------------------
+    // Batalla entre dispositivos
+    // ------------------------------------------------------------------
+
+    /** Turnos jugados: los del motor, o los que mandó el anfitrión si este celular es el invitado. */
+    private List<BattleTurn> turnos() {
+        return espejo ? turnosEspejo : motor.getTurnos();
+    }
+
+    /** Nombre de un lado en los mensajes: el A siempre es este celular. */
+    private String ladoRed(boolean ladoA) {
+        return Protocolo.lado(ladoA == soyAnfitrion);
+    }
+
+    /** true si el lado que nombra el mensaje es el A (este celular). */
+    private boolean esLadoA(JSONObject mensaje, String clave) {
+        return Protocolo.lado(soyAnfitrion).equals(mensaje.optString(clave));
+    }
+
+    /** (Anfitrión) Queda en pausa hasta que llegue la "accion" del invitado. */
+    private void esperarRival(boolean reemplazo) {
+        esperandoRival = true;
+        rivalEligeReemplazo = reemplazo;
+        tvTurno.setText("⏳ Esperando a " + dueno(false) + "…");
+    }
+
+    /** (Anfitrión) Un equipo para el mensaje "inicio": ID, HP y ataques de cada Pokémon. */
+    private JSONArray describirEquipo(List<BattlePokemon> equipo) {
+        JSONArray lista = new JSONArray();
+        for (BattlePokemon p : equipo) {
+            JSONArray ataques = new JSONArray();
+            for (Movimiento m : p.getMovimientos()) {
+                ataques.put(Protocolo.ataqueDe(m.nombre, m.tipo, m.potencia, m.precision));
+            }
+            lista.put(Protocolo.pokemon(p.id, p.hpMaxima, ataques));
+        }
+        return lista;
+    }
+
+    private final ConexionBatalla.Escucha escuchaRed = new ConexionBatalla.Escucha() {
+        @Override
+        public void alRecibir(JSONObject mensaje) {
+            if (batallaTerminada || isFinishing() || isDestroyed()) return;
+            if (soyAnfitrion) recibirComoAnfitrion(mensaje);
+            else recibirComoInvitado(mensaje);
+        }
+
+        @Override
+        public void alDesconectar() {
+            if (batallaTerminada || isFinishing() || isDestroyed()) return;
+            Toast.makeText(getApplicationContext(), "El otro celular se desconectó: batalla cancelada",
+                    Toast.LENGTH_LONG).show();
+            finish();
+        }
+    };
+
+    private void recibirComoAnfitrion(JSONObject mensaje) {
+        String tipo = Protocolo.tipo(mensaje);
+        if (Protocolo.LISTO.equals(tipo)) {
+            rivalListo = true;
+            intentarComenzar();
+            return;
+        }
+        // Solo se acepta la decisión del invitado cuando de verdad le toca (y si es válida)
+        if (!Protocolo.ACCION.equals(tipo) || !esperandoRival) return;
+
+        int indice = mensaje.optInt("indice", -1);
+        String hace = mensaje.optString("hace");
+        if (Protocolo.HACE_ATACAR.equals(hace) && !rivalEligeReemplazo) {
+            List<Movimiento> ataques = actual(false).getMovimientos();
+            if (indice < 0 || indice >= ataques.size()) return;
+            esperandoRival = false;
+            ejecutarAtaque(false, ataques.get(indice));
+        } else if (Protocolo.HACE_CAMBIAR.equals(hace)) {
+            if (!otrosVivos(false).contains(indice)) return;
+            esperandoRival = false;
+            entrarPokemon(false, indice, !rivalEligeReemplazo);
+        }
+    }
+
+    private void recibirComoInvitado(JSONObject mensaje) {
+        switch (Protocolo.tipo(mensaje)) {
+            case Protocolo.INICIO:
+                aplicarInicio(mensaje);
+                break;
+            case Protocolo.TURNO:
+                turnoDeA = esLadoA(mensaje, "lado");
+                if (!turnoDeA) {
+                    tvTurno.setText("⏳ Esperando a " + dueno(false) + "…");
+                } else if (Protocolo.PIDE_REEMPLAZO.equals(mensaje.optString("pide"))) {
+                    mostrarVentanaEquipo(true, "Elige tu siguiente Pokémon", false,
+                            indice -> red.enviar(Protocolo.cambiar(indice)));
+                } else {
+                    mostrarPanelAtaques(true);
+                }
+                break;
+            case Protocolo.ATAQUE:
+                aplicarAtaque(mensaje);
+                break;
+            case Protocolo.ENTRA: {
+                boolean ladoA = esLadoA(mensaje, "lado");
+                int indice = mensaje.optInt("indice", -1);
+                if (indice < 0 || indice >= equipo(ladoA).size()) return;
+                mostrarEntrada(ladoA, indice);
+                agregarBitacora(dueno(ladoA) + (mensaje.optBoolean("porDecision") ? " cambia a " : " envía a ")
+                        + actual(ladoA).nombre + ".");
+                break;
+            }
+            case Protocolo.FIN:
+                terminarBatalla(esLadoA(mensaje, "gana"));
+                break;
+            default:
+                break;
+        }
+    }
+
+    /** (Invitado) HP y ataques que dictó el anfitrión para los dos equipos. */
+    private void aplicarInicio(JSONObject mensaje) {
+        if (ataquesListos) return;
+        aplicarEquipo(mensaje.optJSONArray(Protocolo.lado(soyAnfitrion)), equipoA, datosA);
+        aplicarEquipo(mensaje.optJSONArray(Protocolo.lado(!soyAnfitrion)), equipoB, datosB);
+        pintarPokemon(true);
+        pintarPokemon(false);
+        ataquesListos = true;
+        intentarComenzar();
+    }
+
+    private void aplicarEquipo(JSONArray lista, List<BattlePokemon> equipo, Pokemon[] datos) {
+        if (lista == null) return;
+        for (int i = 0; i < equipo.size() && i < lista.length(); i++) {
+            JSONObject p = lista.optJSONObject(i);
+            if (p == null) continue;
+
+            int hp = p.optInt("hp", 0);
+            if (hp > 0 && hp != equipo.get(i).hpMaxima) equipo.set(i, new BattlePokemon(datos[i], hp));
+
+            List<Movimiento> ataques = new ArrayList<>();
+            JSONArray dictados = p.optJSONArray("ataques");
+            for (int j = 0; dictados != null && j < dictados.length(); j++) {
+                JSONObject a = dictados.optJSONObject(j);
+                if (a != null) ataques.add(leerMovimiento(a));
+            }
+            equipo.get(i).setMovimientos(ataques);
+        }
+    }
+
+    private Movimiento leerMovimiento(JSONObject o) {
+        String tipo = o.optString("tipo", "");
+        return new Movimiento(o.optString("nombre", "Ataque"), tipo.isEmpty() ? null : tipo,
+                o.optInt("potencia", 0), o.optInt("precision", 0));
+    }
+
+    /** (Invitado) Dibuja un ataque que ya calculó el anfitrión. */
+    private void aplicarAtaque(JSONObject mensaje) {
+        boolean ladoA = esLadoA(mensaje, "lado");
+        BattlePokemon atacante = actual(ladoA), defensor = actual(!ladoA);
+        defensor.fijarHp(mensaje.optInt("hp", defensor.getHpActual()));
+
+        BattleTurn turno = BattleTurn.remoto(mensaje.optInt("numero", turnosEspejo.size() + 1),
+                atacante, defensor, leerMovimiento(mensaje), mensaje.optInt("danio", 0),
+                (float) mensaje.optDouble("efectividad", 1.0),
+                mensaje.optBoolean("critico"), mensaje.optBoolean("fallo"));
+        turnosEspejo.add(turno);
+        mostrarAtaque(ladoA, turno);
     }
 
     private String nombresEquipo(List<BattlePokemon> equipo) {

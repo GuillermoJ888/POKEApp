@@ -48,7 +48,7 @@ public class HistorialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_historial);
 
         modo = getIntent().getStringExtra(EXTRA_MODO);
-        if (modo == null) modo = HistorialManager.MODO_EMULATOR;
+        if (modo == null) modo = HistorialManager.MODO_TODOS;   // así lo abre el Menú (módulo J)
 
         ((TextView) findViewById(R.id.tvModo)).setText(modo);
         seccionResumen = findViewById(R.id.seccionResumen);
@@ -219,7 +219,7 @@ public class HistorialActivity extends AppCompatActivity {
         ((TextView) vista.findViewById(R.id.tvDetalleGanador)).setText(
                 "🏆 Ganó " + batalla.ganador + " · " + batalla.turnos + " turnos");
         ((TextView) vista.findViewById(R.id.tvDetalleFecha)).setText(
-                HistorialAdapter.nombreDelDia(batalla.fecha).toLowerCase(Locale.ROOT)
+                batalla.modo + " · " + HistorialAdapter.nombreDelDia(batalla.fecha).toLowerCase(Locale.ROOT)
                         + " · " + HistorialAdapter.hora(batalla.fecha));
 
         ((TextView) vista.findViewById(R.id.tvNarracion)).setText(narrar(batalla));

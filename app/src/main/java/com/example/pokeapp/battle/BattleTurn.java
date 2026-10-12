@@ -29,6 +29,16 @@ public class BattleTurn {
         this.derrotado = defensor.estaDerrotado();
     }
 
+    /**
+     * Batalla entre dispositivos (invitado): turno que ya calculó el anfitrión.
+     * El HP del defensor debe estar ya actualizado (BattlePokemon.fijarHp).
+     */
+    public static BattleTurn remoto(int numero, BattlePokemon atacante, BattlePokemon defensor,
+                                    Movimiento movimiento, int danio, float efectividad,
+                                    boolean critico, boolean fallo) {
+        return new BattleTurn(numero, atacante, defensor, movimiento, danio, efectividad, critico, fallo);
+    }
+
     /** true si el ataque no le afecta al tipo del defensor (×0). */
     public boolean sinEfecto() {
         return !fallo && efectividad == 0f;

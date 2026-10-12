@@ -10,7 +10,10 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -103,6 +106,95 @@ public class UsuarioManager {
             Long medallas = snapshot.getLong("medallas");
             callback.alTerminar(medallas == null ? 0 : medallas.intValue());
         }).addOnFailureListener(e -> callback.alTerminar(0));
+    }
+
+    public interface MedallasListas {
+        /** total = medallas obtenidas; fechas = número de medalla (1–10) → cuándo se ganó. */
+        void alTerminar(int total, Map<Integer, Date> fechas);
+    }
+
+    /** Para el módulo Medallas: cuántas tiene y la fecha de cada una (si falla: 0 y vacío). */
+    @SuppressWarnings("unchecked")
+    public static void obtenerMedallasConFecha(@NonNull MedallasListas callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(0, new HashMap<>());
+            return;
+        }
+
+        doc.get().addOnSuccessListener(snapshot -> {
+            Map<Integer, Date> fechas = new HashMap<>();
+            Object lista = snapshot.get("medallasObtenidas");
+            if (lista instanceof List) {
+                for (Object o : (List<Object>) lista) {
+                    if (!(o instanceof Map)) continue;
+                    Object numero = ((Map<String, Object>) o).get("numero");
+                    Object fecha = ((Map<String, Object>) o).get("fecha");
+                    if (numero instanceof Number && fecha instanceof Timestamp) {
+                        fechas.put(((Number) numero).intValue(), ((Timestamp) fecha).toDate());
+                    }
+                }
+            }
+            callback.alTerminar(valor(snapshot.getLong("medallas")), fechas);
+        }).addOnFailureListener(e -> callback.alTerminar(0, new HashMap<>()));
+    }
+
+    /** Mejor puntuación de un minijuego (campo de usuarios/{uid}, por ejemplo "recordTipos"); 0 si no hay. */
+    public static void obtenerRecord(String campo, @NonNull FavoritosManager.Resultado<Integer> callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(0);
+            return;
+        }
+        doc.get().addOnSuccessListener(snapshot -> callback.alTerminar(valor(snapshot.getLong(campo))))
+                .addOnFailureListener(e -> callback.alTerminar(0));
+    }
+
+    public static void guardarRecord(String campo, int puntos) {
+        DocumentReference doc = documento();
+        if (doc == null) return;
+
+        Map<String, Object> datos = new HashMap<>();
+        datos.put(campo, puntos);
+        doc.set(datos, SetOptions.merge());
+    }
+
+    /** Safari: agrega el Pokémon a la colección del usuario (no se repite si ya lo tenía). */
+    public static void registrarCaptura(int id, String nombre) {
+        DocumentReference doc = documento();
+        if (doc == null) return;
+
+        Map<String, Object> pokemon = new HashMap<>();
+        pokemon.put("id", id);
+        pokemon.put("nombre", nombre);
+
+        Map<String, Object> datos = new HashMap<>();
+        datos.put("capturados", FieldValue.arrayUnion(pokemon));
+        doc.set(datos, SetOptions.merge());
+    }
+
+    /** Colección del Safari, en el orden en que se capturaron (vacía si no hay o si falla). */
+    @SuppressWarnings("unchecked")
+    public static void obtenerCapturados(@NonNull FavoritosManager.Resultado<List<PokemonMini>> callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(new ArrayList<>());
+            return;
+        }
+
+        doc.get().addOnSuccessListener(snapshot -> {
+            List<PokemonMini> lista = new ArrayList<>();
+            Object guardados = snapshot.get("capturados");
+            if (guardados instanceof List) {
+                for (Object o : (List<Object>) guardados) {
+                    if (!(o instanceof Map)) continue;
+                    Object id = ((Map<String, Object>) o).get("id");
+                    Object nombre = ((Map<String, Object>) o).get("nombre");
+                    if (id instanceof Number) lista.add(new PokemonMini(((Number) id).intValue(), String.valueOf(nombre)));
+                }
+            }
+            callback.alTerminar(lista);
+        }).addOnFailureListener(e -> callback.alTerminar(new ArrayList<>()));
     }
 
     public static final int MAX_MEDALLAS = 10;

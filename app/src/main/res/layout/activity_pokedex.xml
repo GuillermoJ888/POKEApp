@@ -23,12 +23,16 @@
 
             <TextView
                 android:id="@+id/btnRegresar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="6dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_boton_regresar"
+                android:gravity="center"
+                android:includeFontPadding="false"
                 android:text="←"
                 android:textColor="#FFFFFF"
-                android:textSize="24sp" />
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:contentDescription="Regresar" />
 
             <View
                 android:layout_width="58dp"

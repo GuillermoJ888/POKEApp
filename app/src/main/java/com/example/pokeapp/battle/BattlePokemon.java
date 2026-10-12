@@ -32,6 +32,14 @@ public class BattlePokemon {
     private List<Movimiento> movimientos = new ArrayList<>();
 
     public BattlePokemon(Pokemon pokemon) {
+        this(pokemon, 0);
+    }
+
+    /**
+     * Batalla entre dispositivos: el anfitrión dicta el HP máximo (su app puede usar
+     * otros stats). hpDictado 0 = el HP real de la PokéAPI.
+     */
+    public BattlePokemon(Pokemon pokemon, int hpDictado) {
         this.id = pokemon.getId();
         this.nombre = ListaPokemon.nombreBonito(pokemon.getName());
         this.imagen = pokemon.getSprites() != null ? pokemon.getSprites().getImagenNormal() : null;
@@ -61,7 +69,7 @@ public class BattlePokemon {
             }
         }
 
-        this.hpMaxima = hp;
+        this.hpMaxima = hpDictado > 0 ? hpDictado : hp;
         this.ataque = atk;
         this.defensa = def;
         this.ataqueEspecial = atkEsp;
@@ -101,6 +109,11 @@ public class BattlePokemon {
     /** Lo usa el motor al aplicar un golpe; el HP nunca baja de 0. */
     void recibirDanio(int danio) {
         hpActual = Math.max(0, hpActual - danio);
+    }
+
+    /** Batalla entre dispositivos (invitado): el HP lo dicta el anfitrión. */
+    public void fijarHp(int hp) {
+        hpActual = Math.max(0, Math.min(hpMaxima, hp));
     }
 
     /** Regresa al HP máximo (por ejemplo, entre niveles de la Torre). */

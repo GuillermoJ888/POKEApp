@@ -33,11 +33,15 @@ public class HistorialManager {
     public static final String MODO_EMULATOR = "Battle Emulator";
     public static final String MODO_VERSUS = "Battle Versus";
     public static final String MODO_TORRE = "Torre Pokémon";
+    public static final String MODO_DISPOSITIVOS = "Batalla entre dispositivos";
+    /** Historial general (módulo J): no filtra por modo. */
+    public static final String MODO_TODOS = "Todos los modos";
 
     private static final int MAX_LEIDAS = 50;
 
     /** Una batalla guardada. */
     public static class Batalla {
+        public final String modo;
         public final Date fecha;               // puede ser null si aún no sincroniza
         public final List<String> pokemon;
         public final List<Integer> pokemonIds;
@@ -45,8 +49,9 @@ public class HistorialManager {
         public final int turnos;
         public final List<String> movimientos;
 
-        Batalla(Date fecha, List<String> pokemon, List<Integer> pokemonIds, String ganador,
+        Batalla(String modo, Date fecha, List<String> pokemon, List<Integer> pokemonIds, String ganador,
                 int turnos, List<String> movimientos) {
+            this.modo = modo;
             this.fecha = fecha;
             this.pokemon = pokemon;
             this.pokemonIds = pokemonIds;
@@ -94,7 +99,7 @@ public class HistorialManager {
     }
 
     /**
-     * Batallas de un modo, de la más reciente a la más antigua; null si falló.
+     * Batallas de un modo (o de todos con MODO_TODOS), de la más reciente a la más antigua; null si falló.
      * Se filtra el modo aquí (y no en la consulta) para no necesitar un índice compuesto.
      */
     public static void obtenerBatallas(String modo, @NonNull FavoritosManager.Resultado<List<Batalla>> callback) {
@@ -108,7 +113,7 @@ public class HistorialManager {
                 .addOnSuccessListener(snapshot -> {
                     List<Batalla> lista = new ArrayList<>();
                     for (DocumentSnapshot doc : snapshot.getDocuments()) {
-                        if (!modo.equals(doc.getString("modo"))) continue;
+                        if (!MODO_TODOS.equals(modo) && !modo.equals(doc.getString("modo"))) continue;
                         lista.add(convertir(doc));
                     }
                     callback.alTerminar(lista);
@@ -146,8 +151,10 @@ public class HistorialManager {
 
         Long turnos = doc.getLong("turnos");
         String ganador = doc.getString("ganador");
+        String modo = doc.getString("modo");
 
         return new Batalla(
+                modo != null ? modo : MODO_EMULATOR,
                 ts != null ? ts.toDate() : null,
                 pokemon,
                 ids,
