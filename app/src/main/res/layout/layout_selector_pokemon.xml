@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/t_populares_toca_uno_para_elegirlo"
-            android:textColor="@color/menu_text_soft"
+            android:textColor="?attr/pkTextoSuave"
             android:textSize="11sp"
             android:textStyle="bold"
             android:letterSpacing="0.06" />
@@ -190,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/t_nombre_2"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="23sp"
                 android:textStyle="bold" />
 
@@ -212,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:text="@string/t_stats_de_batalla"
-                android:textColor="@color/menu_text_soft"
+                android:textColor="?attr/pkTextoSuave"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.08" />
@@ -230,7 +230,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text=""
-                android:textColor="@color/menu_text_soft"
+                android:textColor="?attr/pkTextoSuave"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 

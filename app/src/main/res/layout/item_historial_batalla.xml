@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/t_n_5_25_p_m"
-            android:textColor="@color/menu_text_soft"
+            android:textColor="?attr/pkTextoSuave"
             android:textSize="11sp" />
 
         <TextView
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/t_a"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/t_b"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="13sp"
                 android:textStyle="bold"
                 android:maxLines="1"

@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/t_nivel_1_docente_cesba_1"
-            android:textColor="@color/menu_text"
+            android:textColor="?attr/pkTexto"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/t_n_1_pokemon_rival"
-            android:textColor="@color/menu_text_soft"
+            android:textColor="?attr/pkTextoSuave"
             android:textSize="12sp" />
     </LinearLayout>
 

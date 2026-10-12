@@ -317,7 +317,7 @@ public class SelectorPokemon {
 
             TextView etiqueta = new TextView(activity);
             etiqueta.setText(etiquetas[i]);
-            etiqueta.setTextColor(activity.getColor(R.color.menu_text_soft));
+            etiqueta.setTextColor(PokeApp.color(activity, R.attr.pkTextoSuave));
             etiqueta.setTextSize(12);
             fila.addView(etiqueta, new LinearLayout.LayoutParams(Math.round(76 * dp), LinearLayout.LayoutParams.WRAP_CONTENT));
 
@@ -330,7 +330,7 @@ public class SelectorPokemon {
 
             TextView valor = new TextView(activity);
             valor.setText(String.valueOf(valores[i]));
-            valor.setTextColor(activity.getColor(R.color.menu_text));
+            valor.setTextColor(PokeApp.color(activity, R.attr.pkTexto));
             valor.setTextSize(13);
             valor.setTypeface(null, android.graphics.Typeface.BOLD);
             valor.setGravity(android.view.Gravity.END);

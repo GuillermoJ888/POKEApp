@@ -2,19 +2,27 @@ package com.example.pokeapp;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.pokeapp.data.Preferencias;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashActivity extends AppCompatActivity {
 
     private static final long DURACION_SPLASH_MS = 1800;
+    private static final long DURACION_MAXIMA_VIDEO_MS = 12000;
+
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private boolean yaSalio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +31,41 @@ public class SplashActivity extends AppCompatActivity {
 
         animarLogo();
 
-        new Handler(Looper.getMainLooper()).postDelayed(
-                this::irAPantallaCorrespondiente,
-                DURACION_SPLASH_MS
-        );
+        if (!reproducirVideo()) {
+            handler.postDelayed(this::irAPantallaCorrespondiente, DURACION_SPLASH_MS);
+        }
+    }
+
+    /**
+     * Si existe el video res/raw/splash_video (mp4), se reproduce a pantalla completa y al terminar
+     * se entra a la app. Si no existe o falla, queda la imagen con la barra de carga de siempre.
+     */
+    private boolean reproducirVideo() {
+        int video = getResources().getIdentifier("splash_video", "raw", getPackageName());
+        if (video == 0) return false;
+
+        VideoView videoSplash = findViewById(R.id.videoSplash);
+        videoSplash.setVisibility(View.VISIBLE);
+        videoSplash.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + video));
+        videoSplash.setOnPreparedListener(reproductor -> {
+            if (!Preferencias.sonido(this)) reproductor.setVolume(0f, 0f);
+            findViewById(R.id.cargaSplash).setVisibility(View.GONE);
+        });
+        videoSplash.setOnCompletionListener(reproductor -> irAPantallaCorrespondiente());
+        videoSplash.setOnErrorListener((reproductor, que, extra) -> {
+            irAPantallaCorrespondiente();
+            return true;
+        });
+        videoSplash.start();
+        // Por si el video se atora: nunca se queda más de este tiempo en la pantalla de carga
+        handler.postDelayed(this::irAPantallaCorrespondiente, DURACION_MAXIMA_VIDEO_MS);
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
     }
 
     private void animarLogo() {
@@ -46,6 +85,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void irAPantallaCorrespondiente() {
+        if (yaSalio || isFinishing()) return;
+        yaSalio = true;
+        handler.removeCallbacksAndMessages(null);
 
         boolean haySesionActiva =
                 FirebaseAuth.getInstance().getCurrentUser() != null;

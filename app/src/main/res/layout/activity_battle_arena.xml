@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/t_b"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -116,7 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/t_tipo"
-                android:textColor="@color/menu_text_soft"
+                android:textColor="?attr/pkTextoSuave"
                 android:textSize="11sp"
                 android:maxLines="1" />
 
@@ -137,7 +137,7 @@
                 android:layout_marginTop="2dp"
                 android:gravity="end"
                 android:text="@string/t_n_100_100_hp_100"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -181,7 +181,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/t_a"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -192,7 +192,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/t_tipo"
-                android:textColor="@color/menu_text_soft"
+                android:textColor="?attr/pkTextoSuave"
                 android:textSize="11sp"
                 android:maxLines="1" />
 
@@ -213,7 +213,7 @@
                 android:layout_marginTop="2dp"
                 android:gravity="end"
                 android:text="@string/t_n_100_100_hp_100"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="11sp"
                                 android:textStyle="bold" />
 

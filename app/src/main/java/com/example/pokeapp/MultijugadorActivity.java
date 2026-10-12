@@ -464,7 +464,7 @@ public class MultijugadorActivity extends AppCompatActivity {
         for (Map.Entry<String, String> sala : salas.entrySet()) {
             TextView fila = new TextView(this);
             fila.setText("⚔️ Sala de " + sala.getValue());
-            fila.setTextColor(ContextCompat.getColor(this, R.color.menu_text));
+            fila.setTextColor(PokeApp.color(this, R.attr.pkTexto));
             fila.setTextSize(15);
             fila.setTypeface(null, android.graphics.Typeface.BOLD);
             fila.setBackgroundResource(R.drawable.bg_mini_normal);

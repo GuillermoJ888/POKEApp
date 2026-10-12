@@ -84,7 +84,7 @@ public class MedallasActivity extends AppCompatActivity {
 
             TextView nombre = new TextView(this);
             nombre.setText((i + 1) + ". Medalla " + MEDALLAS[i][0]);
-            nombre.setTextColor(getColor(R.color.menu_text));
+            nombre.setTextColor(PokeApp.color(this, R.attr.pkTexto));
             nombre.setTextSize(14);
             nombre.setTypeface(null, Typeface.BOLD);
             nombre.setGravity(Gravity.CENTER);
@@ -94,7 +94,7 @@ public class MedallasActivity extends AppCompatActivity {
             Date fecha = fechas != null ? fechas.get(i + 1) : null;
             TextView estado = new TextView(this);
             estado.setText(!ganada ? "Bloqueada" : fecha != null ? "Obtenida el " + formato.format(fecha) : "Obtenida");
-            estado.setTextColor(ganada ? 0xFF2E8B57 : getColor(R.color.menu_text_soft));
+            estado.setTextColor(ganada ? 0xFF2E8B57 : PokeApp.color(this, R.attr.pkTextoSuave));
             estado.setTextSize(12);
             estado.setGravity(Gravity.CENTER);
             tarjeta.addView(estado);

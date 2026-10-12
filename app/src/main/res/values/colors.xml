@@ -31,4 +31,14 @@
     <color name="chip_fondo">#FFE4DE</color>
     <color name="vida_fondo">#F2FFFDF5</color>
     <color name="vida_borde">#3A1410</color>
+
+    <!-- Tema Pokédex: pantalla verde tipo LCD -->
+    <color name="dex_menu_bg">#D9F0CF</color>
+    <color name="dex_menu_text">#0F2E18</color>
+    <color name="dex_menu_text_soft">#4A7054</color>
+    <color name="dex_tarjeta_fondo">#F2FAEC</color>
+    <color name="dex_tarjeta_borde">#7DB98A</color>
+    <color name="dex_chip_fondo">#C2E6B8</color>
+    <color name="dex_vida_fondo">#F2F2FAEC</color>
+    <color name="dex_vida_borde">#0F2E18</color>
 </resources>

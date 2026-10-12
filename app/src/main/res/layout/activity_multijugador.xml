@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/t_dos_celulares_cercanos_cada_quien_"
-                android:textColor="@color/menu_text_soft"
+                android:textColor="?attr/pkTextoSuave"
                 android:textSize="13sp" />
 
             <!-- Mi equipo -->
@@ -107,7 +107,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/t_tu_equipo_0_3"
-                    android:textColor="@color/menu_text"
+                    android:textColor="?attr/pkTexto"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/t_conexion"
-                    android:textColor="@color/menu_text"
+                    android:textColor="?attr/pkTexto"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -142,7 +142,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:text=""
-                    android:textColor="@color/menu_text_soft"
+                    android:textColor="?attr/pkTextoSuave"
                     android:textSize="13sp" />
 
                 <!-- Salas encontradas (se llenan desde el código) -->

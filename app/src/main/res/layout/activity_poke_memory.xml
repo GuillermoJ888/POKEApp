@@ -82,7 +82,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="🃏 0/8"
-                    android:textColor="@color/menu_text"
+                    android:textColor="?attr/pkTexto"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -93,7 +93,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="🔁 0"
-                    android:textColor="@color/menu_text"
+                    android:textColor="?attr/pkTexto"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -104,7 +104,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="⏱ 0:00"
-                    android:textColor="@color/menu_text"
+                    android:textColor="?attr/pkTexto"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -116,7 +116,7 @@
                 android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:text="@string/t_voltea_las_cartas_de_dos_en_dos_y_"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 

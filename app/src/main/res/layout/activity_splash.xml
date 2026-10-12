@@ -13,8 +13,17 @@
         android:src="@drawable/bg_splash"
         android:contentDescription="@string/t_splash_pokeapp_v2" />
 
+    <!-- Video opcional: aparece solo si existe res/raw/splash_video.mp4 -->
+    <VideoView
+        android:id="@+id/videoSplash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <!-- Barra de carga abajo -->
     <LinearLayout
+        android:id="@+id/cargaSplash"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

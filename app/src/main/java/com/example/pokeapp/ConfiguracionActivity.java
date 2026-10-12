@@ -1,6 +1,7 @@
 package com.example.pokeapp;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -20,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
  *  - Reiniciar progreso: con confirmación; borra victorias, medallas, récords, colección e historial.
  *  - Cerrar sesión: con confirmación.
  *  - Idioma: alterna Español / English (toda la app se redibuja).
- *  - Tema: alterna Claro / Oscuro / Según el celular.
+ *  - Tema: alterna Claro / Oscuro / Pokédex / Según el celular.
  */
 public class ConfiguracionActivity extends AppCompatActivity {
 
@@ -63,7 +64,7 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
         agregarFila("🎨", getString(R.string.cfg_tema), getString(R.string.cfg_tema_desc),
                 textoTema(Preferencias.tema(this)),
-                () -> Preferencias.setTema(this, siguienteTema(Preferencias.tema(this))));
+                () -> cambiarTema(siguienteTema(Preferencias.tema(this))));
 
         agregarFila("♻️", getString(R.string.cfg_reiniciar), getString(R.string.cfg_reiniciar_desc),
                 "›", this::confirmarReinicio);
@@ -74,15 +75,31 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
     private String textoTema(String tema) {
         if (Preferencias.TEMA_OSCURO.equals(tema)) return getString(R.string.cfg_tema_oscuro);
+        if (Preferencias.TEMA_POKEDEX.equals(tema)) return getString(R.string.cfg_tema_pokedex);
         if (Preferencias.TEMA_SISTEMA.equals(tema)) return getString(R.string.cfg_tema_sistema);
         return getString(R.string.cfg_tema_claro);
     }
 
-    /** Claro → Oscuro → Según el celular → Claro... */
+    /** Claro → Oscuro → Pokédex → Según el celular → Claro... */
     private String siguienteTema(String tema) {
         if (Preferencias.TEMA_CLARO.equals(tema)) return Preferencias.TEMA_OSCURO;
-        if (Preferencias.TEMA_OSCURO.equals(tema)) return Preferencias.TEMA_SISTEMA;
+        if (Preferencias.TEMA_OSCURO.equals(tema)) return Preferencias.TEMA_POKEDEX;
+        if (Preferencias.TEMA_POKEDEX.equals(tema)) return Preferencias.TEMA_SISTEMA;
         return Preferencias.TEMA_CLARO;
+    }
+
+    private void cambiarTema(String tema) {
+        Preferencias.setTema(this, tema);
+        // Si cambia entre claro y oscuro, Android redibuja solo; si no (ej. Claro ↔ Pokédex), se redibuja aquí
+        boolean oscuraAhora = esOscura(getResources().getConfiguration());
+        boolean oscuraNueva = Preferencias.TEMA_OSCURO.equals(tema)
+                || (Preferencias.TEMA_SISTEMA.equals(tema)
+                && esOscura(getApplicationContext().getResources().getConfiguration()));
+        if (oscuraAhora == oscuraNueva) recreate();
+    }
+
+    private boolean esOscura(Configuration configuracion) {
+        return (configuracion.uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
     }
 
     private String textoInterruptor(boolean activo) {
@@ -119,21 +136,21 @@ public class ConfiguracionActivity extends AppCompatActivity {
 
         TextView tvTitulo = new TextView(this);
         tvTitulo.setText(titulo);
-        tvTitulo.setTextColor(getColor(R.color.menu_text));
+        tvTitulo.setTextColor(PokeApp.color(this, R.attr.pkTexto));
         tvTitulo.setTextSize(16);
         tvTitulo.setTypeface(null, Typeface.BOLD);
         textos.addView(tvTitulo);
 
         TextView tvDescripcion = new TextView(this);
         tvDescripcion.setText(descripcion);
-        tvDescripcion.setTextColor(getColor(R.color.menu_text_soft));
+        tvDescripcion.setTextColor(PokeApp.color(this, R.attr.pkTextoSuave));
         tvDescripcion.setTextSize(12);
         textos.addView(tvDescripcion);
         fila.addView(textos, new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
 
         TextView tvValor = new TextView(this);
         tvValor.setText(valor);
-        tvValor.setTextColor(getColor(alTocar != null ? R.color.menu_red : R.color.menu_text_soft));
+        tvValor.setTextColor(alTocar != null ? getColor(R.color.menu_red) : PokeApp.color(this, R.attr.pkTextoSuave));
         tvValor.setTextSize(13);
         tvValor.setTypeface(null, Typeface.BOLD);
         fila.addView(tvValor);

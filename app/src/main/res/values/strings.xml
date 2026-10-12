@@ -216,9 +216,10 @@
     <string name="cfg_idioma">Idioma</string>
     <string name="cfg_idioma_desc">Toca para cambiar entre español e inglés</string>
     <string name="cfg_tema">Tema</string>
-    <string name="cfg_tema_desc">Toca para cambiar: claro, oscuro o según el celular</string>
+    <string name="cfg_tema_desc">Toca para cambiar: claro, oscuro, Pokédex o según el celular</string>
     <string name="cfg_tema_claro">☀️ Claro</string>
     <string name="cfg_tema_oscuro">🌙 Oscuro</string>
+    <string name="cfg_tema_pokedex">📟 Pokédex</string>
     <string name="cfg_tema_sistema">📱 Según el celular</string>
     <string name="cfg_reiniciar">Reiniciar progreso</string>
     <string name="cfg_reiniciar_desc">Borra victorias, medallas, récords, colección e historial</string>

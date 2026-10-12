@@ -182,9 +182,10 @@
     <string name="cfg_idioma">Language</string>
     <string name="cfg_idioma_desc">Tap to switch between Spanish and English</string>
     <string name="cfg_tema">Theme</string>
-    <string name="cfg_tema_desc">Tap to change: light, dark or same as phone</string>
+    <string name="cfg_tema_desc">Tap to change: light, dark, Pokédex or same as phone</string>
     <string name="cfg_tema_claro">☀️ Light</string>
     <string name="cfg_tema_oscuro">🌙 Dark</string>
+    <string name="cfg_tema_pokedex">📟 Pokédex</string>
     <string name="cfg_tema_sistema">📱 Same as phone</string>
     <string name="cfg_reiniciar">Reset progress</string>
     <string name="cfg_reiniciar_desc">Deletes wins, badges, records, collection and history</string>

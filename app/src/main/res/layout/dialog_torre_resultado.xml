@@ -23,7 +23,7 @@
         android:layout_marginTop="6dp"
         android:gravity="center"
         android:text="@string/t_nivel_superado"
-        android:textColor="@color/menu_text"
+        android:textColor="?attr/pkTexto"
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -34,7 +34,7 @@
         android:layout_marginTop="6dp"
         android:gravity="center"
         android:text=""
-        android:textColor="@color/menu_text_soft"
+        android:textColor="?attr/pkTextoSuave"
         android:textSize="14sp"
         android:lineSpacingExtra="3dp" />
 

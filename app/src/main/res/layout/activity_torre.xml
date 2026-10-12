@@ -96,7 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/t_elige_3_de_6_pokemon_al_azar_y_sup"
-                    android:textColor="@color/menu_text_soft"
+                    android:textColor="?attr/pkTextoSuave"
                     android:textSize="13sp"
                     android:lineSpacingExtra="2dp" />
 
@@ -140,7 +140,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/t_elige_3_pokemon_para_tu_equipo"
-                    android:textColor="@color/menu_text"
+                    android:textColor="?attr/pkTexto"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -221,7 +221,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="@string/t_docente_cesba_1"
-                        android:textColor="@color/menu_text"
+                        android:textColor="?attr/pkTexto"
                         android:textSize="19sp"
                         android:textStyle="bold" />
 
@@ -230,7 +230,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_bosque"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="12sp" />
 
                     <TextView
@@ -238,7 +238,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
                         android:text="@string/t_su_equipo"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.08" />
@@ -261,7 +261,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
                         android:text="@string/t_tu_equipo_se_cura_al_empezar_cada_"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.08" />

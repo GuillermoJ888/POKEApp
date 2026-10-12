@@ -21,6 +21,7 @@ public class Preferencias {
 
     public static final String TEMA_CLARO = "claro";
     public static final String TEMA_OSCURO = "oscuro";
+    public static final String TEMA_POKEDEX = "pokedex";
     public static final String TEMA_SISTEMA = "sistema";
 
     private static SharedPreferences prefs(Context context) {
@@ -45,7 +46,7 @@ public class Preferencias {
         prefs(context).edit().putBoolean(VIBRACION, activa).apply();
     }
 
-    /** Tema de la app: claro (por defecto), oscuro o el que tenga el celular. */
+    /** Tema de la app: claro (por defecto), oscuro, Pokédex o el que tenga el celular. */
     public static String tema(Context context) {
         return prefs(context).getString(TEMA, TEMA_CLARO);
     }

@@ -16,4 +16,14 @@
             <enum name="gengar" value="10" />
         </attr>
     </declare-styleable>
+
+    <!-- Colores que cambian con el tema (claro, oscuro o Pokédex); se usan como ?attr/pkTexto -->
+    <attr name="pkFondo" format="color" />
+    <attr name="pkTexto" format="color" />
+    <attr name="pkTextoSuave" format="color" />
+    <attr name="pkTarjetaFondo" format="color" />
+    <attr name="pkTarjetaBorde" format="color" />
+    <attr name="pkChipFondo" format="color" />
+    <attr name="pkVidaFondo" format="color" />
+    <attr name="pkVidaBorde" format="color" />
 </resources>

@@ -8,6 +8,28 @@
     <style name="Theme.POKEApp" parent="Base.Theme.POKEApp">
         <!-- Los botones usan su propio android:background (sin el morado de Material) -->
         <item name="materialButtonStyle">@style/Widget.POKEApp.Button</item>
+
+        <!-- Colores del tema claro; en oscuro Android toma los de values-night/colors.xml -->
+        <item name="pkFondo">@color/menu_bg</item>
+        <item name="pkTexto">@color/menu_text</item>
+        <item name="pkTextoSuave">@color/menu_text_soft</item>
+        <item name="pkTarjetaFondo">@color/tarjeta_fondo</item>
+        <item name="pkTarjetaBorde">@color/tarjeta_borde</item>
+        <item name="pkChipFondo">@color/chip_fondo</item>
+        <item name="pkVidaFondo">@color/vida_fondo</item>
+        <item name="pkVidaBorde">@color/vida_borde</item>
+    </style>
+
+    <!-- Tema Pokédex: pantalla verde tipo LCD con el marco rojo de siempre (lo pone PokeApp.java) -->
+    <style name="Theme.POKEApp.Pokedex">
+        <item name="pkFondo">@color/dex_menu_bg</item>
+        <item name="pkTexto">@color/dex_menu_text</item>
+        <item name="pkTextoSuave">@color/dex_menu_text_soft</item>
+        <item name="pkTarjetaFondo">@color/dex_tarjeta_fondo</item>
+        <item name="pkTarjetaBorde">@color/dex_tarjeta_borde</item>
+        <item name="pkChipFondo">@color/dex_chip_fondo</item>
+        <item name="pkVidaFondo">@color/dex_vida_fondo</item>
+        <item name="pkVidaBorde">@color/dex_vida_borde</item>
     </style>
 
     <style name="Widget.POKEApp.Button" parent="Widget.Material3.Button">

@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/t_n_0_de_10"
-                    android:textColor="@color/menu_text"
+                    android:textColor="?attr/pkTexto"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 

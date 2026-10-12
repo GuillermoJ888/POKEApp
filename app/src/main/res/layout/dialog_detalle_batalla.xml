@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/t_a_vs_b"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/t_fecha"
-                android:textColor="@color/menu_text_soft"
+                android:textColor="?attr/pkTextoSuave"
                 android:textSize="11sp" />
         </LinearLayout>
 

@@ -3,6 +3,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="14dp" />
-    <solid android:color="@color/vida_fondo" />
-    <stroke android:width="2dp" android:color="@color/vida_borde" />
+    <solid android:color="?attr/pkVidaFondo" />
+    <stroke android:width="2dp" android:color="?attr/pkVidaBorde" />
 </shape>

@@ -115,7 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_pokemon_a"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.08" />
@@ -125,7 +125,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_nombre_2"
-                        android:textColor="@color/menu_text"
+                        android:textColor="?attr/pkTexto"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -134,7 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_tipo"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -192,7 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_pokemon_b"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="10sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.08" />
@@ -202,7 +202,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_nombre_2"
-                        android:textColor="@color/menu_text"
+                        android:textColor="?attr/pkTexto"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -211,7 +211,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_tipo"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -251,7 +251,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/t_paso_1_de_2_elige_al_pokemon_a"
-                    android:textColor="@color/menu_text"
+                    android:textColor="?attr/pkTexto"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -319,7 +319,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/t_populares_toca_uno_para_elegirlo"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:letterSpacing="0.06" />
@@ -392,7 +392,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:text="@string/t_n_000_nombre"
-                        android:textColor="@color/menu_text"
+                        android:textColor="?attr/pkTexto"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -402,7 +402,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="@string/t_tipo"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="13sp" />
 
                     <TextView
@@ -412,7 +412,7 @@
                         android:layout_marginTop="10dp"
                         android:gravity="center"
                         android:text=""
-                        android:textColor="@color/menu_text"
+                        android:textColor="?attr/pkTexto"
                         android:textSize="12sp"
                         android:lineSpacingExtra="3dp" />
 

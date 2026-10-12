@@ -112,7 +112,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_batallas"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -141,7 +141,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/t_turnos_promedio"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="11sp" />
                 </LinearLayout>
 
@@ -167,7 +167,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-"
-                        android:textColor="@color/menu_text"
+                        android:textColor="?attr/pkTexto"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:maxLines="1"
@@ -178,7 +178,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/t_mas_victorias"
-                        android:textColor="@color/menu_text_soft"
+                        android:textColor="?attr/pkTextoSuave"
                         android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -214,7 +214,7 @@
                     android:layout_marginTop="14dp"
                     android:gravity="center"
                     android:text="@string/t_aun_no_tienes_batallas_n_haz_la_pr"
-                    android:textColor="@color/menu_text_soft"
+                    android:textColor="?attr/pkTextoSuave"
                     android:textSize="15sp" />
             </LinearLayout>
 

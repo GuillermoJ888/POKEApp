@@ -81,27 +81,29 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Zona del encuentro: el Pokémon y la bola que se lanza -->
+            <!-- Zona del encuentro: el Pokémon arriba y, abajo, la bola que se desliza con el dedo -->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="360dp"
                 android:background="@drawable/bg_escenario_bosque"
                 android:clipChildren="true">
 
                 <ImageView
                     android:id="@+id/imgSafari"
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
-                    android:layout_gravity="center"
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="14dp"
                     android:scaleType="fitCenter"
                     android:visibility="invisible"
                     android:contentDescription="@string/t_pokemon_salvaje" />
 
                 <ImageView
                     android:id="@+id/imgBolaSafari"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:layout_gravity="center"
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="14dp"
                     android:src="@drawable/ic_pokeball_logo"
                     android:visibility="invisible"
                     android:contentDescription="@string/t_pokeball" />
@@ -114,7 +116,7 @@
                 android:layout_marginTop="12dp"
                 android:gravity="center"
                 android:text="…"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -125,7 +127,7 @@
                 android:gravity="center"
                 android:minLines="2"
                 android:text=""
-                android:textColor="@color/menu_text_soft"
+                android:textColor="?attr/pkTextoSuave"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
@@ -139,11 +141,11 @@
                 android:background="@drawable/bg_card_menu"
                 android:padding="12dp"
                 android:text="@string/t_algo_se_mueve_entre_la_hierba"
-                android:textColor="@color/menu_text"
+                android:textColor="?attr/pkTexto"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
-            <!-- Lanzar Pokéball: una por tipo, con cuántas quedan y su probabilidad -->
+            <!-- Pokéball: tocar para elegirla (tocar otra vez la lanza recta); cuántas quedan y su probabilidad -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
