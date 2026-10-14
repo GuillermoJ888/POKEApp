@@ -53,6 +53,7 @@ public class HistorialActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.tvModo)).setText(modo);
         seccionResumen = findViewById(R.id.seccionResumen);
         seccionVacia = findViewById(R.id.seccionVacia);
+        Animaciones.flotar(findViewById(R.id.imgVacio));
         progress = findViewById(R.id.progressHistorial);
         tvVacio = findViewById(R.id.tvVacio);
         recycler = findViewById(R.id.recyclerHistorial);

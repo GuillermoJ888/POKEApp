@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ícono del menú (dibujado en código, sin emojis) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <path android:pathData="M17,3 L29,3 L37,27 L25,27 Z" android:fillColor="#EF4444" android:strokeColor="#1F1A2E" android:strokeWidth="2.5" android:strokeLineJoin="round" android:strokeLineCap="round" />
+    <path android:pathData="M47,3 L35,3 L27,27 L39,27 Z" android:fillColor="#3B82F6" android:strokeColor="#1F1A2E" android:strokeWidth="2.5" android:strokeLineJoin="round" android:strokeLineCap="round" />
+    <path android:pathData="M15,42 a17,17 0 1,0 34,0 a17,17 0 1,0 -34,0 Z" android:fillColor="#FACC15" android:strokeColor="#1F1A2E" android:strokeWidth="3" android:strokeLineJoin="round" android:strokeLineCap="round" />
+    <path android:pathData="M21,42 a11,11 0 1,0 22,0 a11,11 0 1,0 -22,0 Z" android:fillColor="#F59E0B" />
+    <path android:pathData="M32,34 L34.23,39.43 L40.08,39.87 L35.61,43.67 L37,49.38 L32,46.3 L27,49.38 L28.39,43.67 L23.92,39.87 L29.77,39.43 Z" android:fillColor="#FFF7D6" />
+</vector>

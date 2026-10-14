@@ -43,16 +43,54 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvVacio"
+    <!-- Sin favoritos: Pokéball flotando, mensaje y atajo a la Pokédex -->
+    <LinearLayout
+        android:id="@+id/seccionVacia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:gravity="center"
-        android:text="@string/t_aun_no_tienes_pokemon_favoritos_nb"
-        android:textColor="@color/poke_gray_text"
-        android:textSize="13sp"
-        android:visibility="gone" />
+        android:layout_marginTop="56dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgVacio"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:alpha="0.5"
+            android:src="@drawable/ic_mod_favoritos"
+            android:contentDescription="@string/t_sin_favoritos_titulo" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:gravity="center"
+            android:text="@string/t_sin_favoritos_titulo"
+            android:textColor="#FFFFFF"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvVacio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="@string/t_aun_no_tienes_pokemon_favoritos_nb"
+            android:textColor="@color/poke_gray_text"
+            android:textSize="14sp" />
+
+        <com.example.pokeapp.PokeBoton
+            android:id="@+id/btnIrPokedex"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            app:tema="pikachu"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="26dp"
+            android:text="@string/t_buscar_en_la_pokedex"
+            android:textSize="16sp" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFavoritos"

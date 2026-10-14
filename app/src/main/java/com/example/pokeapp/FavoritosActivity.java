@@ -18,6 +18,7 @@ public class FavoritosActivity extends AppCompatActivity {
 
     private RecyclerView recyclerFavoritos;
     private TextView tvVacio;
+    private View seccionVacia;
     private ProgressBar progressFavoritos;
     private FavoritosAdapter adapter;
 
@@ -28,6 +29,10 @@ public class FavoritosActivity extends AppCompatActivity {
 
         recyclerFavoritos = findViewById(R.id.recyclerFavoritos);
         tvVacio = findViewById(R.id.tvVacio);
+        seccionVacia = findViewById(R.id.seccionVacia);
+        Animaciones.flotar(findViewById(R.id.imgVacio));
+        findViewById(R.id.btnIrPokedex).setOnClickListener(v ->
+                startActivity(new Intent(this, PokedexActivity.class)));
         progressFavoritos = findViewById(R.id.progressFavoritos);
 
         adapter = new FavoritosAdapter(new FavoritosAdapter.Acciones() {
@@ -95,12 +100,12 @@ public class FavoritosActivity extends AppCompatActivity {
                 Toast.makeText(this, "No se pudieron cargar tus favoritos: " + FavoritosManager.ultimoError(),
                         Toast.LENGTH_LONG).show();
                 tvVacio.setText("⚠️ " + FavoritosManager.ultimoError());
-                tvVacio.setVisibility(View.VISIBLE);
+                seccionVacia.setVisibility(View.VISIBLE);
                 return;
             }
 
             adapter.actualizar(lista);
-            tvVacio.setVisibility(lista.isEmpty() ? View.VISIBLE : View.GONE);
+            seccionVacia.setVisibility(lista.isEmpty() ? View.VISIBLE : View.GONE);
         });
     }
 }

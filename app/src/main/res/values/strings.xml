@@ -266,4 +266,6 @@
     <string name="mod_perfil_desc">Tu progreso</string>
     <string name="mod_config_titulo">Configuración</string>
     <string name="mod_config_desc">Tema y sonido</string>
+    <string name="t_sin_favoritos_titulo">Tu colección de favoritos está vacía</string>
+    <string name="t_buscar_en_la_pokedex">Buscar en la Pokédex</string>
 </resources>

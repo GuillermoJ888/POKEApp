@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ícono del menú (dibujado en código, sin emojis) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <path android:pathData="M51.52,27.64 L58.79,28.62 L58.79,35.38 L51.52,36.36 L48.89,42.72 L53.33,48.55 L48.55,53.33 L42.72,48.89 L36.36,51.52 L35.38,58.79 L28.62,58.79 L27.64,51.52 L21.28,48.89 L15.45,53.33 L10.67,48.55 L15.11,42.72 L12.48,36.36 L5.21,35.38 L5.21,28.62 L12.48,27.64 L15.11,21.28 L10.67,15.45 L15.45,10.67 L21.28,15.11 L27.64,12.48 L28.62,5.21 L35.38,5.21 L36.36,12.48 L42.72,15.11 L48.55,10.67 L53.33,15.45 L48.89,21.28 Z M23.5,32 a8.5,8.5 0 1,0 17,0 a8.5,8.5 0 1,0 -17,0 Z" android:fillColor="#CBD5E1" android:fillType="evenOdd" android:strokeColor="#1F1A2E" android:strokeWidth="3" android:strokeLineJoin="round" android:strokeLineCap="round" />
+    <path android:pathData="M17.5,32 a14.5,14.5 0 1,0 29,0 a14.5,14.5 0 1,0 -29,0 Z" android:strokeColor="#94A3B8" android:strokeWidth="2.5" android:strokeLineJoin="round" android:strokeLineCap="round" />
+</vector>

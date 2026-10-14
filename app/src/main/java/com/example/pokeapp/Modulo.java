@@ -59,19 +59,19 @@ public class Modulo {
     public static List<Modulo> todos() {
         List<Modulo> m = new ArrayList<>();
         m.add(new Modulo("pokedex", "a", "Pokédex", "Busca Pokémon", "📱", R.drawable.ic_pokedex, 0xFFC81E0A, 0xFFFF7A45, PokedexActivity.class));
-        m.add(new Modulo("emulator", "b", "Battle Emulator", "Duelo simulado", "⚔️", 0, 0xFF5B21B6, 0xFFA855F7, BattleEmulatorActivity.class));
-        m.add(new Modulo("versus", "c", "Battle Versus", "2 jugadores", "🆚", 0, 0xFF1D4ED8, 0xFF60A5FA, VersusActivity.class));
-        m.add(new Modulo("multijugador", "", "Batalla entre dispositivos", "Reta a otro celular", "📡", 0, 0xFF0E7490, 0xFF818CF8, MultijugadorActivity.class));
+        m.add(new Modulo("emulator", "b", "Battle Emulator", "Duelo simulado", "⚔️", R.drawable.ic_mod_emulator, 0xFF5B21B6, 0xFFA855F7, BattleEmulatorActivity.class));
+        m.add(new Modulo("versus", "c", "Battle Versus", "2 jugadores", "🆚", R.drawable.ic_mod_versus, 0xFF1D4ED8, 0xFF60A5FA, VersusActivity.class));
+        m.add(new Modulo("multijugador", "", "Batalla entre dispositivos", "Reta a otro celular", "📡", R.drawable.ic_mod_multijugador, 0xFF0E7490, 0xFF818CF8, MultijugadorActivity.class));
         m.add(new Modulo("torre", "d", "Torre Pokémon", "6 niveles", "🏰", R.drawable.ic_torre_pagoda, 0xFF0B0A08, 0xFF5A4118, TorreActivity.class));
-        m.add(new Modulo("quien", "e", "¿Quién es ese Pokémon?", "Adivina la silueta", "❓", 0, 0xFF1E1B4B, 0xFF4F46E5, QuienEsActivity.class));
-        m.add(new Modulo("safari", "f", "Safari Pokémon", "Captura Pokémon", "🌿", 0, 0xFF166534, 0xFF4ADE80, SafariActivity.class));
-        m.add(new Modulo("tipos", "g", "Maestro de Tipos", "Ventajas de tipo", "🔥", 0, 0xFFB91C1C, 0xFFF59E0B, MaestroTiposActivity.class));
-        m.add(new Modulo("memory", "h", "PokéMemory", "Encuentra parejas", "🃏", 0, 0xFF9D174D, 0xFFF472B6, PokeMemoryActivity.class));
-        m.add(new Modulo("favoritos", "i", "Favoritos", "En la nube ☁️", "⭐", 0, 0xFFB45309, 0xFFFACC15, FavoritosActivity.class));
-        m.add(new Modulo("historial", "j", "Historial", "Tus batallas", "📜", 0, 0xFF374151, 0xFF9CA3AF, HistorialActivity.class));
-        m.add(new Modulo("medallas", "k", "Medallas", "10 logros", "🏅", 0, 0xFF92400E, 0xFFEAB308, MedallasActivity.class));
+        m.add(new Modulo("quien", "e", "¿Quién es ese Pokémon?", "Adivina la silueta", "❓", R.drawable.ic_mod_quien, 0xFF1E1B4B, 0xFF4F46E5, QuienEsActivity.class));
+        m.add(new Modulo("safari", "f", "Safari Pokémon", "Captura Pokémon", "🌿", R.drawable.ic_mod_safari, 0xFF166534, 0xFF4ADE80, SafariActivity.class));
+        m.add(new Modulo("tipos", "g", "Maestro de Tipos", "Ventajas de tipo", "🔥", R.drawable.ic_mod_tipos, 0xFFB91C1C, 0xFFF59E0B, MaestroTiposActivity.class));
+        m.add(new Modulo("memory", "h", "PokéMemory", "Encuentra parejas", "🃏", R.drawable.ic_mod_memory, 0xFF9D174D, 0xFFF472B6, PokeMemoryActivity.class));
+        m.add(new Modulo("favoritos", "i", "Favoritos", "En la nube ☁️", "⭐", R.drawable.ic_mod_favoritos, 0xFFB45309, 0xFFFACC15, FavoritosActivity.class));
+        m.add(new Modulo("historial", "j", "Historial", "Tus batallas", "📜", R.drawable.ic_mod_historial, 0xFF374151, 0xFF9CA3AF, HistorialActivity.class));
+        m.add(new Modulo("medallas", "k", "Medallas", "10 logros", "🏅", R.drawable.ic_mod_medallas, 0xFF92400E, 0xFFEAB308, MedallasActivity.class));
         m.add(new Modulo("perfil", "l", "Mi perfil", "Tu progreso", "🧢", R.drawable.ic_gorra, 0xFF0E7490, 0xFF22D3EE, PerfilActivity.class));
-        m.add(new Modulo("config", "m", "Configuración", "Tema y sonido", "⚙️", 0, 0xFF1E293B, 0xFF64748B, ConfiguracionActivity.class));
+        m.add(new Modulo("config", "m", "Configuración", "Tema y sonido", "⚙️", R.drawable.ic_mod_config, 0xFF1E293B, 0xFF64748B, ConfiguracionActivity.class));
         return m;
     }
 }

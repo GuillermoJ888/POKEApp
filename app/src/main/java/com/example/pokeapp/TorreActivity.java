@@ -385,26 +385,34 @@ public class TorreActivity extends AppCompatActivity {
             if (isFinishing() || isDestroyed() || nivel != ganado) return;
             String premio = textoMedallas(nuevas);
 
-            if (ganado == SECRETO) {
-                mostrarResultado("🌟", "¡Venciste al jefe secreto!",
-                        "Derrotaste a " + nombreDocente(SECRETO) + " y a sus 5 legendarios. "
-                                + "No queda nadie más fuerte en la Torre." + premio,
-                        "Nueva campaña", this::comenzarCampania,
-                        "Salir", this::mostrarInicio);
-            } else if (ganado < NIVELES) {
-                int siguiente = ganado + 1;
-                mostrarResultado("🏆", "¡Nivel " + ganado + " superado!",
-                        "Venciste a " + nombreDocente(ganado) + "." + premio
-                                + "\n\nTu equipo se cura para el siguiente nivel."
-                                + (siguiente == NIVELES ? " 👑 Sigue el jefe final con 4 legendarios." : ""),
-                        "Ir al nivel " + siguiente, () -> irANivel(siguiente),
-                        "Abandonar", this::mostrarInicio);
+            // Si ganó medalla, primero se ve la medalla girando y luego la ventana del resultado
+            Runnable verResultado = () -> {
+                if (ganado == SECRETO) {
+                    mostrarResultado("🌟", "¡Venciste al jefe secreto!",
+                            "Derrotaste a " + nombreDocente(SECRETO) + " y a sus 5 legendarios. "
+                                    + "No queda nadie más fuerte en la Torre." + premio,
+                            "Nueva campaña", this::comenzarCampania,
+                            "Salir", this::mostrarInicio);
+                } else if (ganado < NIVELES) {
+                    int siguiente = ganado + 1;
+                    mostrarResultado("🏆", "¡Nivel " + ganado + " superado!",
+                            "Venciste a " + nombreDocente(ganado) + "." + premio
+                                    + "\n\nTu equipo se cura para el siguiente nivel."
+                                    + (siguiente == NIVELES ? " 👑 Sigue el jefe final con 4 legendarios." : ""),
+                            "Ir al nivel " + siguiente, () -> irANivel(siguiente),
+                            "Abandonar", this::mostrarInicio);
+                } else {
+                    mostrarResultado("🏅", "¡Conquistaste la Torre!",
+                            "Venciste a " + nombreDocente(ganado) + ", el jefe final." + premio
+                                    + "\n\n❓ Algo se mueve en lo más alto de la Torre… ¡Apareció un jefe secreto!",
+                            "Retar al jefe secreto", () -> irANivel(SECRETO),
+                            "Salir", this::mostrarInicio);
+                }
+            };
+            if (nuevas != null && !nuevas.isEmpty()) {
+                Animaciones.medallaGanada(this, nuevas.get(0), verResultado);
             } else {
-                mostrarResultado("🏅", "¡Conquistaste la Torre!",
-                        "Venciste a " + nombreDocente(ganado) + ", el jefe final." + premio
-                                + "\n\n❓ Algo se mueve en lo más alto de la Torre… ¡Apareció un jefe secreto!",
-                        "Retar al jefe secreto", () -> irANivel(SECRETO),
-                        "Salir", this::mostrarInicio);
+                verResultado.run();
             }
         });
     }

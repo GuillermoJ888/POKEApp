@@ -232,4 +232,6 @@
     <string name="mod_perfil_desc">Your progress</string>
     <string name="mod_config_titulo">Settings</string>
     <string name="mod_config_desc">Theme and sound</string>
+    <string name="t_sin_favoritos_titulo">Your favorites collection is empty</string>
+    <string name="t_buscar_en_la_pokedex">Search the Pokédex</string>
 </resources>

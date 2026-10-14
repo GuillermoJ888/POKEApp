@@ -8,6 +8,10 @@
     <style name="Theme.POKEApp" parent="Base.Theme.POKEApp">
         <!-- Los botones usan su propio android:background (sin el morado de Material) -->
         <item name="materialButtonStyle">@style/Widget.POKEApp.Button</item>
+        <!-- Toda carga circular es una Pokéball que gira -->
+        <item name="android:progressBarStyle">@style/Widget.POKEApp.CargaPokeball</item>
+        <!-- Las pantallas entran deslizándose desde la derecha y salen hacia la derecha al regresar -->
+        <item name="android:windowAnimationStyle">@style/Animacion.POKEApp</item>
 
         <!-- Colores del tema claro; en oscuro Android toma los de values-night/colors.xml -->
         <item name="pkFondo">@color/menu_bg</item>
@@ -30,6 +34,19 @@
         <item name="pkChipFondo">@color/dex_chip_fondo</item>
         <item name="pkVidaFondo">@color/dex_vida_fondo</item>
         <item name="pkVidaBorde">@color/dex_vida_borde</item>
+    </style>
+
+    <style name="Widget.POKEApp.CargaPokeball" parent="@android:style/Widget.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/anim_carga_pokeball</item>
+        <item name="android:indeterminateDuration">1500</item>
+        <item name="android:indeterminateOnly">true</item>
+    </style>
+
+    <style name="Animacion.POKEApp" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/entrar_desde_derecha</item>
+        <item name="android:activityOpenExitAnimation">@anim/salir_hacia_izquierda</item>
+        <item name="android:activityCloseEnterAnimation">@anim/entrar_desde_izquierda</item>
+        <item name="android:activityCloseExitAnimation">@anim/salir_hacia_derecha</item>
     </style>
 
     <style name="Widget.POKEApp.Button" parent="Widget.Material3.Button">
