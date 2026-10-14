@@ -1,10 +1,13 @@
 package com.example.pokeapp;
 
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -21,17 +24,39 @@ import java.util.Map;
 
 /**
  * Medallas (módulo K): las 10 medallas del proyecto, obtenidas o bloqueadas.
- * Cada Torre Pokémon completada desbloquea la siguiente (UsuarioManager.otorgarMedalla);
- * de las obtenidas se muestra la fecha en que se ganó.
+ * Las 7 primeras se ganan una por cada nivel de la Torre Pokémon (la del docente vencido);
+ * las otras 3, por conquistar la Torre varias veces y por juntar todas
+ * (UsuarioManager.otorgarMedallasTorre). De las obtenidas se muestra la fecha.
  */
 public class MedallasActivity extends AppCompatActivity {
 
-    /** Nombre, emoji y tipo (da el color) de cada medalla, en el orden en que se ganan. */
+    /** Emoji y tipo (da el color) de cada medalla, de la 1 a la 10. */
     private static final String[][] MEDALLAS = {
-            {"Roca", "🪨", "rock"}, {"Cascada", "💧", "water"}, {"Trueno", "⚡", "electric"},
-            {"Arcoíris", "🌈", "grass"}, {"Alma", "💜", "poison"}, {"Pantano", "🔮", "psychic"},
-            {"Volcán", "🌋", "fire"}, {"Tierra", "🌎", "ground"}, {"Glaciar", "❄️", "ice"},
-            {"Dragón", "🐉", "dragon"}};
+            {"🪨", "rock"}, {"💧", "water"}, {"⚡", "electric"}, {"🌿", "grass"}, {"🔥", "fire"},
+            {"👑", "dragon"}, {"🌟", "psychic"}, {"🏆", "ground"}, {"🐉", "ice"}, {"💎", "poison"}};
+
+    /** "Medalla Gaz", "Medalla Campeón"… Las de nivel llevan el nombre del docente vencido. */
+    public static String nombre(int numero) {
+        if (numero <= UsuarioManager.MEDALLA_JEFE_FINAL) return "Medalla " + TorreActivity.nombreDocente(numero);
+        switch (numero) {
+            case UsuarioManager.MEDALLA_SECRETA: return "Medalla Secreta";
+            case UsuarioManager.MEDALLA_CAMPEON: return "Medalla Campeón";
+            case UsuarioManager.MEDALLA_LEYENDA: return "Medalla Leyenda";
+            default: return "Medalla Maestro";
+        }
+    }
+
+    /** Cómo se gana cada medalla. */
+    private static String requisito(int numero) {
+        if (numero < UsuarioManager.MEDALLA_JEFE_FINAL) return "Vence el nivel " + numero + " de la Torre";
+        switch (numero) {
+            case UsuarioManager.MEDALLA_JEFE_FINAL: return "Vence al jefe final de la Torre";
+            case UsuarioManager.MEDALLA_SECRETA: return "Vence al jefe secreto";
+            case UsuarioManager.MEDALLA_CAMPEON: return "Conquista la Torre " + UsuarioManager.TORRES_CAMPEON + " veces";
+            case UsuarioManager.MEDALLA_LEYENDA: return "Conquista la Torre " + UsuarioManager.TORRES_LEYENDA + " veces";
+            default: return "Consigue las otras 9 medallas";
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +74,7 @@ public class MedallasActivity extends AppCompatActivity {
     private void pintar(int obtenidas, Map<Integer, Date> fechas) {
         ((TextView) findViewById(R.id.tvProgresoMedallas)).setText(obtenidas + " de " + MEDALLAS.length
                 + (obtenidas >= MEDALLAS.length ? " · ¡Colección completa! 🏆"
-                : " · Completa la Torre Pokémon para ganar la siguiente"));
+                : " · Gana niveles de la Torre Pokémon para conseguirlas"));
         ProgressBar barra = findViewById(R.id.barraMedallas);
         barra.setMax(MEDALLAS.length);
         barra.setProgress(obtenidas);
@@ -60,8 +85,8 @@ public class MedallasActivity extends AppCompatActivity {
         SimpleDateFormat formato = new SimpleDateFormat("d MMM yyyy", new Locale("es", "MX"));
 
         for (int i = 0; i < MEDALLAS.length; i++) {
-            boolean ganada = i < obtenidas;
-            int color = ganada ? TypeColors.obtenerColor(MEDALLAS[i][2]) : 0xFFB8B8B8;
+            boolean ganada = fechas != null && fechas.containsKey(i + 1);
+            int color = ganada ? TypeColors.obtenerColor(MEDALLAS[i][1]) : 0xFFB8B8B8;
 
             LinearLayout tarjeta = new LinearLayout(this);
             tarjeta.setOrientation(LinearLayout.VERTICAL);
@@ -70,20 +95,38 @@ public class MedallasActivity extends AppCompatActivity {
             tarjeta.setPadding(Math.round(10 * dp), Math.round(14 * dp), Math.round(10 * dp), Math.round(12 * dp));
             tarjeta.setAlpha(ganada ? 1f : 0.6f);
 
-            // La medalla: círculo del color de su tipo con borde dorado (gris si está bloqueada)
-            GradientDrawable circulo = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
-                    new int[]{0xFFFFFFFF, color});
-            circulo.setShape(GradientDrawable.OVAL);
-            circulo.setStroke(Math.round(4 * dp), ganada ? 0xFFFACC15 : 0xFF8A8A8A);
-            TextView medalla = new TextView(this);
-            medalla.setBackground(circulo);
-            medalla.setGravity(Gravity.CENTER);
-            medalla.setText(ganada ? MEDALLAS[i][1] : "🔒");
-            medalla.setTextSize(32);
-            tarjeta.addView(medalla, new LinearLayout.LayoutParams(Math.round(84 * dp), Math.round(84 * dp)));
+            // La medalla: su imagen (res/drawable-nodpi/medalla_<n>.png) si existe; en gris si está bloqueada
+            int imagen = getResources().getIdentifier("medalla_" + (i + 1), "drawable", getPackageName());
+            if (imagen != 0) {
+                ImageView medalla = new ImageView(this);
+                medalla.setImageResource(imagen);
+                medalla.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                if (!ganada) {
+                    ColorMatrix gris = new ColorMatrix();
+                    gris.setSaturation(0f);
+                    medalla.setColorFilter(new ColorMatrixColorFilter(gris));
+                    medalla.setAlpha(0.55f);
+                }
+                tarjeta.addView(medalla, new LinearLayout.LayoutParams(Math.round(96 * dp), Math.round(112 * dp)));
+            } else {
+                // Sin imagen: círculo del color de su tipo con borde dorado (gris si está bloqueada)
+                GradientDrawable circulo = new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                        new int[]{0xFFFFFFFF, color});
+                circulo.setShape(GradientDrawable.OVAL);
+                circulo.setStroke(Math.round(4 * dp), ganada ? 0xFFFACC15 : 0xFF8A8A8A);
+                TextView medalla = new TextView(this);
+                medalla.setBackground(circulo);
+                medalla.setGravity(Gravity.CENTER);
+                medalla.setText(ganada ? MEDALLAS[i][0] : "🔒");
+                medalla.setTextSize(32);
+                LinearLayout.LayoutParams lpMedalla = new LinearLayout.LayoutParams(Math.round(84 * dp), Math.round(84 * dp));
+                lpMedalla.topMargin = Math.round(14 * dp);
+                lpMedalla.bottomMargin = Math.round(14 * dp);
+                tarjeta.addView(medalla, lpMedalla);
+            }
 
             TextView nombre = new TextView(this);
-            nombre.setText((i + 1) + ". Medalla " + MEDALLAS[i][0]);
+            nombre.setText((i + 1) + ". " + nombre(i + 1));
             nombre.setTextColor(PokeApp.color(this, R.attr.pkTexto));
             nombre.setTextSize(14);
             nombre.setTypeface(null, Typeface.BOLD);
@@ -93,7 +136,7 @@ public class MedallasActivity extends AppCompatActivity {
 
             Date fecha = fechas != null ? fechas.get(i + 1) : null;
             TextView estado = new TextView(this);
-            estado.setText(!ganada ? "Bloqueada" : fecha != null ? "Obtenida el " + formato.format(fecha) : "Obtenida");
+            estado.setText(!ganada ? requisito(i + 1) : fecha != null ? "Obtenida el " + formato.format(fecha) : "Obtenida");
             estado.setTextColor(ganada ? 0xFF2E8B57 : PokeApp.color(this, R.attr.pkTextoSuave));
             estado.setTextSize(12);
             estado.setGravity(Gravity.CENTER);

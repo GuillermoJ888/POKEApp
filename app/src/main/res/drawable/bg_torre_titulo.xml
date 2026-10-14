@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Banda roja del título de la Torre -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:startColor="#00500A0A" android:centerColor="#C0700E0E" android:endColor="#00500A0A" android:angle="0" />
+</shape>

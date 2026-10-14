@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de pantalla completa de la Torre: negro con neblina al centro -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="#070706" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient android:type="radial" android:gradientRadius="340dp" android:centerX="0.5" android:centerY="0.4"
+                android:startColor="#3A3D33" android:endColor="#00070706" />
+        </shape>
+    </item>
+</layer-list>

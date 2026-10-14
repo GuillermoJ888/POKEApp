@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pared de un piso de la Torre: madera oscura con pilares y vigas doradas -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <gradient android:startColor="#241A10" android:endColor="#0E0B07" android:angle="270" />
+        </shape>
+    </item>
+    <item android:gravity="start" android:width="5dp">
+        <shape>
+            <gradient android:startColor="#E2C27A" android:endColor="#7A5A24" android:angle="0" />
+        </shape>
+    </item>
+    <item android:gravity="end" android:width="5dp">
+        <shape>
+            <gradient android:startColor="#7A5A24" android:endColor="#E2C27A" android:angle="0" />
+        </shape>
+    </item>
+    <item android:gravity="top" android:height="2dp">
+        <shape>
+            <solid android:color="#5E4520" />
+        </shape>
+    </item>
+</layer-list>

@@ -79,6 +79,14 @@ public class BattleArenaActivity extends AppCompatActivity {
     private static final String EXTRA_MODO = "extra_modo";
     private static final String EXTRA_ESCENARIO = "extra_escenario";
     private static final String EXTRA_RED = "extra_red";
+    /** Opcional: imagen (drawable) del entrenador rival, que se ve junto a su Pokémon. */
+    public static final String EXTRA_ENTRENADOR_B = "extra_entrenador_b";
+    /** true = esa imagen es un personaje de cuerpo completo (PNG sin fondo); false = foto en marco redondo. */
+    public static final String EXTRA_ENTRENADOR_CUERPO = "extra_entrenador_cuerpo";
+    /** Opcional: frase con la que se presenta el entrenador rival, en vez de "¡A luchar contra …!". */
+    public static final String EXTRA_FRASE_ENTRENADOR = "extra_frase_entrenador";
+    /** Tiempo extra de presentación cuando hay entrenador: sale él, se hace a un lado y entra su Pokémon. */
+    private static final long PAUSA_ENTRENADOR = 1500;
 
     private static final int RED_NO = 0, RED_ANFITRION = 1, RED_INVITADO = 2;
 
@@ -102,6 +110,8 @@ public class BattleArenaActivity extends AppCompatActivity {
     private TextView tvTurno, tvBanner, tvBitacora, tvTurnoDe;
     private ProgressBar barraHpA, barraHpB;
     private FrameLayout contenedorA, contenedorB;
+    private ImageView imgEntrenadorB;
+    private boolean hayEntrenador, entrenadorDeCuerpo;
     private LinearLayout puntosA, puntosB;
     private ScrollView scrollBitacora;
     private View barraAccion, btnCambiar;
@@ -232,7 +242,7 @@ public class BattleArenaActivity extends AppCompatActivity {
             pausaInicioLista = true;
             if (!ataquesListos) mostrarBanner("Preparando ataques…");
             intentarComenzar();
-        }, PAUSA_INICIO);
+        }, PAUSA_INICIO + (hayEntrenador ? PAUSA_ENTRENADOR : 0));
     }
 
     /** Salir a media batalla entre dispositivos corta la conexión: el otro celular se entera y también sale. */
@@ -274,6 +284,32 @@ public class BattleArenaActivity extends AppCompatActivity {
     private void enlazarVistas() {
         imgA = findViewById(R.id.imgA);
         imgB = findViewById(R.id.imgB);
+        imgEntrenadorB = findViewById(R.id.imgEntrenadorB);
+        int entrenador = getIntent().getIntExtra(EXTRA_ENTRENADOR_B, 0);
+        if (entrenador != 0) {
+            hayEntrenador = true;
+            entrenadorDeCuerpo = getIntent().getBooleanExtra(EXTRA_ENTRENADOR_CUERPO, false);
+            imgEntrenadorB.setImageResource(entrenador);
+            if (entrenadorDeCuerpo) {
+                // Personaje completo, como los entrenadores de los juegos: sin marco y más grande
+                float dp = getResources().getDisplayMetrics().density;
+                imgEntrenadorB.setBackground(null);
+                imgEntrenadorB.setPadding(0, 0, 0, 0);
+                imgEntrenadorB.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                imgEntrenadorB.getLayoutParams().width = Math.round(112 * dp);
+                imgEntrenadorB.getLayoutParams().height = Math.round(140 * dp);
+                // Pixel art (imágenes chicas): sin suavizado para que no se vea borroso
+                android.graphics.drawable.Drawable dibujo = imgEntrenadorB.getDrawable();
+                if (dibujo instanceof android.graphics.drawable.BitmapDrawable
+                        && ((android.graphics.drawable.BitmapDrawable) dibujo).getBitmap().getWidth() <= 256) {
+                    dibujo.mutate();
+                    ((android.graphics.drawable.BitmapDrawable) dibujo).setFilterBitmap(false);
+                }
+            } else {
+                imgEntrenadorB.setClipToOutline(true);   // foto con recorte redondo
+            }
+            imgEntrenadorB.setVisibility(View.INVISIBLE);   // aparece en la presentación
+        }
         tvNombreA = findViewById(R.id.tvNombreA);
         tvNombreB = findViewById(R.id.tvNombreB);
         tvTiposA = findViewById(R.id.tvTiposA);
@@ -347,7 +383,12 @@ public class BattleArenaActivity extends AppCompatActivity {
         pintarPokemon(true);
         pintarPokemon(false);
 
-        if (esPorEquipos()) {
+        if (hayEntrenador && nombreB != null) {
+            // "Nivel 3 · Edgar" → "¡A luchar contra Edgar!"
+            String rival = nombreB.contains(" · ") ? nombreB.substring(nombreB.indexOf(" · ") + 3) : nombreB;
+            String frase = getIntent().getStringExtra(EXTRA_FRASE_ENTRENADOR);
+            mostrarBanner(frase != null ? frase : "¡A luchar contra " + rival + "!");
+        } else if (esPorEquipos()) {
             mostrarBanner("¡" + dueno(true) + " vs " + dueno(false) + "!");
         } else {
             mostrarBanner("¡" + actual(true).nombre + " vs " + actual(false).nombre + "!");
@@ -439,8 +480,22 @@ public class BattleArenaActivity extends AppCompatActivity {
             contenedorB.setTranslationX(ancho);
             contenedorA.animate().translationX(0f).setDuration(600)
                     .setInterpolator(new OvershootInterpolator()).start();
-            contenedorB.animate().translationX(0f).setDuration(600).setStartDelay(150)
+            contenedorB.animate().translationX(0f).setDuration(600)
+                    .setStartDelay(hayEntrenador ? PAUSA_ENTRENADOR : 150)
                     .setInterpolator(new OvershootInterpolator()).start();
+            if (hayEntrenador) {
+                // Como en los juegos: primero se planta el entrenador en la plataforma del rival,
+                // luego se hace a un lado y entra su Pokémon
+                FrameLayout.LayoutParams lpPokemon = (FrameLayout.LayoutParams) contenedorB.getLayoutParams();
+                FrameLayout.LayoutParams lpEntrenador = (FrameLayout.LayoutParams) imgEntrenadorB.getLayoutParams();
+                float alCentro = (lpPokemon.leftMargin + lpPokemon.width / 2f)
+                        - (lpEntrenador.leftMargin + lpEntrenador.width / 2f);
+                imgEntrenadorB.setVisibility(View.VISIBLE);
+                imgEntrenadorB.setTranslationX(ancho);
+                imgEntrenadorB.animate().translationX(alCentro).setDuration(500).withEndAction(() ->
+                        imgEntrenadorB.animate().translationX(0f).setStartDelay(PAUSA_ENTRENADOR - 600)
+                                .setDuration(450).start()).start();
+            }
         });
     }
 
@@ -481,6 +536,15 @@ public class BattleArenaActivity extends AppCompatActivity {
         // Los pies del Pokémon quedan un poco abajo del centro de su plataforma,
         // sin salirse por abajo de la arena
         colocar(contenedorB, bx, by + 6 * dp);
+
+        // El entrenador rival queda a un lado y un poco atrás de su Pokémon, sin salirse de la pantalla
+        if (imgEntrenadorB.getVisibility() != View.GONE) {
+            float mitad = imgEntrenadorB.getLayoutParams().width / 2f;
+            float x = bx + contenedorB.getLayoutParams().width * 0.42f + mitad;
+            // El personaje completo pisa el mismo suelo que su Pokémon; la foto va un poco más arriba
+            colocar(imgEntrenadorB, Math.min(x, ancho - mitad - 2 * dp),
+                    entrenadorDeCuerpo ? by + 6 * dp : by - 30 * dp);
+        }
         colocar(contenedorA, ax, Math.min(ay + 6 * dp, alto - 4 * dp));
 
         // Tarjeta de A: si A está hasta abajo, va a media altura (bajo B);

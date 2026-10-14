@@ -1,53 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Un nivel en la escalera de la Torre: docente, nivel, rival y estado -->
+<!-- Un piso de la Torre (pagoda dorada): techo, pared con la ventana del docente y los datos del nivel, y barandal -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/filaNivel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:background="@drawable/bg_card_menu"
-    android:padding="10dp">
+    android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/imgDocenteNivel"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/bg_avatar_perfil"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_docente_silueta"
-        android:contentDescription="@string/t_docente_del_nivel" />
+        android:id="@+id/imgTechoNivel"
+        android:layout_width="match_parent"
+        android:layout_height="34dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_torre_techo"
+        android:importantForAccessibility="no" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="12dp"
-        android:orientation="vertical">
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_torre_piso"
+        android:paddingStart="13dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp">
+
+        <ImageView
+            android:id="@+id/imgDocenteNivel"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:background="@drawable/bg_torre_ventana"
+            android:padding="4dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_docente_silueta"
+            android:contentDescription="@string/t_docente_del_nivel" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNumeroNivel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:letterSpacing="0.12"
+                android:text="NIVEL 1"
+                android:textColor="#C9A45C"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTituloNivel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:fontFamily="serif"
+                android:text="@string/t_nivel_1_docente_cesba_1"
+                android:textColor="#F6E7BE"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDetalleNivel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:text="@string/t_n_1_pokemon_rival"
+                android:textColor="#A39373"
+                android:textSize="11sp" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tvTituloNivel"
+            android:id="@+id/tvEstadoNivel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/t_nivel_1_docente_cesba_1"
-            android:textColor="?attr/pkTexto"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvDetalleNivel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/t_n_1_pokemon_rival"
-            android:textColor="?attr/pkTextoSuave"
-            android:textSize="12sp" />
+            android:text="🔒"
+            android:textSize="17sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvEstadoNivel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="🔒"
-        android:textSize="20sp" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="9dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_torre_barandal"
+        android:importantForAccessibility="no" />
 </LinearLayout>

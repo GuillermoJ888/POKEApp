@@ -2,6 +2,7 @@ package com.example.pokeapp.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -32,6 +33,31 @@ public class CargadorPokemon {
     }
 
     /** n IDs distintos al azar: solo legendarios, o solo Pokémon que NO son legendarios. */
+    /**
+     * Pokémon fuertes que NO son legendarios: los pseudolegendarios (Dragonite, Tyranitar, Salamence,
+     * Metagross, Garchomp, Hydreigon, Goodra, Kommo-o, Dragapult, Baxcalibur) y otros de stats altos.
+     */
+    public static final List<Integer> FUERTES = Arrays.asList(
+            149, 248, 373, 376, 445, 635, 706, 784, 887, 998,
+            6, 59, 65, 68, 94, 130, 131, 143, 212, 230, 257, 282, 306, 330, 350,
+            448, 464, 466, 467, 468, 473, 530, 612, 637, 658, 681, 823);
+
+    /** n Pokémon al azar sin legendarios, de los que al menos "fuertes" salen de la lista FUERTES. */
+    public static List<Integer> idsConFuertes(int n, int fuertes, Random random) {
+        Set<Integer> elegidos = new HashSet<>();
+        while (elegidos.size() < Math.min(fuertes, n)) {
+            elegidos.add(FUERTES.get(random.nextInt(FUERTES.size())));
+        }
+        Set<Integer> legendariosSet = new HashSet<>(LEGENDARIOS);
+        while (elegidos.size() < n) {
+            int id = 1 + random.nextInt(ID_MAXIMO);
+            if (!legendariosSet.contains(id)) elegidos.add(id);
+        }
+        List<Integer> resultado = new ArrayList<>(elegidos);
+        Collections.shuffle(resultado, random);   // que los fuertes no salgan siempre en el mismo lugar
+        return resultado;
+    }
+
     public static List<Integer> idsAleatorios(int n, boolean legendarios, Random random) {
         Set<Integer> elegidos = new HashSet<>();
         List<Integer> resultado = new ArrayList<>();

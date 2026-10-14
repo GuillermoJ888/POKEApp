@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Torre Pokémon: pagoda dorada de 4 pisos (mismo estilo que la torre de niveles), para el botón del menú -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <path android:pathData="M60,1 L62,9 L66,11 L62,13 L63,16 L57,16 L58,13 L54,11 L58,9 Z" android:fillColor="#F4DE9C" />
+    <path android:pathData="M45.4,29 h29.1 v10 h-29.1 Z" android:fillColor="#1B140C" />
+    <path android:pathData="M45.4,29 h2.5 v10 h-2.5 Z M72.1,29 h2.5 v10 h-2.5 Z" android:fillColor="#C9A45C" />
+    <path android:pathData="M55.5,31 h9 v6 h-9 Z" android:fillColor="#FFE9A6" />
+    <path android:pathData="M34,18 C37,23 43,25 50,24 L49.1,14 L70.9,14 L70,24 C77,25 83,23 86,18 L86,21 C83,27 76,29 68,29 L52,29 C44,29 37,27 34,21 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="0" android:startY="13" android:endX="0" android:endY="29">
+                <item android:offset="0" android:color="#CDB6FA" />
+                <item android:offset="0.5" android:color="#6A3FB0" />
+                <item android:offset="1" android:color="#22113F" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M41,54 h38.1 v10 h-38.1 Z" android:fillColor="#1B140C" />
+    <path android:pathData="M41,54 h2.5 v10 h-2.5 Z M76.5,54 h2.5 v10 h-2.5 Z" android:fillColor="#C9A45C" />
+    <path android:pathData="M55.5,56 h9 v6 h-9 Z" android:fillColor="#FFE9A6" />
+    <path android:pathData="M26,43 C29,48 35,50 42,49 L45.7,39 L74.3,39 L78,49 C85,50 91,48 94,43 L94,46 C91,52 84,54 76,54 L44,54 C36,54 29,52 26,46 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="0" android:startY="38" android:endX="0" android:endY="54">
+                <item android:offset="0" android:color="#FFF2B8" />
+                <item android:offset="0.5" android:color="#E0A832" />
+                <item android:offset="1" android:color="#6B450F" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M36.5,79 h47 v10 h-47 Z" android:fillColor="#1B140C" />
+    <path android:pathData="M36.5,79 h2.5 v10 h-2.5 Z M81,79 h2.5 v10 h-2.5 Z" android:fillColor="#C9A45C" />
+    <path android:pathData="M55.5,81 h9 v6 h-9 Z" android:fillColor="#FFE9A6" />
+    <path android:pathData="M18,68 C21,73 27,75 34,74 L42.4,64 L77.6,64 L86,74 C93,75 99,73 102,68 L102,71 C99,77 92,79 84,79 L36,79 C28,79 21,77 18,71 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="0" android:startY="63" android:endX="0" android:endY="79">
+                <item android:offset="0" android:color="#F4DE9C" />
+                <item android:offset="0.5" android:color="#B58E48" />
+                <item android:offset="1" android:color="#4A3516" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M32,104 h56 v10 h-56 Z" android:fillColor="#1B140C" />
+    <path android:pathData="M32,104 h2.5 v10 h-2.5 Z M85.5,104 h2.5 v10 h-2.5 Z" android:fillColor="#C9A45C" />
+    <path android:pathData="M55.5,106 h9 v6 h-9 Z" android:fillColor="#FFE9A6" />
+    <path android:pathData="M10,93 C13,98 19,100 26,99 L39,89 L81,89 L94,99 C101,100 107,98 110,93 L110,96 C107,102 100,104 92,104 L28,104 C20,104 13,102 10,96 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="0" android:startY="88" android:endX="0" android:endY="104">
+                <item android:offset="0" android:color="#F4DE9C" />
+                <item android:offset="0.5" android:color="#B58E48" />
+                <item android:offset="1" android:color="#4A3516" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M22,114 h76 v3 h-76 Z" android:fillColor="#6B6456" />
+    <path android:pathData="M14,117 h92 v3 h-92 Z" android:fillColor="#4A4438" />
+</vector>

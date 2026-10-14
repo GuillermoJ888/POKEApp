@@ -9,6 +9,7 @@ import android.util.TypedValue;
 
 import androidx.annotation.NonNull;
 
+import com.example.pokeapp.data.ApiClient;
 import com.example.pokeapp.data.Preferencias;
 
 import java.util.Map;
@@ -28,6 +29,7 @@ public class PokeApp extends Application implements Application.ActivityLifecycl
     public void onCreate() {
         super.onCreate();
         Preferencias.aplicarTema(this);
+        ApiClient.activarCache(getCacheDir());
         registerActivityLifecycleCallbacks(this);
     }
 

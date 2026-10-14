@@ -14,6 +14,8 @@ import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +113,7 @@ public class UsuarioManager {
     }
 
     public interface MedallasListas {
-        /** total = medallas obtenidas; fechas = número de medalla (1–10) → cuándo se ganó. */
+        /** total = medallas obtenidas; fechas = número de cada medalla que tiene (1–10) → cuándo la ganó. */
         void alTerminar(int total, Map<Integer, Date> fechas);
     }
 
@@ -254,6 +256,7 @@ public class UsuarioManager {
         datos.put("derrotas", 0);
         datos.put("medallas", 0);
         datos.put("medallasObtenidas", FieldValue.delete());
+        datos.put("torresCompletadas", FieldValue.delete());
         datos.put("capturados", FieldValue.delete());
         datos.put(RECORD_QUIEN, FieldValue.delete());
         datos.put(RACHA_QUIEN, FieldValue.delete());
@@ -279,37 +282,65 @@ public class UsuarioManager {
 
     public static final int MAX_MEDALLAS = 10;
 
+    // Números de medalla (1–10). Las 7 primeras son una por nivel de la Torre.
+    public static final int MEDALLA_JEFE_FINAL = 6;
+    public static final int MEDALLA_SECRETA = 7;
+    public static final int MEDALLA_CAMPEON = 8;    // conquistar la Torre 3 veces
+    public static final int MEDALLA_LEYENDA = 9;    // conquistar la Torre 5 veces
+    public static final int MEDALLA_MAESTRO = 10;   // tener las otras nueve
+    public static final int TORRES_CAMPEON = 3, TORRES_LEYENDA = 5;
+
     /**
-     * Se llama al completar la Torre Pokémon: desbloquea la siguiente medalla
-     * (máximo 10) y guarda su número y fecha en "medallasObtenidas" para el
-     * módulo Medallas. Devuelve el nuevo total, o -1 si no se pudo guardar.
+     * Se llama al GANAR un nivel de la Torre (1–6, o 7 = jefe secreto): da la medalla de ese nivel
+     * si aún no la tenía y, al vencer al jefe final, cuenta una Torre conquistada (a las 3 y a las 5
+     * hay medalla extra; con las nueve se gana la décima). Cada medalla guarda su número y fecha
+     * en "medallasObtenidas" para el módulo Medallas.
+     * Devuelve los números de las medallas recién ganadas (lista vacía si ninguna) o null si falló.
      */
-    public static void otorgarMedalla(@NonNull FavoritosManager.Resultado<Integer> callback) {
+    @SuppressWarnings("unchecked")
+    public static void otorgarMedallasTorre(int nivel, @NonNull FavoritosManager.Resultado<List<Integer>> callback) {
         DocumentReference doc = documento();
         if (doc == null) {
-            callback.alTerminar(-1);
+            callback.alTerminar(null);
             return;
         }
 
         doc.get().addOnSuccessListener(snapshot -> {
-            int actuales = valor(snapshot.getLong("medallas"));
-            if (actuales >= MAX_MEDALLAS) {
-                callback.alTerminar(actuales);   // ya tiene las 10
-                return;
+            Set<Integer> tiene = new HashSet<>();
+            Object lista = snapshot.get("medallasObtenidas");
+            if (lista instanceof List) {
+                for (Object o : (List<Object>) lista) {
+                    Object numero = o instanceof Map ? ((Map<String, Object>) o).get("numero") : null;
+                    if (numero instanceof Number) tiene.add(((Number) numero).intValue());
+                }
             }
 
-            int nueva = actuales + 1;
-            Map<String, Object> medalla = new HashMap<>();
-            medalla.put("numero", nueva);
-            medalla.put("fecha", Timestamp.now());
+            int torres = valor(snapshot.getLong("torresCompletadas"));
+            if (nivel == MEDALLA_JEFE_FINAL) torres++;
+
+            List<Integer> nuevas = new ArrayList<>();
+            if (nivel >= 1 && nivel <= MEDALLA_SECRETA && tiene.add(nivel)) nuevas.add(nivel);
+            if (torres >= TORRES_CAMPEON && tiene.add(MEDALLA_CAMPEON)) nuevas.add(MEDALLA_CAMPEON);
+            if (torres >= TORRES_LEYENDA && tiene.add(MEDALLA_LEYENDA)) nuevas.add(MEDALLA_LEYENDA);
+            if (tiene.size() >= MAX_MEDALLAS - 1 && tiene.add(MEDALLA_MAESTRO)) nuevas.add(MEDALLA_MAESTRO);
 
             Map<String, Object> datos = new HashMap<>();
-            datos.put("medallas", nueva);
-            datos.put("medallasObtenidas", FieldValue.arrayUnion(medalla));
+            datos.put("torresCompletadas", torres);
+            datos.put("medallas", tiene.size());
+            if (!nuevas.isEmpty()) {
+                Object[] registros = new Object[nuevas.size()];
+                for (int i = 0; i < registros.length; i++) {
+                    Map<String, Object> medalla = new HashMap<>();
+                    medalla.put("numero", nuevas.get(i));
+                    medalla.put("fecha", Timestamp.now());
+                    registros[i] = medalla;
+                }
+                datos.put("medallasObtenidas", FieldValue.arrayUnion(registros));
+            }
 
             doc.set(datos, SetOptions.merge())
-                    .addOnSuccessListener(v -> callback.alTerminar(nueva))
-                    .addOnFailureListener(e -> callback.alTerminar(-1));
-        }).addOnFailureListener(e -> callback.alTerminar(-1));
+                    .addOnSuccessListener(v -> callback.alTerminar(nuevas))
+                    .addOnFailureListener(e -> callback.alTerminar(null));
+        }).addOnFailureListener(e -> callback.alTerminar(null));
     }
 }

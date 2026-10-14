@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Barandal del balcón de cada piso de la Torre -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="360dp"
+    android:height="16dp"
+    android:viewportWidth="360"
+    android:viewportHeight="16">
+    <path android:pathData="M0,0 h360 v16 h-360 Z" android:fillColor="#0D0B08" />
+    <path android:pathData="M6,4 h3 v8 h-3 Z M18,4 h3 v8 h-3 Z M30,4 h3 v8 h-3 Z M42,4 h3 v8 h-3 Z M54,4 h3 v8 h-3 Z M66,4 h3 v8 h-3 Z M78,4 h3 v8 h-3 Z M90,4 h3 v8 h-3 Z M102,4 h3 v8 h-3 Z M114,4 h3 v8 h-3 Z M126,4 h3 v8 h-3 Z M138,4 h3 v8 h-3 Z M150,4 h3 v8 h-3 Z M162,4 h3 v8 h-3 Z M174,4 h3 v8 h-3 Z M186,4 h3 v8 h-3 Z M198,4 h3 v8 h-3 Z M210,4 h3 v8 h-3 Z M222,4 h3 v8 h-3 Z M234,4 h3 v8 h-3 Z M246,4 h3 v8 h-3 Z M258,4 h3 v8 h-3 Z M270,4 h3 v8 h-3 Z M282,4 h3 v8 h-3 Z M294,4 h3 v8 h-3 Z M306,4 h3 v8 h-3 Z M318,4 h3 v8 h-3 Z M330,4 h3 v8 h-3 Z M342,4 h3 v8 h-3 Z M354,4 h3 v8 h-3 Z" android:fillColor="#8F6B2E" />
+    <path android:pathData="M0,1 h360 v3 h-360 Z" android:fillColor="#E2C27A" />
+    <path android:pathData="M0,12 h360 v3 h-360 Z" android:fillColor="#B58E48" />
+</vector>

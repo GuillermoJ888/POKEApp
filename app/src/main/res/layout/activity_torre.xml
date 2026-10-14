@@ -12,8 +12,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Cabecera -->
+        <!-- Cabecera (se oculta en la pantalla de la torre, que trae sus propios botones) -->
         <FrameLayout
+            android:id="@+id/cabeceraTorre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_menu_header"
@@ -80,6 +81,7 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/contenidoTorre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -92,40 +94,69 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
+                <!-- Barra propia de la torre: regresar, título e historial -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/t_elige_3_de_6_pokemon_al_azar_y_sup"
-                    android:textColor="?attr/pkTextoSuave"
-                    android:textSize="13sp"
-                    android:lineSpacingExtra="2dp" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/btnRegresarTorre"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:text="←"
+                        android:textColor="#E8D08A"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        android:contentDescription="@string/t_regresar" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_torre_titulo"
+                        android:gravity="center"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:fontFamily="serif"
+                        android:letterSpacing="0.2"
+                        android:maxLines="1"
+                        android:text="TORRE POKÉMON"
+                        android:textColor="#E8D08A"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnHistorialTorre"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:text="📜"
+                        android:textSize="22sp"
+                        android:contentDescription="@string/t_historial" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvMedallasTorre"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_chip_turnos"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
                     android:text="@string/t_medallas_0_10"
-                    android:textColor="@color/menu_red"
+                    android:textColor="#C9A45C"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
+                <!-- La torre: un piso por nivel (se arma en TorreActivity.pintarEscalera) -->
                 <LinearLayout
                     android:id="@+id/listaNiveles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical" />
-
-                <com.example.pokeapp.PokeBoton
-                    android:id="@+id/btnComenzarTorre"
-                    app:tema="charizard"
-                    android:layout_width="match_parent"
-                    android:layout_height="58dp"
-                    android:layout_marginTop="44dp"
-                    android:text="@string/t_comenzar_campana"
-                    android:textSize="17sp" />
             </LinearLayout>
 
             <!-- ===== ELECCIÓN: 3 de 6 Pokémon al azar ===== -->

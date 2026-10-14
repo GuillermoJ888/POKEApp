@@ -42,6 +42,18 @@
             android:layout_gravity="top|start"
             android:visibility="invisible" />
 
+        <!-- Entrenador rival (solo en la Torre: el docente del nivel), detrás de su Pokémon -->
+        <ImageView
+            android:id="@+id/imgEntrenadorB"
+            android:layout_width="78dp"
+            android:layout_height="78dp"
+            android:layout_gravity="top|start"
+            android:background="@drawable/bg_entrenador"
+            android:padding="3dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:contentDescription="@string/t_docente_del_nivel" />
+
         <!-- Pokémon B (rival) -->
         <FrameLayout
             android:id="@+id/contenedorB"
@@ -276,6 +288,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/bg_battle_banner"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"

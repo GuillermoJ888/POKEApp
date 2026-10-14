@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Techo de un piso de la Torre: pagoda dorada con las puntas hacia arriba -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="360dp"
+    android:height="46dp"
+    android:viewportWidth="360"
+    android:viewportHeight="46">
+    <path android:pathData="M0,16 C10,30 34,35 60,33 C78,25 90,13 98,5 L262,5 C270,13 282,25 300,33 C326,35 350,30 360,16 L360,21 C352,37 330,43 300,43 L60,43 C30,43 8,37 0,21 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="0" android:startY="4" android:endX="0" android:endY="44">
+                <item android:offset="0" android:color="#E2C27A" />
+                <item android:offset="0.45" android:color="#9A7434" />
+                <item android:offset="1" android:color="#33240F" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M112,6 L84,43 M128,6 L108,43 M146,6 L134,43 M163,6 L157,43 M180,6 L180,43 M197,6 L203,43 M214,6 L226,43 M232,6 L252,43 M248,6 L276,43" android:strokeColor="#55241808" android:strokeWidth="1.4" />
+    <path android:pathData="M0,21 C8,37 30,43 60,43 L300,43 C330,43 352,37 360,21 L360,24 C352,40 330,46 300,46 L60,46 C30,46 8,40 0,24 Z" android:fillColor="#F4DE9C" />
+    <path android:pathData="M92,0 L268,0 L266,6 L94,6 Z" android:fillColor="#F4DE9C" />
+</vector>
