@@ -62,6 +62,7 @@
                     android:layout_marginStart="8dp"
                     android:text="@string/t_mi_perfil"
                     android:textColor="@color/perfil_lavender"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="22sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -112,6 +113,7 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/t_entrenador"
                     android:textColor="@color/poke_white"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="23sp"
                     android:textStyle="bold" />
 
@@ -205,6 +207,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/perfil_sky"
+                        android:fontFamily="@font/fredoka"
                         android:textSize="26sp"
                         android:textStyle="bold" />
 
@@ -232,6 +235,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/perfil_violet"
+                        android:fontFamily="@font/fredoka"
                         android:textSize="26sp"
                         android:textStyle="bold" />
 
@@ -266,6 +270,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/perfil_sky"
+                        android:fontFamily="@font/fredoka"
                         android:textSize="26sp"
                         android:textStyle="bold" />
 
@@ -293,6 +298,7 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/perfil_violet"
+                        android:fontFamily="@font/fredoka"
                         android:textSize="26sp"
                         android:textStyle="bold" />
 

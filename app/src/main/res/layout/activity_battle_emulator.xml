@@ -58,6 +58,7 @@
                     android:layout_marginStart="10dp"
                     android:text="@string/t_battle_emulator_2"
                     android:textColor="#FFFFFF"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -159,6 +160,7 @@
                 android:layout_marginBottom="6dp"
                 android:text="@string/t_vs"
                 android:textColor="@color/menu_red"
+                android:fontFamily="@font/fredoka"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
@@ -393,6 +395,7 @@
                         android:layout_marginTop="6dp"
                         android:text="@string/t_n_000_nombre"
                         android:textColor="?attr/pkTexto"
+                        android:fontFamily="@font/fredoka"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 

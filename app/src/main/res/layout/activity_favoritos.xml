@@ -33,6 +33,7 @@
             android:layout_marginStart="8dp"
             android:text="@string/t_mis_favoritos"
             android:textColor="@color/poke_gold"
+            android:fontFamily="@font/fredoka"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -68,6 +69,7 @@
             android:gravity="center"
             android:text="@string/t_sin_favoritos_titulo"
             android:textColor="#FFFFFF"
+            android:fontFamily="@font/fredoka"
             android:textSize="19sp"
             android:textStyle="bold" />
 

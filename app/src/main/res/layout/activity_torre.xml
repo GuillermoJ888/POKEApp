@@ -59,6 +59,7 @@
                     android:layout_marginStart="10dp"
                     android:text="@string/t_torre_pokemon"
                     android:textColor="#FFFFFF"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -253,6 +254,7 @@
                         android:layout_marginTop="8dp"
                         android:text="@string/t_docente_cesba_1"
                         android:textColor="?attr/pkTexto"
+                        android:fontFamily="@font/fredoka"
                         android:textSize="19sp"
                         android:textStyle="bold" />
 

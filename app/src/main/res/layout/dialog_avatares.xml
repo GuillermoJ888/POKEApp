@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:text="@string/t_elige_tu_avatar"
         android:textColor="#FFFFFF"
+        android:fontFamily="@font/fredoka"
         android:textSize="20sp"
         android:textStyle="bold" />
 

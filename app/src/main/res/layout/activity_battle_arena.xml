@@ -298,6 +298,7 @@
             android:gravity="center"
             android:text="@string/t_comienza_la_batalla"
             android:textColor="#FFFFFF"
+            android:fontFamily="@font/fredoka"
             android:textSize="22sp"
             android:textStyle="bold"
             android:visibility="gone" />

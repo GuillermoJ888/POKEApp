@@ -89,7 +89,9 @@ public class PokeBoton extends AppCompatButton {
         setBackground(new Cuerpo());
         setStateListAnimator(null);   // sin la sombra/elevación de Material
         setAllCaps(false);
-        setTypeface(getTypeface(), Typeface.BOLD);
+        // Letra de los títulos (Fredoka); si no se pudiera cargar, la normal en negrita
+        Typeface fredoka = isInEditMode() ? null : androidx.core.content.res.ResourcesCompat.getFont(getContext(), R.font.fredoka);
+        setTypeface(fredoka != null ? fredoka : getTypeface(), Typeface.BOLD);
         setGravity(Gravity.CENTER);
         setTextColor(tema.texto);
         if (tema.sombraTexto) setShadowLayer(3 * dp, 0, 1.5f * dp, 0x99000000);

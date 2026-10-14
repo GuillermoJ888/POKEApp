@@ -24,6 +24,7 @@
         android:layout_marginTop="2dp"
         android:text="@string/t_elige_tu_siguiente_pokemon"
         android:textColor="#FFFFFF"
+        android:fontFamily="@font/fredoka"
         android:textSize="20sp"
         android:textStyle="bold" />
 

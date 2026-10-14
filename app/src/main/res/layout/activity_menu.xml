@@ -68,6 +68,7 @@
                         android:layout_marginTop="4dp"
                         android:text="@string/t_hola_entrenador"
                         android:textColor="#FFFFFF"
+                        android:fontFamily="@font/fredoka"
                         android:textSize="25sp"
                         android:textStyle="bold" />
 

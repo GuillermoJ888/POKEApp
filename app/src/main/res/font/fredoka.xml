@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fredoka (Google Fonts, licencia OFL, ver FREDOKA_OFL.txt en la raíz del proyecto): fuente de los títulos.
+     Una sola variante, SemiBold, declarada como negrita para que Android no la engruese de más. -->
+<font-family xmlns:android="http://schemas.android.com/apk/res/android">
+    <font
+        android:font="@font/fredoka_semibold"
+        android:fontStyle="normal"
+        android:fontWeight="700" />
+</font-family>

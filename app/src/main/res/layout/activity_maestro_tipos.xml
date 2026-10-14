@@ -48,6 +48,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/t_maestro_de_tipos_2"
                     android:textColor="#FFFFFF"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -81,6 +82,7 @@
                     android:layout_weight="1"
                     android:text="⭐ 0"
                     android:textColor="?attr/pkTexto"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 
@@ -137,6 +139,7 @@
                     android:layout_marginTop="4dp"
                     android:text="@string/t_maestro_de_tipos"
                     android:textColor="?attr/pkTexto"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

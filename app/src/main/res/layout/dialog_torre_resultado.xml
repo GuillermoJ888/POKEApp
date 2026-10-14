@@ -24,6 +24,7 @@
         android:gravity="center"
         android:text="@string/t_nivel_superado"
         android:textColor="?attr/pkTexto"
+        android:fontFamily="@font/fredoka"
         android:textSize="22sp"
         android:textStyle="bold" />
 

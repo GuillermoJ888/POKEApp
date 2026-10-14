@@ -25,6 +25,7 @@
             android:layout_marginTop="14dp"
             android:text="@string/t_pokeapp_v2_2"
             android:textColor="@color/poke_white"
+            android:fontFamily="@font/fredoka"
             android:textSize="26sp"
             android:textStyle="bold" />
 

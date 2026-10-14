@@ -65,6 +65,7 @@
                 android:gravity="end"
                 android:text="@string/t_pokedex"
                 android:textColor="#FFFFFF"
+                android:fontFamily="@font/fredoka"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:letterSpacing="0.12" />
@@ -223,6 +224,7 @@
                                 android:layout_weight="1"
                                 android:text="#000"
                                 android:textColor="#14213D"
+                                android:fontFamily="@font/fredoka"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -276,6 +278,7 @@
                 android:gravity="center"
                 android:text="@string/t_nombre"
                 android:textColor="#FFFFFF"
+                android:fontFamily="@font/fredoka"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 

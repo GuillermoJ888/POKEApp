@@ -45,6 +45,7 @@
         android:layout_marginTop="6dp"
         android:text="@string/t_nombre_2"
         android:textColor="?attr/pkTexto"
+        android:fontFamily="@font/fredoka"
         android:textSize="26sp"
         android:textStyle="bold" />
 
@@ -79,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:text="0 / 0"
                 android:textColor="?attr/pkTexto"
+                android:fontFamily="@font/fredoka"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -106,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:text="0"
                 android:textColor="?attr/pkTexto"
+                android:fontFamily="@font/fredoka"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

@@ -58,6 +58,7 @@
                     android:layout_marginStart="10dp"
                     android:text="@string/t_battle_versus"
                     android:textColor="#FFFFFF"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

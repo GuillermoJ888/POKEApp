@@ -191,6 +191,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/t_nombre_2"
                 android:textColor="?attr/pkTexto"
+                android:fontFamily="@font/fredoka"
                 android:textSize="23sp"
                 android:textStyle="bold" />
 

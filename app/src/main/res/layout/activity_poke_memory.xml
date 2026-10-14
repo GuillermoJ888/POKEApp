@@ -48,6 +48,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/t_pokememory"
                     android:textColor="#FFFFFF"
+                    android:fontFamily="@font/fredoka"
                     android:textSize="20sp"
                     android:textStyle="bold" />
 

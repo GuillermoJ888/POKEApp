@@ -27,6 +27,7 @@
         android:gravity="center"
         android:text="@string/t_seguro"
         android:textColor="?attr/pkTexto"
+        android:fontFamily="@font/fredoka"
         android:textSize="21sp"
         android:textStyle="bold" />
 

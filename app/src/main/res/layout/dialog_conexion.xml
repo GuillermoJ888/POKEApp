@@ -32,6 +32,7 @@
         android:gravity="center"
         android:text="@string/t_pelear_contra_rival"
         android:textColor="#FFFFFF"
+        android:fontFamily="@font/fredoka"
         android:textSize="21sp"
         android:textStyle="bold" />
 

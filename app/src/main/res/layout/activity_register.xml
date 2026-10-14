@@ -35,6 +35,7 @@
             android:layout_marginBottom="24dp"
             android:text="@string/t_crear_una_cuenta"
             android:textColor="@color/poke_white"
+            android:fontFamily="@font/fredoka"
             android:textSize="22sp"
             android:textStyle="bold" />
 
