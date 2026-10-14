@@ -282,23 +282,23 @@ public class UsuarioManager {
 
     public static final int MAX_MEDALLAS = 10;
 
-    // Números de medalla (1–10). Las 7 primeras son una por nivel de la Torre.
-    public static final int MEDALLA_JEFE_FINAL = 6;
-    public static final int MEDALLA_SECRETA = 7;
-    public static final int MEDALLA_CAMPEON = 8;    // conquistar la Torre 3 veces
-    public static final int MEDALLA_LEYENDA = 9;    // conquistar la Torre 5 veces
-    public static final int MEDALLA_MAESTRO = 10;   // tener las otras nueve
-    public static final int TORRES_CAMPEON = 3, TORRES_LEYENDA = 5;
+    /** Nivel de la Torre que, al ganarlo, la completa (el jefe final). */
+    public static final int NIVEL_JEFE_FINAL = 6;
 
     /**
-     * Se llama al GANAR un nivel de la Torre (1–6, o 7 = jefe secreto): da la medalla de ese nivel
-     * si aún no la tenía y, al vencer al jefe final, cuenta una Torre conquistada (a las 3 y a las 5
-     * hay medalla extra; con las nueve se gana la décima). Cada medalla guarda su número y fecha
-     * en "medallasObtenidas" para el módulo Medallas.
+     * Se llama al GANAR un nivel de la Torre. Como pide el PDF, solo hay medalla al COMPLETARLA:
+     * al vencer al jefe final (nivel 6) se cuenta una Torre conquistada y se desbloquea la
+     * siguiente medalla (la 1.ª Torre da la medalla 1, la 2.ª la medalla 2… hasta 10).
+     * Los niveles 1 a 5 y el jefe secreto no dan medalla.
+     * Cada medalla guarda su número y fecha en "medallasObtenidas" para el módulo Medallas.
      * Devuelve los números de las medallas recién ganadas (lista vacía si ninguna) o null si falló.
      */
     @SuppressWarnings("unchecked")
     public static void otorgarMedallasTorre(int nivel, @NonNull FavoritosManager.Resultado<List<Integer>> callback) {
+        if (nivel != NIVEL_JEFE_FINAL) {
+            callback.alTerminar(new ArrayList<>());   // solo completar la Torre da medalla
+            return;
+        }
         DocumentReference doc = documento();
         if (doc == null) {
             callback.alTerminar(null);
@@ -315,14 +315,16 @@ public class UsuarioManager {
                 }
             }
 
-            int torres = valor(snapshot.getLong("torresCompletadas"));
-            if (nivel == MEDALLA_JEFE_FINAL) torres++;
+            int torres = valor(snapshot.getLong("torresCompletadas")) + 1;
 
+            // La siguiente medalla que le falta (1, 2, 3… hasta 10); con las 10 ya no hay más
             List<Integer> nuevas = new ArrayList<>();
-            if (nivel >= 1 && nivel <= MEDALLA_SECRETA && tiene.add(nivel)) nuevas.add(nivel);
-            if (torres >= TORRES_CAMPEON && tiene.add(MEDALLA_CAMPEON)) nuevas.add(MEDALLA_CAMPEON);
-            if (torres >= TORRES_LEYENDA && tiene.add(MEDALLA_LEYENDA)) nuevas.add(MEDALLA_LEYENDA);
-            if (tiene.size() >= MAX_MEDALLAS - 1 && tiene.add(MEDALLA_MAESTRO)) nuevas.add(MEDALLA_MAESTRO);
+            for (int numero = 1; numero <= MAX_MEDALLAS; numero++) {
+                if (tiene.add(numero)) {
+                    nuevas.add(numero);
+                    break;
+                }
+            }
 
             Map<String, Object> datos = new HashMap<>();
             datos.put("torresCompletadas", torres);

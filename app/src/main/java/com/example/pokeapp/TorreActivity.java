@@ -36,8 +36,8 @@ import java.util.Random;
  *  1. La app genera 6 Pokémon al azar (mínimo 2 fuertes o pseudolegendarios, nunca legendarios) y el usuario elige 3.
  *  2. Seis niveles seguidos contra rivales al azar del sistema, cada uno con su docente CESBA.
  *  3. El nivel 6 es el jefe final con 4 legendarios al azar.
- *  4. Cada nivel ganado da su propia medalla en ese momento (ver MedallasActivity; son 10 en total).
- *  5. Extra: al vencer al jefe final se desbloquea un jefe secreto con 5 legendarios (da la Medalla Secreta).
+ *  4. Si gana los 6 niveles en la misma campaña obtiene una medalla (la siguiente de las 10).
+ *  5. Extra: al vencer al jefe final se desbloquea un jefe secreto con 5 legendarios (no da medalla).
  * El equipo se cura al empezar cada nivel. Las batallas usan la arena compartida:
  * el usuario toca Atacar y el sistema responde solo.
  */
@@ -138,7 +138,7 @@ public class TorreActivity extends AppCompatActivity {
             if (!isFinishing() && !isDestroyed()) {
                 tvMedallas.setText("🏅 Medallas: " + total + " / " + UsuarioManager.MAX_MEDALLAS);
                 // Tener la medalla del jefe final = ya lo venció alguna vez: se revela el piso secreto
-                boolean descubierto = fechas.containsKey(UsuarioManager.MEDALLA_JEFE_FINAL);
+                boolean descubierto = total > 0;   // ya completó la Torre alguna vez
                 if (descubierto != secretoDescubierto) {
                     secretoDescubierto = descubierto;
                     if (nivel == 0) pintarEscalera();
@@ -353,17 +353,17 @@ public class TorreActivity extends AppCompatActivity {
         if (rivales.isEmpty() || equipo.isEmpty()) return;
         int personaje = personajeDocente(nivel);
         lanzadorArena.launch(BattleArenaActivity.crearIntentEquipos(this,
-                equipo, rivales,
-                "Tú", (nivel == SECRETO ? "Jefe secreto" : "Nivel " + nivel) + " · " + nombreDocente(nivel),
-                true, false,
-                HistorialManager.MODO_TORRE, ESCENARIO_POR_NIVEL[nivel - 1])
+                        equipo, rivales,
+                        "Tú", (nivel == SECRETO ? "Jefe secreto" : "Nivel " + nivel) + " · " + nombreDocente(nivel),
+                        true, false,
+                        HistorialManager.MODO_TORRE, ESCENARIO_POR_NIVEL[nivel - 1])
                 // Junto al Pokémon rival va el personaje del docente (nunca su foto); si aún no hay dibujo, no sale nadie
                 .putExtra(BattleArenaActivity.EXTRA_ENTRENADOR_B, personaje)
                 .putExtra(BattleArenaActivity.EXTRA_ENTRENADOR_CUERPO, true)
                 .putExtra(BattleArenaActivity.EXTRA_FRASE_ENTRENADOR, nivel == SECRETO ? FRASE_SECRETO : null));
     }
 
-    /** Al volver de la arena. Cada nivel ganado da su medalla en ese momento (no hay que terminar la Torre). */
+    /** Al volver de la arena. Solo vencer al jefe final (completar la Torre) da medalla. */
     private void alTerminarNivel(boolean gano) {
         if (!gano) {
             if (nivel == SECRETO) {
@@ -373,7 +373,7 @@ public class TorreActivity extends AppCompatActivity {
                         "Salir", this::mostrarInicio);
             } else {
                 mostrarResultado("💥", "Caíste en el nivel " + nivel,
-                        "La campaña terminó. Conservas las medallas de los niveles que ya venciste.",
+                        "La campaña terminó. Para ganar una medalla hay que superar los 6 niveles seguidos.",
                         "Nueva campaña", this::comenzarCampania,
                         "Salir", this::mostrarInicio);
             }

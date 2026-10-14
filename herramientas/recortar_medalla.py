@@ -4,7 +4,7 @@ from collections import deque
 from PIL import Image, ImageFilter
 im = Image.open(sys.argv[1]).convert('RGBA'); w, h = im.size; px = im.load()
 fr, fg, fb = px[3, h // 2][:3]
-TOL = 46
+TOL = int(sys.argv[3]) if len(sys.argv) > 3 else 46
 def fondo(x, y):
     r, g, b, _ = px[x, y]
     return abs(r - fr) + abs(g - fg) + abs(b - fb) < TOL

@@ -24,38 +24,31 @@ import java.util.Map;
 
 /**
  * Medallas (módulo K): las 10 medallas del proyecto, obtenidas o bloqueadas.
- * Las 7 primeras se ganan una por cada nivel de la Torre Pokémon (la del docente vencido);
- * las otras 3, por conquistar la Torre varias veces y por juntar todas
+ * Como pide el PDF, cada Torre Pokémon completada desbloquea la siguiente
  * (UsuarioManager.otorgarMedallasTorre). De las obtenidas se muestra la fecha.
+ * La imagen de cada una es res/drawable-nodpi/medalla_<n>.png.
  */
 public class MedallasActivity extends AppCompatActivity {
 
-    /** Emoji y tipo (da el color) de cada medalla, de la 1 a la 10. */
+    /** Primer número de medalla. */
+    private static final int PRIMERA = 1;
+
+    /** Emoji y tipo (da el color) de cada medalla, de la 1 a la 10 (solo si falta su imagen). */
     private static final String[][] MEDALLAS = {
             {"🪨", "rock"}, {"💧", "water"}, {"⚡", "electric"}, {"🌿", "grass"}, {"🔥", "fire"},
-            {"👑", "dragon"}, {"🌟", "psychic"}, {"🏆", "ground"}, {"🐉", "ice"}, {"💎", "poison"}};
+            {"👑", "dragon"}, {"🌙", "dark"}, {"💤", "normal"}, {"🔥", "fire"}, {"⚡", "electric"}};
 
-    /** "Medalla Gaz", "Medalla Campeón"… Las de nivel llevan el nombre del docente vencido. */
+    /** Nombre de cada medalla: el Pokémon de su insignia. */
+    private static final String[] NOMBRES = {"Medalla Arceus", "Medalla Gengar", "Medalla Eevee", "Medalla Sylveon", "Medalla Greninja",
+            "Medalla Dragonite", "Medalla Darkrai", "Medalla Snorlax", "Medalla Charizard", "Medalla Pikachu"};
+
     public static String nombre(int numero) {
-        if (numero <= UsuarioManager.MEDALLA_JEFE_FINAL) return "Medalla " + TorreActivity.nombreDocente(numero);
-        switch (numero) {
-            case UsuarioManager.MEDALLA_SECRETA: return "Medalla Secreta";
-            case UsuarioManager.MEDALLA_CAMPEON: return "Medalla Campeón";
-            case UsuarioManager.MEDALLA_LEYENDA: return "Medalla Leyenda";
-            default: return "Medalla Maestro";
-        }
+        return NOMBRES[Math.max(1, Math.min(numero, NOMBRES.length)) - 1];
     }
 
-    /** Cómo se gana cada medalla. */
+    /** Cómo se gana cada medalla: la n se gana al completar la Torre por n-ésima vez. */
     private static String requisito(int numero) {
-        if (numero < UsuarioManager.MEDALLA_JEFE_FINAL) return "Vence el nivel " + numero + " de la Torre";
-        switch (numero) {
-            case UsuarioManager.MEDALLA_JEFE_FINAL: return "Vence al jefe final de la Torre";
-            case UsuarioManager.MEDALLA_SECRETA: return "Vence al jefe secreto";
-            case UsuarioManager.MEDALLA_CAMPEON: return "Conquista la Torre " + UsuarioManager.TORRES_CAMPEON + " veces";
-            case UsuarioManager.MEDALLA_LEYENDA: return "Conquista la Torre " + UsuarioManager.TORRES_LEYENDA + " veces";
-            default: return "Consigue las otras 9 medallas";
-        }
+        return numero == 1 ? "Completa la Torre por primera vez" : "Completa la Torre " + numero + " veces";
     }
 
     @Override
@@ -74,7 +67,7 @@ public class MedallasActivity extends AppCompatActivity {
     private void pintar(int obtenidas, Map<Integer, Date> fechas) {
         ((TextView) findViewById(R.id.tvProgresoMedallas)).setText(obtenidas + " de " + MEDALLAS.length
                 + (obtenidas >= MEDALLAS.length ? " · ¡Colección completa! 🏆"
-                : " · Gana niveles de la Torre Pokémon para conseguirlas"));
+                : " · Completa la Torre Pokémon para ganar la siguiente"));
         ProgressBar barra = findViewById(R.id.barraMedallas);
         barra.setMax(MEDALLAS.length);
         barra.setProgress(obtenidas);
@@ -85,7 +78,8 @@ public class MedallasActivity extends AppCompatActivity {
         SimpleDateFormat formato = new SimpleDateFormat("d MMM yyyy", new Locale("es", "MX"));
 
         for (int i = 0; i < MEDALLAS.length; i++) {
-            boolean ganada = fechas != null && fechas.containsKey(i + 1);
+            int numero = PRIMERA + i;
+            boolean ganada = fechas != null && fechas.containsKey(numero);
             int color = ganada ? TypeColors.obtenerColor(MEDALLAS[i][1]) : 0xFFB8B8B8;
 
             LinearLayout tarjeta = new LinearLayout(this);
@@ -96,7 +90,7 @@ public class MedallasActivity extends AppCompatActivity {
             tarjeta.setAlpha(ganada ? 1f : 0.6f);
 
             // La medalla: su imagen (res/drawable-nodpi/medalla_<n>.png) si existe; en gris si está bloqueada
-            int imagen = getResources().getIdentifier("medalla_" + (i + 1), "drawable", getPackageName());
+            int imagen = getResources().getIdentifier("medalla_" + numero, "drawable", getPackageName());
             if (imagen != 0) {
                 ImageView medalla = new ImageView(this);
                 medalla.setImageResource(imagen);
@@ -126,7 +120,7 @@ public class MedallasActivity extends AppCompatActivity {
             }
 
             TextView nombre = new TextView(this);
-            nombre.setText((i + 1) + ". " + nombre(i + 1));
+            nombre.setText((i + 1) + ". " + nombre(numero));
             nombre.setTextColor(PokeApp.color(this, R.attr.pkTexto));
             nombre.setTextSize(14);
             nombre.setTypeface(null, Typeface.BOLD);
@@ -134,9 +128,9 @@ public class MedallasActivity extends AppCompatActivity {
             nombre.setPadding(0, Math.round(8 * dp), 0, 0);
             tarjeta.addView(nombre);
 
-            Date fecha = fechas != null ? fechas.get(i + 1) : null;
+            Date fecha = fechas != null ? fechas.get(numero) : null;
             TextView estado = new TextView(this);
-            estado.setText(!ganada ? requisito(i + 1) : fecha != null ? "Obtenida el " + formato.format(fecha) : "Obtenida");
+            estado.setText(!ganada ? requisito(numero) : fecha != null ? "Obtenida el " + formato.format(fecha) : "Obtenida");
             estado.setTextColor(ganada ? 0xFF2E8B57 : PokeApp.color(this, R.attr.pkTextoSuave));
             estado.setTextSize(12);
             estado.setGravity(Gravity.CENTER);

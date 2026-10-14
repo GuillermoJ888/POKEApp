@@ -21,8 +21,7 @@ import retrofit2.Response;
  * Asigna a cada Pokémon sus 4 MEJORES ataques REALES de la PokéAPI (/move/{nombre}).
  *
  * Se revisan TODOS los ataques que la PokéAPI dice que ese Pokémon puede aprender y se eligen
- * los que más daño hacen (potencia × precisión): los 2 más fuertes de su mismo tipo y los
- * 2 más fuertes de otros tipos (distintos entre sí, para tener con qué pegarle a más rivales).
+ * los 4 que más daño hacen (potencia × precisión) de SU MISMO TIPO (o de cualquiera de sus dos tipos).
  * No hay azar: el mismo Pokémon recibe siempre los mismos 4 ataques, así que en la Torre
  * los conserva de un nivel a otro. Los detalles se guardan en memoria (y en el celular)
  * para no pedirlos dos veces. Si algo falla, se queda con ataques genéricos de su tipo.
@@ -111,7 +110,7 @@ public class MovimientoManager {
         return m.potencia * (m.precision > 0 ? m.precision / 100.0 : 1.0);
     }
 
-    /** 3) A cada Pokémon: los 2 más fuertes de su tipo + los 2 más fuertes de otros tipos, hasta 4. */
+    /** 3) A cada Pokémon: sus 4 ataques más fuertes de SU MISMO TIPO (o tipos, si tiene dos). */
     private static void repartir(Map<BattlePokemon, List<String>> candidatos) {
         // Del más fuerte al más débil; si empatan, por nombre (para que siempre salga lo mismo)
         Comparator<Movimiento> masFuerte = Comparator.comparingDouble(MovimientoManager::fuerza).reversed()
@@ -120,35 +119,19 @@ public class MovimientoManager {
         for (Map.Entry<BattlePokemon, List<String>> e : candidatos.entrySet()) {
             BattlePokemon p = e.getKey();
             List<Movimiento> mismoTipo = new ArrayList<>();
-            List<Movimiento> otros = new ArrayList<>();
 
             for (String nombre : e.getValue()) {
                 Movimiento m = CACHE.get(nombre);
-                if (m == null) continue;
-                if (p.tipos.contains(m.tipo)) mismoTipo.add(m);
-                else otros.add(m);
+                if (m != null && p.tipos.contains(m.tipo)) mismoTipo.add(m);
             }
             mismoTipo.sort(masFuerte);
-            otros.sort(masFuerte);
-
-            // De los otros tipos, solo el más fuerte de cada tipo (no dos ataques casi iguales)
-            List<Movimiento> otrosVariados = new ArrayList<>();
-            for (Movimiento m : otros) {
-                if (!tieneTipo(otrosVariados, m.tipo)) otrosVariados.add(m);
-            }
 
             List<Movimiento> elegidos = new ArrayList<>();
-            agregarHasta(elegidos, mismoTipo, 2);
-            agregarHasta(elegidos, otrosVariados, ATAQUES);
             agregarHasta(elegidos, mismoTipo, ATAQUES);
-            agregarHasta(elegidos, otros, ATAQUES);
 
-            // Si no alcanzó (falló internet o casi no tiene ataques de daño): genéricos de su tipo
+            // Si casi no tiene ataques de daño de su tipo (o falló internet): genéricos de su tipo
             for (String tipo : p.tipos) {
                 if (elegidos.size() < ATAQUES && !tieneTipo(elegidos, tipo)) elegidos.add(Movimiento.basico(tipo));
-            }
-            if (elegidos.size() < ATAQUES && !tieneTipo(elegidos, "normal")) {
-                elegidos.add(new Movimiento("Placaje", "normal", 40, 100));
             }
 
             p.setMovimientos(elegidos);
