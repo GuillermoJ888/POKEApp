@@ -345,4 +345,29 @@ public class UsuarioManager {
                     .addOnFailureListener(e -> callback.alTerminar(null));
         }).addOnFailureListener(e -> callback.alTerminar(null));
     }
+
+    /** Compañero elegido en Mi perfil (ID de la PokéAPI); 0 si no ha elegido. Se guarda en usuarios/{uid}.companero. */
+    public static void obtenerCompanero(@NonNull FavoritosManager.Resultado<Integer> callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(0);
+            return;
+        }
+        doc.get().addOnSuccessListener(snapshot -> callback.alTerminar(valor(snapshot.getLong("companero"))))
+                .addOnFailureListener(e -> callback.alTerminar(0));
+    }
+
+    /** Guarda el compañero (0 = ninguno). Devuelve true si se guardó. */
+    public static void guardarCompanero(int id, @NonNull FavoritosManager.Resultado<Boolean> callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(false);
+            return;
+        }
+        Map<String, Object> datos = new HashMap<>();
+        datos.put("companero", id == 0 ? FieldValue.delete() : id);
+        doc.set(datos, SetOptions.merge())
+                .addOnSuccessListener(v -> callback.alTerminar(true))
+                .addOnFailureListener(e -> callback.alTerminar(false));
+    }
 }

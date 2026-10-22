@@ -234,4 +234,7 @@
     <string name="mod_config_desc">Theme and sound</string>
     <string name="t_sin_favoritos_titulo">Your favorites collection is empty</string>
     <string name="t_buscar_en_la_pokedex">Search the Pokédex</string>
+    <string name="t_companero">PARTNER</string>
+    <string name="t_elige_un_companero">Choose a partner</string>
+    <string name="t_companero_desc">If your 3 Pokémon faint against Badi or the secret boss, it comes to the rescue</string>
 </resources>

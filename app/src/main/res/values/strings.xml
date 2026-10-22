@@ -268,4 +268,7 @@
     <string name="mod_config_desc">Tema y sonido</string>
     <string name="t_sin_favoritos_titulo">Tu colección de favoritos está vacía</string>
     <string name="t_buscar_en_la_pokedex">Buscar en la Pokédex</string>
+    <string name="t_companero">COMPAÑERO</string>
+    <string name="t_elige_un_companero">Elige un compañero</string>
+    <string name="t_companero_desc">Si caen tus 3 Pokémon contra Badi o el jefe secreto, sale al rescate</string>
 </resources>

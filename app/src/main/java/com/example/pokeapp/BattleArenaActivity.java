@@ -83,6 +83,8 @@ public class BattleArenaActivity extends AppCompatActivity {
     public static final String EXTRA_ENTRENADOR_B = "extra_entrenador_b";
     /** true = esa imagen es un personaje de cuerpo completo (PNG sin fondo); false = foto en marco redondo. */
     public static final String EXTRA_ENTRENADOR_CUERPO = "extra_entrenador_cuerpo";
+    /** Opcional: Pokémon (JSON) que entra al rescate del lado A cuando caen todos los suyos (una vez). */
+    public static final String EXTRA_COMPANERO_A = "extra_companero_a";
     /** Opcional: frase con la que se presenta el entrenador rival, en vez de "¡A luchar contra …!". */
     public static final String EXTRA_FRASE_ENTRENADOR = "extra_frase_entrenador";
     /** Tiempo extra de presentación cuando hay entrenador: sale él, se hace a un lado y entra su Pokémon. */
@@ -112,6 +114,8 @@ public class BattleArenaActivity extends AppCompatActivity {
     private FrameLayout contenedorA, contenedorB;
     private ImageView imgEntrenadorB;
     private boolean hayEntrenador, entrenadorDeCuerpo;
+    private Pokemon companeroA;          // compañero de reserva del lado A (solo Torre, niveles de jefe)
+    private boolean companeroUsado;
     private LinearLayout puntosA, puntosB;
     private ScrollView scrollBitacora;
     private View barraAccion, btnCambiar;
@@ -194,6 +198,15 @@ public class BattleArenaActivity extends AppCompatActivity {
             Toast.makeText(this, "No se pudieron cargar los Pokémon", Toast.LENGTH_SHORT).show();
             finish();
             return;
+        }
+
+        String jsonCompanero = getIntent().getStringExtra(EXTRA_COMPANERO_A);
+        if (jsonCompanero != null) {
+            try {
+                companeroA = gson.fromJson(jsonCompanero, Pokemon.class);
+            } catch (Exception e) {
+                companeroA = null;
+            }
         }
 
         nombreA = getIntent().getStringExtra(EXTRA_NOMBRE_A);
@@ -347,6 +360,29 @@ public class BattleArenaActivity extends AppCompatActivity {
     private FrameLayout contenedor(boolean ladoA) { return ladoA ? contenedorA : contenedorB; }
 
     /** "Jugador 1" si el lado tiene dueño; si no, el nombre del Pokémon. */
+    /**
+     * El compañero elegido en Mi perfil entra con sus ataques reales cuando caen todos los Pokémon de A,
+     * y siempre ataca primero (no se decide por Speed).
+     */
+    private void rescatarConCompanero() {
+        companeroUsado = true;
+        BattlePokemon companero = new BattlePokemon(companeroA);
+        equipoA.add(companero);
+        handler.postDelayed(() -> {
+            if (batallaTerminada || isFinishing() || isDestroyed()) return;
+            mostrarBanner("¡" + companero.nombre + " sale al rescate!");
+            agregarBitacora("🤝 ¡Tu compañero " + companero.nombre + " sale al rescate!");
+            MovimientoManager.asignar(Collections.singletonList(companero), () -> handler.postDelayed(() -> {
+                if (batallaTerminada || isFinishing() || isDestroyed()) return;
+                mostrarEntrada(true, equipoA.size() - 1);
+                agregarBitacora((nombreA != null ? nombreA : "Entra") + " envía a " + companero.nombre
+                        + ".\n¡" + companero.nombre + " ataca primero!");
+                turnoDeA = true;
+                handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
+            }, PAUSA_REEMPLAZO));
+        }, PAUSA_REEMPLAZO);
+    }
+
     private String dueno(boolean ladoA) {
         String nombre = ladoA ? nombreA : nombreB;
         return nombre != null ? nombre : actual(ladoA).nombre;
@@ -747,7 +783,12 @@ public class BattleArenaActivity extends AppCompatActivity {
 
         if (turno.derrotado) {
             if (!quedanVivos(!ladoA)) {
-                terminarBatalla(ladoA);
+                // Cayó todo el equipo A: si tiene compañero de reserva, sale al rescate (una sola vez)
+                if (!ladoA && companeroA != null && !companeroUsado) {
+                    rescatarConCompanero();
+                } else {
+                    terminarBatalla(ladoA);
+                }
             } else {
                 handler.postDelayed(() -> pedirReemplazo(!ladoA), PAUSA_REEMPLAZO);
             }

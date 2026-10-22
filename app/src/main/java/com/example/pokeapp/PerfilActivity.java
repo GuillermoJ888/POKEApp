@@ -2,13 +2,17 @@ package com.example.pokeapp;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +22,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.pokeapp.data.AvatarManager;
+import com.example.pokeapp.data.CargadorPokemon;
 import com.example.pokeapp.data.FavoritosManager;
+import com.example.pokeapp.data.PokemonMini;
 import com.example.pokeapp.data.UsuarioManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,6 +36,7 @@ public class PerfilActivity extends AppCompatActivity {
     private TextView tvFavoritos, tvMedallas, tvVictorias, tvDerrotas, tvNivel;
     private ProgressBar progressNivel;
     private ImageView imgAvatar;
+    private int companero;   // ID del compañero elegido (0 = ninguno)
 
     /** Selector de fotos de Android (no pide permisos): regresa la imagen elegida. */
     private final ActivityResultLauncher<PickVisualMediaRequest> lanzadorFoto = registerForActivityResult(
@@ -69,6 +77,10 @@ public class PerfilActivity extends AppCompatActivity {
         AvatarManager.mostrar(this, imgAvatar);
         findViewById(R.id.contenedorAvatar).setOnClickListener(v -> elegirAvatar());
 
+        // Compañero para la Torre (se guarda en la cuenta)
+        findViewById(R.id.tarjetaCompanero).setOnClickListener(v -> elegirCompanero());
+        UsuarioManager.obtenerCompanero(this::mostrarCompanero);
+
         // El contador de favoritos abre la lista de favoritos
         findViewById(R.id.tarjetaFavoritosPerfil).setOnClickListener(v ->
                 startActivity(new Intent(this, FavoritosActivity.class)));
@@ -86,6 +98,82 @@ public class PerfilActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }, null));
+    }
+
+    /** Muestra el compañero elegido en su tarjeta (id 0 = ninguno). */
+    private void mostrarCompanero(int id) {
+        if (isFinishing() || isDestroyed()) return;
+        companero = id;
+        ImageView img = findViewById(R.id.imgCompanero);
+        TextView nombre = findViewById(R.id.tvCompanero);
+        int i = CargadorPokemon.COMPANEROS.indexOf(id);
+        if (i < 0) {
+            img.setImageResource(R.drawable.ic_pokeball_logo);
+            nombre.setText(R.string.t_elige_un_companero);
+            return;
+        }
+        Glide.with(this).load(new PokemonMini(id, CargadorPokemon.NOMBRES_COMPANEROS.get(i)).getSpriteUrl()).into(img);
+        nombre.setText(CargadorPokemon.NOMBRES_COMPANEROS.get(i));
+    }
+
+    /** Ventana con Pikachu, Raichu y los iniciales con sus evoluciones (una línea por renglón); el elegido lleva ✓. */
+    private void elegirCompanero() {
+        float dp = getResources().getDisplayMetrics().density;
+        GridLayout grid = new GridLayout(this);
+        grid.setColumnCount(3);
+        grid.setPadding(Math.round(10 * dp), Math.round(10 * dp), Math.round(10 * dp), Math.round(10 * dp));
+        AlertDialog[] dialogo = new AlertDialog[1];
+
+        for (int i = 0; i < CargadorPokemon.COMPANEROS.size(); i++) {
+            int id = CargadorPokemon.COMPANEROS.get(i);
+            String nombre = CargadorPokemon.NOMBRES_COMPANEROS.get(i);
+
+            LinearLayout celda = new LinearLayout(this);
+            celda.setOrientation(LinearLayout.VERTICAL);
+            celda.setGravity(Gravity.CENTER_HORIZONTAL);
+            celda.setPadding(0, Math.round(4 * dp), 0, Math.round(4 * dp));
+            if (id == companero) celda.setBackgroundResource(R.drawable.bg_chip_turnos);
+
+            ImageView sprite = new ImageView(this);
+            Glide.with(this).load(new PokemonMini(id, nombre).getSpriteUrl()).into(sprite);
+            celda.addView(sprite, new LinearLayout.LayoutParams(Math.round(64 * dp), Math.round(64 * dp)));
+
+            TextView texto = new TextView(this);
+            texto.setText(id == companero ? "✓ " + nombre : nombre);
+            texto.setTextSize(11);
+            texto.setTypeface(null, Typeface.BOLD);
+            texto.setGravity(Gravity.CENTER);
+            texto.setMaxLines(1);
+            celda.addView(texto);
+
+            celda.setOnClickListener(v -> {
+                if (dialogo[0] != null) dialogo[0].dismiss();
+                UsuarioManager.guardarCompanero(id, ok -> {
+                    if (Boolean.TRUE.equals(ok)) {
+                        mostrarCompanero(id);
+                        Toast.makeText(this, nombre + " es tu compañero", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "No se pudo guardar. Revisa tu conexión.", Toast.LENGTH_LONG).show();
+                    }
+                });
+            });
+
+            GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
+                    GridLayout.spec(GridLayout.UNDEFINED), GridLayout.spec(GridLayout.UNDEFINED, 1f));
+            lp.width = 0;
+            grid.addView(celda, lp);
+        }
+
+        ScrollView scroll = new ScrollView(this);
+        scroll.addView(grid);
+        dialogo[0] = new AlertDialog.Builder(this)
+                .setTitle("Elige tu compañero")
+                .setView(scroll)
+                .setNegativeButton("Cerrar", null)
+                .setNeutralButton("Sin compañero", (d, w) -> UsuarioManager.guardarCompanero(0, ok -> {
+                    if (Boolean.TRUE.equals(ok)) mostrarCompanero(0);
+                }))
+                .show();
     }
 
     /** Ventana con todos los avatares; el elegido lleva ✓ y se guarda solo en el celular. */

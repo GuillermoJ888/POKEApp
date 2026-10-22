@@ -34,6 +34,35 @@ public class CargadorPokemon {
 
     /** n IDs distintos al azar: solo legendarios, o solo Pokémon que NO son legendarios. */
     /**
+     * Compañeros que se pueden elegir en Mi perfil: Pikachu y Raichu, y los iniciales de todas las regiones
+     * con sus evoluciones (cada línea en orden: básico, 1.ª y 2.ª evolución).
+     */
+    public static final List<Integer> COMPANEROS = Arrays.asList(
+            25, 26,
+            1, 2, 3, 4, 5, 6, 7, 8, 9,
+            152, 153, 154, 155, 156, 157, 158, 159, 160,
+            252, 253, 254, 255, 256, 257, 258, 259, 260,
+            387, 388, 389, 390, 391, 392, 393, 394, 395,
+            495, 496, 497, 498, 499, 500, 501, 502, 503,
+            650, 651, 652, 653, 654, 655, 656, 657, 658,
+            722, 723, 724, 725, 726, 727, 728, 729, 730,
+            810, 811, 812, 813, 814, 815, 816, 817, 818,
+            906, 907, 908, 909, 910, 911, 912, 913, 914);
+
+    /** Nombres de los compañeros, en el mismo orden que COMPANEROS. */
+    public static final List<String> NOMBRES_COMPANEROS = Arrays.asList(
+            "Pikachu", "Raichu",
+            "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise",
+            "Chikorita", "Bayleef", "Meganium", "Cyndaquil", "Quilava", "Typhlosion", "Totodile", "Croconaw", "Feraligatr",
+            "Treecko", "Grovyle", "Sceptile", "Torchic", "Combusken", "Blaziken", "Mudkip", "Marshtomp", "Swampert",
+            "Turtwig", "Grotle", "Torterra", "Chimchar", "Monferno", "Infernape", "Piplup", "Prinplup", "Empoleon",
+            "Snivy", "Servine", "Serperior", "Tepig", "Pignite", "Emboar", "Oshawott", "Dewott", "Samurott",
+            "Chespin", "Quilladin", "Chesnaught", "Fennekin", "Braixen", "Delphox", "Froakie", "Frogadier", "Greninja",
+            "Rowlet", "Dartrix", "Decidueye", "Litten", "Torracat", "Incineroar", "Popplio", "Brionne", "Primarina",
+            "Grookey", "Thwackey", "Rillaboom", "Scorbunny", "Raboot", "Cinderace", "Sobble", "Drizzile", "Inteleon",
+            "Sprigatito", "Floragato", "Meowscarada", "Fuecoco", "Crocalor", "Skeledirge", "Quaxly", "Quaxwell", "Quaquaval");
+
+    /**
      * Pokémon fuertes que NO son legendarios: los pseudolegendarios (Dragonite, Tyranitar, Salamence,
      * Metagross, Garchomp, Hydreigon, Goodra, Kommo-o, Dragapult, Baxcalibur) y otros de stats altos.
      */
@@ -42,16 +71,25 @@ public class CargadorPokemon {
             6, 59, 65, 68, 94, 130, 131, 143, 212, 230, 257, 282, 306, 330, 350,
             448, 464, 466, 467, 468, 473, 530, 612, 637, 658, 681, 823);
 
-    /** n Pokémon al azar sin legendarios, de los que al menos "fuertes" salen de la lista FUERTES. */
-    public static List<Integer> idsConFuertes(int n, int fuertes, Random random) {
+    /**
+     * n Pokémon al azar, de los que al menos "fuertes" salen de la lista FUERTES. Cada uno de los
+     * demás tiene una probabilidad pequeña (0 a 100) de ser legendario; si no, es uno común al azar.
+     * Nunca salen los que se pueden elegir como compañero (COMPANEROS).
+     */
+    public static List<Integer> idsConFuertes(int n, int fuertes, int probabilidadLegendario, Random random) {
         Set<Integer> elegidos = new HashSet<>();
         while (elegidos.size() < Math.min(fuertes, n)) {
-            elegidos.add(FUERTES.get(random.nextInt(FUERTES.size())));
+            int id = FUERTES.get(random.nextInt(FUERTES.size()));
+            if (!COMPANEROS.contains(id)) elegidos.add(id);
         }
         Set<Integer> legendariosSet = new HashSet<>(LEGENDARIOS);
         while (elegidos.size() < n) {
-            int id = 1 + random.nextInt(ID_MAXIMO);
-            if (!legendariosSet.contains(id)) elegidos.add(id);
+            if (random.nextInt(100) < probabilidadLegendario) {
+                elegidos.add(LEGENDARIOS.get(random.nextInt(LEGENDARIOS.size())));
+            } else {
+                int id = 1 + random.nextInt(ID_MAXIMO);
+                if (!legendariosSet.contains(id) && !COMPANEROS.contains(id)) elegidos.add(id);
+            }
         }
         List<Integer> resultado = new ArrayList<>(elegidos);
         Collections.shuffle(resultado, random);   // que los fuertes no salgan siempre en el mismo lugar

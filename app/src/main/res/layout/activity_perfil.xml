@@ -431,6 +431,70 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Compañero: te rescata en la Torre (niveles de Badi y del jefe secreto) -->
+            <LinearLayout
+                android:id="@+id/tarjetaCompanero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_card_perfil">
+
+                <ImageView
+                    android:id="@+id/imgCompanero"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_pokeball_logo"
+                    android:contentDescription="@string/t_companero" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/t_companero"
+                        android:textColor="@color/perfil_text_soft"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.1" />
+
+                    <TextView
+                        android:id="@+id/tvCompanero"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/t_elige_un_companero"
+                        android:textColor="@color/poke_white"
+                        android:fontFamily="@font/fredoka"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/t_companero_desc"
+                        android:textColor="@color/perfil_text_soft"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="›"
+                    android:textColor="@color/poke_white"
+                    android:textSize="26sp" />
+            </LinearLayout>
+
             <com.example.pokeapp.PokeBoton
                 android:id="@+id/btnCerrarSesionPerfil"
                 app:tema="gengar"

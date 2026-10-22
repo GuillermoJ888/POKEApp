@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo de ¿Quién es ese Pokémon?: rojo con rayas diagonales, como en el anime -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="400dp" android:height="800dp"
+    android:viewportWidth="400" android:viewportHeight="800">
+    <path android:pathData="M0,0 h400 v800 h-400 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear" android:startX="400" android:startY="0" android:endX="0" android:endY="800">
+                <item android:offset="0" android:color="#FFE8173A" />
+                <item android:offset="0.6" android:color="#FFD0102C" />
+                <item android:offset="1" android:color="#FFFF6A1A" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path android:pathData="M440,-204.2 L440,-190 L-40,330 L-40,315.8 Z" android:fillColor="#2EFF5468" />
+    <path android:pathData="M440,-164.3 L440,-139.3 L-40,380.7 L-40,355.7 Z" android:fillColor="#22B3001E" />
+    <path android:pathData="M440,-106 L440,-70.5 L-40,449.5 L-40,414 Z" android:fillColor="#38FF7A85" />
+    <path android:pathData="M440,-73.1 L440,-51 L-40,469 L-40,446.9 Z" android:fillColor="#2EFF5468" />
+    <path android:pathData="M440,-22.2 L440,3.2 L-40,523.2 L-40,497.8 Z" android:fillColor="#2EFF5468" />
+    <path android:pathData="M440,37.8 L440,51.3 L-40,571.3 L-40,557.8 Z" android:fillColor="#38FF7A85" />
+    <path android:pathData="M440,79.1 L440,105.5 L-40,625.5 L-40,599.1 Z" android:fillColor="#2EFF5468" />
+    <path android:pathData="M440,123.9 L440,145 L-40,665 L-40,643.9 Z" android:fillColor="#38FF7A85" />
+    <path android:pathData="M440,157.1 L440,191.2 L-40,711.2 L-40,677.1 Z" android:fillColor="#22B3001E" />
+    <path android:pathData="M440,212.1 L440,237.2 L-40,757.2 L-40,732.1 Z" android:fillColor="#22B3001E" />
+    <path android:pathData="M440,261.4 L440,290.5 L-40,810.5 L-40,781.4 Z" android:fillColor="#2EFF5468" />
+    <path android:pathData="M440,308 L440,335.8 L-40,855.8 L-40,828 Z" android:fillColor="#22B3001E" />
+    <path android:pathData="M440,342.3 L440,372.3 L-40,892.3 L-40,862.3 Z" android:fillColor="#2EFF5468" />
+    <path android:pathData="M440,400.9 L440,424.8 L-40,944.8 L-40,920.9 Z" android:fillColor="#2BFF3348" />
+    <path android:pathData="M440,450.7 L440,473.7 L-40,993.7 L-40,970.7 Z" android:fillColor="#2BFF3348" />
+    <path android:pathData="M440,486.7 L440,503.6 L-40,1023.6 L-40,1006.7 Z" android:fillColor="#38FF7A85" />
+    <path android:pathData="M440,540.8 L440,557.6 L-40,1077.6 L-40,1060.8 Z" android:fillColor="#22B3001E" />
+    <path android:pathData="M440,582.6 L440,617.1 L-40,1137.1 L-40,1102.6 Z" android:fillColor="#2BFF3348" />
+    <path android:pathData="M440,622.9 L440,660.4 L-40,1180.4 L-40,1142.9 Z" android:fillColor="#33FF8A2A" />
+    <path android:pathData="M440,674.3 L440,688.9 L-40,1208.9 L-40,1194.3 Z" android:fillColor="#40FFB347" />
+    <path android:pathData="M440,711.6 L440,735.3 L-40,1255.3 L-40,1231.6 Z" android:fillColor="#33FF8A2A" />
+    <path android:pathData="M440,777.1 L440,789.3 L-40,1309.3 L-40,1297.1 Z" android:fillColor="#2EFF6A00" />
+    <path android:pathData="M440,813.8 L440,848.3 L-40,1368.3 L-40,1333.8 Z" android:fillColor="#40FFB347" />
+    <path android:pathData="M440,854.2 L440,874 L-40,1394 L-40,1374.2 Z" android:fillColor="#40FFB347" />
+    <path android:pathData="M440,905.9 L440,928.7 L-40,1448.7 L-40,1425.9 Z" android:fillColor="#33FF8A2A" />
+    <path android:pathData="M440,960.7 L440,983.9 L-40,1503.9 L-40,1480.7 Z" android:fillColor="#2EFF6A00" />
+</vector>

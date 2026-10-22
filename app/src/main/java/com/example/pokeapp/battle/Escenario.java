@@ -37,7 +37,6 @@ public class Escenario {
             new Escenario("Montaña nevada", R.drawable.bg_escenario_nieve, 0xFFFFFFFF, 0xFFCFE0F0, 0xFF9DB8D6),
             new Escenario("Desierto", R.drawable.bg_escenario_desierto, 0xFFF6DCA0, 0xFFD9AE63, 0xFFB5853F),
             new Escenario("Playa", R.drawable.bg_escenario_playa, 0xFFFFF4D6, 0xFFEBD39A, 0xFFC9A866),
-            new Escenario("Gimnasio", R.drawable.bg_escenario_gimnasio, 0xFFF2F2F2, 0xFFC9C9C9, 0xFFE3350D),
             // Imagen de 800 × 1328 con las plataformas ya dibujadas (juntas: Pokémon al 75 %)
             new Escenario("Bosque encantado", R.drawable.bg_escenario_bosque_encantado,
                     0.696f, 0.527f, 0.338f, 0.655f, 0.75f)

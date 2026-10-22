@@ -20,6 +20,7 @@ import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
 import com.example.pokeapp.battle.BattlePokemon;
+import com.google.gson.Gson;
 import com.example.pokeapp.battle.Escenario;
 import com.example.pokeapp.data.CargadorPokemon;
 import com.example.pokeapp.data.HistorialManager;
@@ -28,12 +29,13 @@ import com.example.pokeapp.data.PokemonStat;
 import com.example.pokeapp.data.UsuarioManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 /**
  * Torre Pokémon (módulo D del PDF):
- *  1. La app genera 6 Pokémon al azar (mínimo 2 fuertes o pseudolegendarios, nunca legendarios) y el usuario elige 3.
+ *  1. La app genera 6 Pokémon al azar (mínimo 2 fuertes o pseudolegendarios; los otros 4 con 20 % de ser legendarios) y el usuario elige 3.
  *  2. Seis niveles seguidos contra rivales al azar del sistema, cada uno con su docente CESBA.
  *  3. El nivel 6 es el jefe final con 4 legendarios al azar.
  *  4. Si gana los 6 niveles en la misma campaña obtiene una medalla (la siguiente de las 10).
@@ -49,12 +51,14 @@ public class TorreActivity extends AppCompatActivity {
     private static final String FRASE_SECRETO = "Empezaremos la batalla POKÉMON con A de mujer";
     private static final int OPCIONES = 6;
     private static final int OPCIONES_FUERTES = 2;   // mínimo de pseudolegendarios o fuertes entre las 6 opciones
+    /** Probabilidad (%) de que cada una de las otras 4 opciones sea legendaria (~59 % de que salga al menos uno). */
+    private static final int PROBABILIDAD_LEGENDARIO = 20;
     private static final int TAM_EQUIPO = 3;
 
     /** Pokémon rivales por nivel: 3 desde el nivel 1 (así lo pidió el profesor); el 6 son 4 legendarios y el secreto, 5. */
     private static final int[] RIVALES_POR_NIVEL = {3, 3, 3, 3, 3, 4, 5};
-    /** Escenario de cada nivel (índice en Escenario.TODOS); el jefe pelea en el gimnasio. */
-    private static final int[] ESCENARIO_POR_NIVEL = {0, 3, 2, 1, 5, 4, 5};
+    /** Escenario de cada nivel (índice en Escenario.TODOS); el jefe final pelea en la montaña nevada. */
+    private static final int[] ESCENARIO_POR_NIVEL = {0, 3, 2, 1, 4, 1, 4};
 
     private static final Random random = new Random();
 
@@ -72,6 +76,7 @@ public class TorreActivity extends AppCompatActivity {
     private final List<Pokemon> equipo = new ArrayList<>();
     private final List<Pokemon> rivales = new ArrayList<>();
     private int nivel = 0;   // 0 = sin campaña
+    private Pokemon companero;   // compañero de Mi perfil: entra al rescate contra Badi y el jefe secreto
     private boolean secretoDescubierto;   // el piso secreto solo se dibuja si ya se conquistó la Torre alguna vez
 
     private final ActivityResultLauncher<Intent> lanzadorArena = registerForActivityResult(
@@ -125,11 +130,25 @@ public class TorreActivity extends AppCompatActivity {
         mostrarInicio();
     }
 
+    /** Carga el compañero elegido en Mi perfil (si lo hay) para los niveles de jefe. */
+    private void cargarCompanero() {
+        UsuarioManager.obtenerCompanero(id -> {
+            if (id == null || id <= 0) {
+                companero = null;
+                return;
+            }
+            CargadorPokemon.cargar(Collections.singletonList(id), lista -> {
+                if (lista != null && !lista.isEmpty()) companero = lista.get(0);
+            });
+        });
+    }
+
     // ------------------------------------------------------------------
     // Inicio: escalera de niveles
     // ------------------------------------------------------------------
 
     private void mostrarInicio() {
+        cargarCompanero();   // por si lo cambió en Mi perfil
         nivel = 0;
         equipo.clear();
         mostrarSeccion(seccionInicio);
@@ -241,7 +260,7 @@ public class TorreActivity extends AppCompatActivity {
         mostrarSeccion(seccionEleccion);
         progressEleccion.setVisibility(View.VISIBLE);
 
-        CargadorPokemon.cargar(CargadorPokemon.idsConFuertes(OPCIONES, OPCIONES_FUERTES, random), lista -> {
+        CargadorPokemon.cargar(CargadorPokemon.idsConFuertes(OPCIONES, OPCIONES_FUERTES, PROBABILIDAD_LEGENDARIO, random), lista -> {
             if (isFinishing() || isDestroyed()) return;
             progressEleccion.setVisibility(View.GONE);
             if (lista == null) {
@@ -310,6 +329,10 @@ public class TorreActivity extends AppCompatActivity {
         tvDocente.setText(nombreDocente(n));
         tvEscenarioNivel.setText("📍 " + Escenario.TODOS.get(ESCENARIO_POR_NIVEL[n - 1]).nombre);
         tvMensajeNivel.setVisibility(View.GONE);
+        if (n >= NIVELES && companero != null) {
+            tvMensajeNivel.setText("🤝 Si caen tus 3 Pokémon, " + new BattlePokemon(companero).nombre + " saldrá al rescate.");
+            tvMensajeNivel.setVisibility(View.VISIBLE);
+        }
         pintarFila(filaTuEquipo, equipo);
         filaRivales.removeAllViews();
 
@@ -360,7 +383,10 @@ public class TorreActivity extends AppCompatActivity {
                 // Junto al Pokémon rival va el personaje del docente (nunca su foto); si aún no hay dibujo, no sale nadie
                 .putExtra(BattleArenaActivity.EXTRA_ENTRENADOR_B, personaje)
                 .putExtra(BattleArenaActivity.EXTRA_ENTRENADOR_CUERPO, true)
-                .putExtra(BattleArenaActivity.EXTRA_FRASE_ENTRENADOR, nivel == SECRETO ? FRASE_SECRETO : null));
+                .putExtra(BattleArenaActivity.EXTRA_FRASE_ENTRENADOR, nivel == SECRETO ? FRASE_SECRETO : null)
+                // Contra Badi y el jefe secreto, el compañero de Mi perfil espera de reserva
+                .putExtra(BattleArenaActivity.EXTRA_COMPANERO_A,
+                        nivel >= NIVELES && companero != null ? new Gson().toJson(companero) : null));
     }
 
     /** Al volver de la arena. Solo vencer al jefe final (completar la Torre) da medalla. */
