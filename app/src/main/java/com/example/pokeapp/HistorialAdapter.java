@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide;
 import com.example.pokeapp.data.HistorialManager.Batalla;
 import com.example.pokeapp.data.PokemonMini;
 
+import com.example.pokeapp.data.Preferencias;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,8 +36,10 @@ public class HistorialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int TIPO_BATALLA = 1;
 
     private static final Locale ES = Locale.forLanguageTag("es-MX");
-    private static final SimpleDateFormat FORMATO_HORA = new SimpleDateFormat("h:mm a", ES);
-    private static final SimpleDateFormat FORMATO_DIA = new SimpleDateFormat("EEEE d 'de' MMMM", ES);
+
+    private static Locale idioma() {
+        return Preferencias.esIngles() ? Locale.ENGLISH : ES;
+    }
 
     /** String = encabezado de día; Batalla = tarjeta. */
     private final List<Object> filas = new ArrayList<>();
@@ -68,7 +72,8 @@ public class HistorialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         hoy.add(Calendar.DAY_OF_YEAR, -1);
         if (mismoDia(dia, hoy)) return "AYER";
 
-        return FORMATO_DIA.format(fecha).toUpperCase(ES);
+        return new SimpleDateFormat(Preferencias.esIngles() ? "EEEE, MMMM d" : "EEEE d 'de' MMMM", idioma())
+                .format(fecha).toUpperCase(idioma());
     }
 
     private static boolean mismoDia(Calendar a, Calendar b) {
@@ -77,7 +82,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     static String hora(Date fecha) {
-        return fecha != null ? FORMATO_HORA.format(fecha) : "Guardando...";
+        return fecha != null ? new SimpleDateFormat("h:mm a", idioma()).format(fecha) : "Guardando...";
     }
 
     static void cargarSprite(ImageView img, List<Integer> ids, int posicion) {

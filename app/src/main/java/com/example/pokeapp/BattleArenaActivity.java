@@ -216,7 +216,13 @@ public class BattleArenaActivity extends AppCompatActivity {
         modo = getIntent().getStringExtra(EXTRA_MODO);
         if (modo == null) modo = HistorialManager.MODO_EMULATOR;
 
-        findViewById(R.id.btnSalirArena).setOnClickListener(v -> finish());
+        findViewById(R.id.btnSalirArena).setOnClickListener(v -> pedirSalir());
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                pedirSalir();
+            }
+        });
         btnCambiar.setOnClickListener(v -> cambiarPorDecision());
 
         int tipoRed = getIntent().getIntExtra(EXTRA_RED, RED_NO);
@@ -259,6 +265,18 @@ public class BattleArenaActivity extends AppCompatActivity {
     }
 
     /** Salir a media batalla entre dispositivos corta la conexión: el otro celular se entera y también sale. */
+    /** Salir a media batalla la pierde (y corta la conexión en red): se confirma primero. */
+    private void pedirSalir() {
+        if (batallaTerminada) {
+            finish();
+            return;
+        }
+        Dialogos.confirmar(this, "🏳️", getString(R.string.t_salir_batalla),
+                getString(red != null ? R.string.t_salir_batalla_red_msg : R.string.t_salir_batalla_msg),
+                getString(R.string.t_salir), getString(R.string.t_cancelar),
+                this::finish, null);
+    }
+
     @Override
     public void finish() {
         if (red != null && !batallaTerminada) red.desconectar();

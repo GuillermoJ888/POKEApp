@@ -47,6 +47,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
     private boolean bloqueado;         // mientras se ven dos cartas que no coinciden
     private int nivel = 1, intentos, encontradas, segundos, record;
     private boolean jugando, relojCorriendo;
+    private final Runnable pasoReloj = this::tic;
 
     private TextView tvIntentos, tvParejas, tvTiempo, tvRecord, tvMensaje, btnNivel;
     private GridLayout grid;
@@ -78,6 +79,19 @@ public class PokeMemoryActivity extends AppCompatActivity {
             pintarMarcador();
         });
         pintarMarcador();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacks(pasoReloj);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler.removeCallbacks(pasoReloj);
+        if (jugando && relojCorriendo) handler.postDelayed(pasoReloj, 1000);
     }
 
     @Override
@@ -171,7 +185,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
         if (!jugando || bloqueado || descubierta[posicion] || posicion == primera) return;
         if (!relojCorriendo) {
             relojCorriendo = true;
-            handler.postDelayed(this::tic, 1000);
+            handler.postDelayed(pasoReloj, 1000);
         }
         girar(vistas.get(posicion), () -> destapar(posicion));
 
@@ -206,7 +220,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
         if (!jugando) return;
         segundos++;
         pintarMarcador();
-        handler.postDelayed(this::tic, 1000);
+        handler.postDelayed(pasoReloj, 1000);
     }
 
     private void terminar() {

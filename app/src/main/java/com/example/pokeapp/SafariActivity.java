@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.pokeapp.battle.BattlePokemon;
@@ -92,6 +95,7 @@ public class SafariActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_safari);
+        pantallaCompleta();
 
         imgPokemon = findViewById(R.id.imgSafari);
         imgBola = findViewById(R.id.imgBolaSafari);
@@ -132,6 +136,14 @@ public class SafariActivity extends AppCompatActivity {
             pintar();
         });
         nuevoSafari();
+    }
+
+    /** Oculta barra de estado y de navegación (se ven deslizando desde el borde), como en la arena. */
+    private void pantallaCompleta() {
+        WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        controller.hide(WindowInsetsCompat.Type.systemBars());
+        controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
     }
 
     @Override

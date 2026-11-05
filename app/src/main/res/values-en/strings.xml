@@ -237,4 +237,13 @@
     <string name="t_companero">PARTNER</string>
     <string name="t_elige_un_companero">Choose a partner</string>
     <string name="t_companero_desc">If your 3 Pokémon faint against Badi or the secret boss, it comes to the rescue</string>
+    <string name="t_salir_batalla">Leave the battle?</string>
+    <string name="t_salir_batalla_msg">The current battle will be lost.</string>
+    <string name="t_salir_batalla_red_msg">The battle will be lost and the connection with your rival will end.</string>
+    <string name="t_nivel_n">Level %1$d</string>
+    <string name="t_sin_jugar">Not played</string>
+    <string name="t_n_pts">%1$d pts</string>
+    <string name="t_pts_racha">%1$d pts · streak %2$d</string>
+    <string name="t_obtenida">Earned</string>
+    <string name="t_obtenida_el">Earned on %1$s</string>
 </resources>

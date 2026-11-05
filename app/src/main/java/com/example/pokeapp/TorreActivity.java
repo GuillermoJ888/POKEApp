@@ -46,6 +46,8 @@ import java.util.Random;
 public class TorreActivity extends AppCompatActivity {
 
     private static final int NIVELES = 6;
+    /** Niveles con docente (sin el jefe secreto); lo usa también ¿Quién es ese Pokémon?. */
+    static final int NIVELES_NORMALES = NIVELES;
     private static final int SECRETO = NIVELES + 1;   // jefe secreto: solo aparece al vencer al jefe final
     /** Frase con la que se presenta el jefe secreto al empezar su batalla. */
     private static final String FRASE_SECRETO = "Empezaremos la batalla POKÉMON con A de mujer";

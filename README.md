@@ -20,13 +20,13 @@ Aplicación Android en **Java + XML** que consume la [PokéAPI](https://pokeapi.
 | I | **Favoritos** (en la nube): abrir detalle, escuchar cry y eliminar | ✅ |
 | J | **Historial**: batallas de todos los modos, por día, con el detalle de los turnos | ✅ |
 | K | **Medallas**: las 10 medallas, obtenidas o bloqueadas, con su fecha | ✅ |
-| L | **Mi perfil**: avatar, nivel, favoritos, medallas, victorias/derrotas, récords de minijuegos y capturados | ✅ |
-| M | **Configuración**: sonido, vibración, reiniciar progreso y cerrar sesión | ✅ (idioma y tema pendientes) |
+| L | **Mi perfil**: avatar, nivel, favoritos, las 10 medallas, victorias/derrotas, récords de minijuegos y capturados | ✅ |
+| M | **Configuración**: sonido, vibración, tema, idioma, reiniciar progreso y cerrar sesión | ✅ |
 
 ## Battle Emulator
 
 1. Se buscan los dos Pokémon por nombre o número (con sugerencias, populares o 🎲 al azar). No se puede elegir el mismo para A y B.
-2. **Iniciar batalla** abre la arena a pantalla completa con un escenario al azar (bosque, montaña nevada, desierto, playa, gimnasio o bosque encantado).
+2. **Iniciar batalla** abre la arena a pantalla completa con un escenario al azar (bosque, montaña nevada, desierto, playa o bosque encantado).
 3. Los turnos avanzan solos con animaciones, barras de vida con % y registro de cada ataque.
 4. Al terminar regresa al Emulator y muestra el ganador (imagen, HP restante y número de turnos) con opciones de revancha, elegir otro Pokémon o volver al menú.
 5. Cada batalla se guarda en el **Historial** (`usuarios/{uid}/historial`), agrupado por día y con el detalle de los turnos.
@@ -35,7 +35,7 @@ Aplicación Android en **Java + XML** que consume la [PokéAPI](https://pokeapi.
 
 Una sola arena (`BattleArenaActivity`) y un solo motor para Battle Emulator, Battle Versus y Torre Pokémon. Usa los **stats reales de la PokéAPI**:
 
-- Cada Pokémon tiene **4 ataques reales** de la PokéAPI (`/move/{nombre}`: tipo, potencia, precisión y nombre en español). El jugador los elige en una caja de ataques estilo juego; el sistema usa el que más daño haría.
+- Cada Pokémon tiene **4 ataques reales** de la PokéAPI (`/move/{nombre}`: tipo, potencia, precisión y nombre en español): los 4 más fuertes de sus propios tipos. El jugador los elige en una caja de ataques estilo juego; el sistema usa el que más daño haría.
 - Empieza el Pokémon con mayor **Velocidad** (empate: al azar) y luego se alternan. En Versus y Torre se puede **cambiar de Pokémon** (gasta el turno).
 - **Daño = 12 × (Ataque / Defensa) × (Potencia / 60) × 1.5 (mismo tipo) × efectividad de tipo × 1.5 si es crítico × variación 0.85–1.00** (mínimo 1).
 - El ataque puede **fallar** según su precisión. Probabilidad de crítico = Velocidad / 512. Si ningún ataque le afecta al rival usa *Forcejeo*. El HP nunca baja de 0.
@@ -63,6 +63,8 @@ El archivo `app/google-services.json` **no está en el repositorio** (contiene l
 3. En **Authentication** habilita *Correo/contraseña* y *Google* (para Google agrega la huella SHA-1 de tu llave de depuración).
 4. En **Firestore Database** crea la base de datos y publica las reglas de [`firestore.rules`](firestore.rules).
 5. Abre el proyecto en Android Studio y ejecútalo.
+
+Pruebas de la tabla de tipos: `gradlew testDebugUnitTest`.
 
 ## Créditos
 

@@ -1,7 +1,10 @@
 package com.example.pokeapp;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -14,9 +17,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.pokeapp.battle.BattlePokemon;
 import com.example.pokeapp.data.CargadorPokemon;
 import com.example.pokeapp.data.UsuarioManager;
@@ -32,6 +38,9 @@ import java.util.Random;
  *
  * - Puntos: 100 por acierto, menos lo que cuesten las pistas usadas (tipo −20, stats −20, cry −10).
  * - 3 vidas: se pierde una al fallar. La racha son los aciertos seguidos.
+ * - Evento especial: cada 10 de racha, si te falta algún corazón, la siguiente ronda muestra solo
+ *   un pedazo de la silueta y sin pistas; si aciertas recuperas 1 corazón (fallar ahí no quita vida).
+ *   La mitad de las veces, en vez de un Pokémon sale la silueta de un entrenador de la Torre.
  * - Se guardan en Firestore el mejor puntaje (recordQuien) y la mejor racha (rachaQuien).
  */
 public class QuienEsActivity extends AppCompatActivity {
@@ -41,6 +50,7 @@ public class QuienEsActivity extends AppCompatActivity {
     private static final int COSTO_TIPO = 20, COSTO_STATS = 20, COSTO_CRY = 10;
     private static final int COLOR_SILUETA = 0xFF1B1B2F;
     private static final long PAUSA = 1600;
+    private static final int RACHA_EVENTO = 10;   // cada cuántos aciertos seguidos puede salir el evento
 
     private final Random random = new Random();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -48,7 +58,9 @@ public class QuienEsActivity extends AppCompatActivity {
 
     private int puntos, vidas, racha, mejorRacha, record, valorPregunta;
     private boolean jugando, esperandoRespuesta, pistaTipo, pistaStats, pistaCry;
+    private boolean eventoPendiente, eventoEspecial;   // ronda de "solo un pedazo" para recuperar un corazón
     private BattlePokemon secreto;
+    private String entrenadorSecreto;   // en el evento especial: nombre del entrenador a adivinar (null = es un Pokémon)
 
     private TextView tvPuntos, tvRacha, tvVidas, tvRecord, tvPregunta, tvPistas;
     private TextView btnTipo, btnStats, btnCry;
@@ -97,6 +109,12 @@ public class QuienEsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        soltarCry();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
@@ -121,6 +139,7 @@ public class QuienEsActivity extends AppCompatActivity {
         puntos = 0;
         racha = 0;
         vidas = VIDAS;
+        eventoPendiente = eventoEspecial = false;
         jugando = true;
         btnJugar.setVisibility(View.GONE);
         pintarMarcador();
@@ -132,9 +151,15 @@ public class QuienEsActivity extends AppCompatActivity {
         gridOpciones.removeAllViews();
         filaPistas.setVisibility(View.GONE);
         tvPistas.setText("");
-        tvPregunta.setText("Buscando un Pokémon…");
+        eventoEspecial = eventoPendiente;
+        eventoPendiente = false;
+        tvPregunta.setText(eventoEspecial ? "🎁 ¡EVENTO ESPECIAL!" + "\n" + "Adivina con solo un pedazo y recupera un ❤️"
+                : "Buscando un Pokémon…");
         img.setImageResource(R.drawable.ic_pokeball_logo);
         img.clearColorFilter();
+        entrenadorSecreto = null;
+
+        if (eventoEspecial && random.nextBoolean() && preguntarEntrenador()) return;
 
         // El primero es el secreto; los demás solo dan nombres para las otras opciones
         CargadorPokemon.cargar(CargadorPokemon.idsAleatorios(OPCIONES, false, random), lista -> {
@@ -157,12 +182,22 @@ public class QuienEsActivity extends AppCompatActivity {
         pistaTipo = pistaStats = pistaCry = false;
         esperandoRespuesta = true;
 
-        Glide.with(this).load(secreto.imagen).into(img);
         img.setColorFilter(COLOR_SILUETA, PorterDuff.Mode.SRC_IN);   // solo la silueta
-        tvPregunta.setText("¿Quién es ese Pokémon?");
-        for (TextView b : new TextView[]{btnTipo, btnStats, btnCry}) b.setAlpha(1f);
-        filaPistas.setVisibility(View.VISIBLE);
+        if (eventoEspecial) {
+            mostrarPedazo();   // sin pistas: solo un pedazo de la silueta
+            tvPregunta.setText("🎁 ¿Quién es? Si aciertas recuperas un ❤️");
+        } else {
+            Glide.with(this).load(secreto.imagen).into(img);
+            tvPregunta.setText("¿Quién es ese Pokémon?");
+            for (TextView b : new TextView[]{btnTipo, btnStats, btnCry}) b.setAlpha(1f);
+            filaPistas.setVisibility(View.VISIBLE);
+        }
 
+        pintarOpciones(nombres);
+    }
+
+    /** Los 4 botones de respuesta. */
+    private void pintarOpciones(List<String> nombres) {
         float dp = getResources().getDisplayMetrics().density;
         gridOpciones.removeAllViews();
         for (String nombre : nombres) {
@@ -183,6 +218,78 @@ public class QuienEsActivity extends AppCompatActivity {
             lp.setMargins(Math.round(5 * dp), Math.round(5 * dp), Math.round(5 * dp), Math.round(5 * dp));
             gridOpciones.addView(boton, lp);
         }
+    }
+
+    /** Evento especial: recorta un pedazo al azar del Pokémon (alrededor de 40 % de su tamaño) y solo muestra eso. */
+    private void mostrarPedazo() {
+        BattlePokemon esperado = secreto;
+        // Sin "hardware bitmap": hace falta leer sus píxeles para encontrar la parte visible
+        Glide.with(this).asBitmap().load(secreto.imagen).disallowHardwareConfig().into(new CustomTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap bitmap, Transition<? super Bitmap> transicion) {
+                if (isFinishing() || isDestroyed() || secreto != esperado || !esperandoRespuesta) return;
+                img.setImageBitmap(recortarPedazo(bitmap));
+                img.animate().scaleX(1.08f).scaleY(1.08f).setDuration(250)
+                        .withEndAction(() -> img.animate().scaleX(1f).scaleY(1f).setDuration(250).start()).start();
+            }
+
+            @Override
+            public void onLoadCleared(Drawable sinUso) { }
+        });
+    }
+
+    /** Cuadro al azar dentro de la parte visible (no transparente) de la imagen. */
+    private Bitmap recortarPedazo(Bitmap bitmap) {
+        int ancho = bitmap.getWidth(), alto = bitmap.getHeight();
+        int minX = ancho, minY = alto, maxX = 0, maxY = 0;
+        for (int y = 0; y < alto; y += 4) {
+            for (int x = 0; x < ancho; x += 4) {
+                if (Color.alpha(bitmap.getPixel(x, y)) > 40) {
+                    minX = Math.min(minX, x);
+                    maxX = Math.max(maxX, x);
+                    minY = Math.min(minY, y);
+                    maxY = Math.max(maxY, y);
+                }
+            }
+        }
+        if (maxX <= minX || maxY <= minY) return bitmap;   // imagen rara: se muestra completa
+        int lado = Math.max(16, Math.round(Math.max(maxX - minX, maxY - minY) * 0.42f));
+        int centroX = minX + random.nextInt(Math.max(1, maxX - minX));
+        int centroY = minY + random.nextInt(Math.max(1, maxY - minY));
+        int x = Math.max(0, Math.min(ancho - lado, centroX - lado / 2));
+        int y = Math.max(0, Math.min(alto - lado, centroY - lado / 2));
+        return Bitmap.createBitmap(bitmap, x, y, Math.min(lado, ancho), Math.min(lado, alto));
+    }
+
+    /**
+     * Evento especial con un entrenador de la Torre (los que ya tienen su personaje, sin el jefe secreto):
+     * su silueta completa y 4 nombres de entrenadores. Devuelve false si no hay personajes.
+     */
+    private boolean preguntarEntrenador() {
+        List<Integer> conPersonaje = new ArrayList<>();
+        List<String> todos = new ArrayList<>();
+        for (int n = 1; n <= TorreActivity.NIVELES_NORMALES; n++) {
+            todos.add(TorreActivity.nombreDocente(n));
+            if (getResources().getIdentifier("entrenador_" + n, "drawable", getPackageName()) != 0) conPersonaje.add(n);
+        }
+        if (conPersonaje.isEmpty()) return false;
+
+        int n = conPersonaje.get(random.nextInt(conPersonaje.size()));
+        entrenadorSecreto = TorreActivity.nombreDocente(n);
+        List<String> nombres = new ArrayList<>();
+        nombres.add(entrenadorSecreto);
+        Collections.shuffle(todos, random);
+        for (String otro : todos) {
+            if (nombres.size() < OPCIONES && !otro.equals(entrenadorSecreto)) nombres.add(otro);
+        }
+        Collections.shuffle(nombres, random);
+
+        esperandoRespuesta = true;
+        img.setImageResource(getResources().getIdentifier("entrenador_" + n, "drawable", getPackageName()));
+        img.setColorFilter(COLOR_SILUETA, PorterDuff.Mode.SRC_IN);
+        tvPregunta.setText("🎁 ¿Quién es este ENTRENADOR? Si aciertas recuperas un ❤️");
+        pintarOpciones(nombres);
+        return true;
     }
 
     private GradientDrawable fondo(int color) {
@@ -251,23 +358,41 @@ public class QuienEsActivity extends AppCompatActivity {
         filaPistas.setVisibility(View.GONE);
         img.clearColorFilter();   // se revela el Pokémon
 
-        boolean acierto = secreto.nombre.equals(nombre);
-        if (acierto) {
+        String correcto = entrenadorSecreto != null ? entrenadorSecreto : secreto.nombre;
+        boolean acierto = correcto.equals(nombre);
+        if (eventoEspecial) {
+            // Ronda de premio: se ve completo; acertar devuelve un corazón y fallar no quita nada
+            if (entrenadorSecreto == null) Glide.with(this).load(secreto.imagen).into(img);
+            eventoEspecial = false;
+            entrenadorSecreto = null;
+            if (acierto) {
+                vidas = Math.min(VIDAS, vidas + 1);
+                Efectos.victoria(this);
+                tvPregunta.setText("💖 ¡Es " + correcto + "! Recuperaste un corazón");
+            } else {
+                tvPregunta.setText("❌ ¡Era " + correcto + "! No pierdes vida, sigue jugando.");
+            }
+        } else if (acierto) {
             puntos += valorPregunta;
             racha++;
             mejorRacha = Math.max(mejorRacha, racha);
-            tvPregunta.setText("✅ ¡Es " + secreto.nombre + "! +" + valorPregunta + " puntos");
+            tvPregunta.setText("✅ ¡Es " + correcto + "! +" + valorPregunta + " puntos");
+            // Cada 10 de racha, si falta algún corazón, la siguiente ronda es el evento especial
+            if (racha % RACHA_EVENTO == 0 && vidas < VIDAS) {
+                eventoPendiente = true;
+                tvPregunta.setText(tvPregunta.getText() + "\n🎁 ¡Racha de " + racha + "! Viene un evento especial");
+            }
         } else {
             vidas--;
             racha = 0;
-            tvPregunta.setText("❌ ¡Era " + secreto.nombre + "!");
+            tvPregunta.setText("❌ ¡Era " + correcto + "!");
         }
 
         for (int i = 0; i < gridOpciones.getChildCount(); i++) {
             TextView boton = (TextView) gridOpciones.getChildAt(i);
             boton.setClickable(false);
             String suNombre = boton.getText().toString();
-            if (suNombre.equals(secreto.nombre)) boton.setBackground(fondo(0xFF2E8B57));
+            if (suNombre.equals(correcto)) boton.setBackground(fondo(0xFF2E8B57));
             else if (suNombre.equals(nombre)) boton.setBackground(fondo(0xFFB91C1C));
             else boton.setAlpha(0.45f);
         }

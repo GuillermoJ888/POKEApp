@@ -312,6 +312,33 @@
             </LinearLayout>
         </LinearLayout>
 
+            <!-- Las 10 medallas (en gris las que faltan); al tocar abre el módulo Medallas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:padding="18dp"
+                android:background="@drawable/bg_card_perfil">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/t_medallas"
+                    android:textAllCaps="true"
+                    android:textColor="@color/perfil_text_soft"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1" />
+
+                <GridLayout
+                    android:id="@+id/gridMedallasPerfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:columnCount="5" />
+            </LinearLayout>
+
             <!-- Récords de minijuegos y colección del Safari -->
             <LinearLayout
                 android:layout_width="match_parent"

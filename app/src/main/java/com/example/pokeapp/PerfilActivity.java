@@ -2,6 +2,8 @@ package com.example.pokeapp;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -30,6 +32,9 @@ import com.example.pokeapp.data.PokemonMini;
 import com.example.pokeapp.data.UsuarioManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Date;
+import java.util.Map;
 
 public class PerfilActivity extends AppCompatActivity {
 
@@ -232,20 +237,56 @@ public class PerfilActivity extends AppCompatActivity {
             tvMedallas.setText(est.medallas + "/10");
             tvVictorias.setText(String.valueOf(est.victorias));
             tvDerrotas.setText(String.valueOf(est.derrotas));
-            tvNivel.setText("Nivel " + est.nivel());
+            tvNivel.setText(getString(R.string.t_nivel_n, est.nivel()));
             progressNivel.setProgress(est.progresoNivel());
+        });
+
+        UsuarioManager.obtenerMedallasConFecha((total, fechas) -> {
+            if (isFinishing() || isDestroyed()) return;
+            pintarMedallas(fechas);
         });
 
         // Récords de minijuegos y colección del Safari
         UsuarioManager.obtenerResumenJuegos(r -> {
             if (isFinishing() || isDestroyed()) return;
             ((TextView) findViewById(R.id.tvRecordQuienPerfil)).setText(r.recordQuien > 0
-                    ? r.recordQuien + " pts · racha " + r.rachaQuien : "Sin jugar");
+                    ? getString(R.string.t_pts_racha, r.recordQuien, r.rachaQuien) : getString(R.string.t_sin_jugar));
             ((TextView) findViewById(R.id.tvRecordTiposPerfil)).setText(r.recordTipos > 0
-                    ? r.recordTipos + " pts" : "Sin jugar");
+                    ? getString(R.string.t_n_pts, r.recordTipos) : getString(R.string.t_sin_jugar));
             ((TextView) findViewById(R.id.tvRecordMemoryPerfil)).setText(r.recordMemory > 0
-                    ? r.recordMemory + " pts" : "Sin jugar");
+                    ? getString(R.string.t_n_pts, r.recordMemory) : getString(R.string.t_sin_jugar));
             ((TextView) findViewById(R.id.tvCapturadosPerfil)).setText(String.valueOf(r.capturados));
         });
+    }
+
+    /** Las 10 medallas en dos filas: a color las ganadas y en gris las que faltan. */
+    private void pintarMedallas(Map<Integer, Date> fechas) {
+        GridLayout grid = findViewById(R.id.gridMedallasPerfil);
+        grid.removeAllViews();
+        grid.setOnClickListener(v -> startActivity(new Intent(this, MedallasActivity.class)));
+        float dp = getResources().getDisplayMetrics().density;
+
+        ColorMatrix gris = new ColorMatrix();
+        gris.setSaturation(0f);
+
+        for (int numero = 1; numero <= 10; numero++) {
+            ImageView medalla = new ImageView(this);
+            int imagen = getResources().getIdentifier("medalla_" + numero, "drawable", getPackageName());
+            if (imagen != 0) medalla.setImageResource(imagen);
+            medalla.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            medalla.setContentDescription(MedallasActivity.nombre(numero));
+            if (!fechas.containsKey(numero)) {
+                medalla.setColorFilter(new ColorMatrixColorFilter(gris));
+                medalla.setAlpha(0.45f);
+            }
+
+            GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
+                    GridLayout.spec(GridLayout.UNDEFINED),
+                    GridLayout.spec(GridLayout.UNDEFINED, 1f));
+            lp.width = 0;
+            lp.height = Math.round(62 * dp);
+            lp.setMargins(Math.round(2 * dp), Math.round(4 * dp), Math.round(2 * dp), Math.round(4 * dp));
+            grid.addView(medalla, lp);
+        }
     }
 }

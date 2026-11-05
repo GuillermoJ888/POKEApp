@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.pokeapp.data.TypeColors;
 import com.example.pokeapp.data.UsuarioManager;
 
+import com.example.pokeapp.data.Preferencias;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -75,7 +77,8 @@ public class MedallasActivity extends AppCompatActivity {
         GridLayout grid = findViewById(R.id.gridMedallas);
         grid.removeAllViews();
         float dp = getResources().getDisplayMetrics().density;
-        SimpleDateFormat formato = new SimpleDateFormat("d MMM yyyy", new Locale("es", "MX"));
+        SimpleDateFormat formato = new SimpleDateFormat("d MMM yyyy",
+                Preferencias.esIngles() ? Locale.ENGLISH : new Locale("es", "MX"));
 
         for (int i = 0; i < MEDALLAS.length; i++) {
             int numero = PRIMERA + i;
@@ -130,7 +133,8 @@ public class MedallasActivity extends AppCompatActivity {
 
             Date fecha = fechas != null ? fechas.get(numero) : null;
             TextView estado = new TextView(this);
-            estado.setText(!ganada ? requisito(numero) : fecha != null ? "Obtenida el " + formato.format(fecha) : "Obtenida");
+            estado.setText(!ganada ? requisito(numero) : fecha != null
+                    ? getString(R.string.t_obtenida_el, formato.format(fecha)) : getString(R.string.t_obtenida));
             estado.setTextColor(ganada ? 0xFF2E8B57 : PokeApp.color(this, R.attr.pkTextoSuave));
             estado.setTextSize(12);
             estado.setGravity(Gravity.CENTER);
