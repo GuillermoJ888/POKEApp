@@ -14,9 +14,10 @@ Aplicación Android en **Java + XML** que consume la [PokéAPI](https://pokeapi.
 | D | **Torre Pokémon**: 3 de 6 al azar, 6 niveles, jefe con 4 legendarios, medallas | ✅ |
 | — | **Batalla entre dispositivos**: dos celulares cercanos con Nearby Connections (extra, no viene en el documento) | ✅ |
 | E | **¿Quién es ese Pokémon?**: silueta, pistas (tipo, stats, cry) que restan puntos, vidas y mejor racha | ✅ |
-| F | **Safari Pokémon**: aparición al azar, distintas Pokéballs, huir y colección de capturados | ✅ |
+| F | **Safari Pokémon**: aparición al azar, distintas Pokéballs, aro de captura y rango de entrenador estilo Pokémon GO, huir y colección de capturados | ✅ |
 | G | **Maestro de Tipos**: ventajas de tipo contra reloj y mejor puntuación | ✅ |
 | H | **PokéMemory**: parejas de cartas, tiempo, intentos y niveles de dificultad | ✅ |
+| — | **Pikachu Run**: corre, salta y esquiva, cada vez más rápido, con récord en la nube (extra, no viene en el documento) | ✅ |
 | I | **Favoritos** (en la nube): abrir detalle, escuchar cry y eliminar | ✅ |
 | J | **Historial**: batallas de todos los modos, por día, con el detalle de los turnos | ✅ |
 | K | **Medallas**: las 10 medallas, obtenidas o bloqueadas, con su fecha | ✅ |

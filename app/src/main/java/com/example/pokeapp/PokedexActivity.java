@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -186,7 +187,7 @@ public class PokedexActivity extends AppCompatActivity {
                         if (!response.isSuccessful() || response.body() == null
                                 || response.body().getResults() == null) {
                             Toast.makeText(PokedexActivity.this,
-                                    "No se pudo cargar la lista", Toast.LENGTH_SHORT).show();
+                                    Idioma.t("No se pudo cargar la lista", "Could not load the list"), Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -209,7 +210,7 @@ public class PokedexActivity extends AppCompatActivity {
                     public void onFailure(Call<PokemonListResponse> call, Throwable t) {
                         if (isFinishing() || isDestroyed()) return;
                         Toast.makeText(PokedexActivity.this,
-                                "Sin conexión: no se pudo cargar la lista", Toast.LENGTH_SHORT).show();
+                                Idioma.t("Sin conexión: no se pudo cargar la lista", "No connection: could not load the list"), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -361,7 +362,7 @@ public class PokedexActivity extends AppCompatActivity {
         String query = etBuscar.getText().toString().trim().toLowerCase(Locale.ROOT);
 
         if (TextUtils.isEmpty(query)) {
-            Toast.makeText(this, "Escribe un nombre o número", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("Escribe un nombre o número", "Type a name or number"), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -385,7 +386,7 @@ public class PokedexActivity extends AppCompatActivity {
 
                 if (!response.isSuccessful() || response.body() == null) {
                     mostrarCargando(false);
-                    mostrarMensaje("No se encontró ningún Pokémon con ese nombre o número");
+                    mostrarMensaje(Idioma.t("No se encontró ningún Pokémon con ese nombre o número", "No Pokémon found with that name or number"));
                     return;
                 }
 
@@ -398,7 +399,7 @@ public class PokedexActivity extends AppCompatActivity {
             public void onFailure(Call<Pokemon> call, Throwable t) {
                 if (token != tokenCarga || isFinishing() || isDestroyed()) return;
                 mostrarCargando(false);
-                mostrarMensaje("Error de conexión. Revisa tu Internet e intenta de nuevo");
+                mostrarMensaje(Idioma.t("Error de conexión. Revisa tu Internet e intenta de nuevo", "Connection error. Check your internet and try again"));
             }
         });
     }
@@ -423,7 +424,7 @@ public class PokedexActivity extends AppCompatActivity {
                     tvDescripcion.setText("");
                 }
 
-                mostrarSinEvolucion("No hay datos de evolución");
+                mostrarSinEvolucion(Idioma.t("No hay datos de evolución", "No evolution data"));
             }
 
             @Override
@@ -431,7 +432,7 @@ public class PokedexActivity extends AppCompatActivity {
                 if (token != tokenCarga || isFinishing() || isDestroyed()) return;
                 mostrarCargando(false);
                 tvDescripcion.setText("");
-                mostrarSinEvolucion("No se pudo cargar la evolución");
+                mostrarSinEvolucion(Idioma.t("No se pudo cargar la evolución", "Could not load the evolution"));
             }
         });
     }
@@ -451,14 +452,14 @@ public class PokedexActivity extends AppCompatActivity {
                                 && response.body().getChain() != null) {
                             pintarEvolucion(response.body().getChain(), idActual);
                         } else {
-                            mostrarSinEvolucion("No se pudo cargar la evolución");
+                            mostrarSinEvolucion(Idioma.t("No se pudo cargar la evolución", "Could not load the evolution"));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<EvolutionChainResponse> call, Throwable t) {
                         if (token != tokenCarga || isFinishing() || isDestroyed()) return;
-                        mostrarSinEvolucion("No se pudo cargar la evolución");
+                        mostrarSinEvolucion(Idioma.t("No se pudo cargar la evolución", "Could not load the evolution"));
                     }
                 });
     }
@@ -489,7 +490,7 @@ public class PokedexActivity extends AppCompatActivity {
         }
 
         if (etapas.size() == 1) {
-            mostrarSinEvolucion("Este Pokémon no evoluciona");
+            mostrarSinEvolucion(Idioma.t("Este Pokémon no evoluciona", "This Pokémon does not evolve"));
             return;
         }
 
@@ -576,7 +577,7 @@ public class PokedexActivity extends AppCompatActivity {
             pagerPokemon.setCurrentItem(0, false);
         }
 
-        tvEvolucionVacio.setText("Cargando...");
+        tvEvolucionVacio.setText(Idioma.t("Cargando...", "Loading..."));
         tvEvolucionVacio.setVisibility(View.VISIBLE);
         scrollEvolucion.setVisibility(View.GONE);
 
@@ -644,11 +645,11 @@ public class PokedexActivity extends AppCompatActivity {
     private String etiquetaStat(String nombre) {
         switch (nombre) {
             case "hp": return "HP";
-            case "attack": return "Ataque";
-            case "defense": return "Defensa";
-            case "special-attack": return "At. Esp.";
-            case "special-defense": return "Def. Esp.";
-            case "speed": return "Velocidad";
+            case "attack": return Idioma.t("Ataque", "Attack");
+            case "defense": return Idioma.t("Defensa", "Defense");
+            case "special-attack": return Idioma.t("At. Esp.", "Sp. Atk");
+            case "special-defense": return Idioma.t("Def. Esp.", "Sp. Def");
+            case "speed": return Idioma.t("Velocidad", "Speed");
             default: return nombre;
         }
     }
@@ -684,7 +685,7 @@ public class PokedexActivity extends AppCompatActivity {
         if (errorFavoritoMostrado) return;
         errorFavoritoMostrado = true;
 
-        Toast.makeText(this, "Favoritos: " + FavoritosManager.ultimoError(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, Idioma.t("Favoritos: ", "Favorites: ") + FavoritosManager.ultimoError(), Toast.LENGTH_LONG).show();
     }
 
     private void alternarFavorito() {
@@ -700,7 +701,7 @@ public class PokedexActivity extends AppCompatActivity {
 
                     if (esFavorito == null) {
                         Toast.makeText(this,
-                                "No se pudo guardar el favorito: " + FavoritosManager.ultimoError(),
+                                Idioma.t("No se pudo guardar el favorito: ", "Could not save the favorite: ") + FavoritosManager.ultimoError(),
                                 Toast.LENGTH_LONG).show();
                         return;
                     }
@@ -716,7 +717,7 @@ public class PokedexActivity extends AppCompatActivity {
 
     private void reproducirCry() {
         if (!com.example.pokeapp.data.Preferencias.sonido(this)) {
-            Toast.makeText(this, "El sonido está desactivado en Configuración", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("El sonido está desactivado en Configuración", "Sound is turned off in Settings"), Toast.LENGTH_SHORT).show();
             return;
         }
         if (pokemonActual == null) return;
@@ -732,12 +733,12 @@ public class PokedexActivity extends AppCompatActivity {
             mediaPlayer.setDataSource(url);
             mediaPlayer.setOnPreparedListener(MediaPlayer::start);
             mediaPlayer.setOnErrorListener((mp, what, extra) -> {
-                Toast.makeText(this, "No se pudo reproducir el sonido", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, Idioma.t("No se pudo reproducir el sonido", "Could not play the sound"), Toast.LENGTH_SHORT).show();
                 return true;
             });
             mediaPlayer.prepareAsync();
         } catch (Exception e) {
-            Toast.makeText(this, "No se pudo reproducir el sonido", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("No se pudo reproducir el sonido", "Could not play the sound"), Toast.LENGTH_SHORT).show();
         }
     }
 

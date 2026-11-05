@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -185,7 +186,7 @@ public class SelectorPokemon {
     private void buscar() {
         String query = etBuscar.getText().toString().trim();
         if (TextUtils.isEmpty(query)) {
-            Toast.makeText(activity, "Escribe un nombre o número", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, Idioma.t("Escribe un nombre o número", "Type a name or number"), Toast.LENGTH_SHORT).show();
             return;
         }
         recyclerSugerencias.setVisibility(View.GONE);
@@ -207,7 +208,7 @@ public class SelectorPokemon {
                 if (token != tokenCarga || activity.isFinishing() || activity.isDestroyed()) return;
                 progress.setVisibility(View.GONE);
                 if (!response.isSuccessful() || response.body() == null) {
-                    mostrarMensaje("No se encontró ningún Pokémon con ese nombre o número");
+                    mostrarMensaje(Idioma.t("No se encontró ningún Pokémon con ese nombre o número", "No Pokémon found with that name or number"));
                     actualizarPopulares();
                     return;
                 }
@@ -219,7 +220,7 @@ public class SelectorPokemon {
             public void onFailure(Call<Pokemon> call, Throwable t) {
                 if (token != tokenCarga || activity.isFinishing() || activity.isDestroyed()) return;
                 progress.setVisibility(View.GONE);
-                mostrarMensaje("Error de conexión. Revisa tu Internet e intenta de nuevo");
+                mostrarMensaje(Idioma.t("Error de conexión. Revisa tu Internet e intenta de nuevo", "Connection error. Check your internet and try again"));
                 actualizarPopulares();
             }
         });
@@ -306,7 +307,7 @@ public class SelectorPokemon {
         contenedor.removeAllViews();
         float dp = activity.getResources().getDisplayMetrics().density;
 
-        String[] etiquetas = {"HP", "Ataque", "Defensa", "Velocidad"};
+        String[] etiquetas = {"HP", Idioma.t("Ataque", "Attack"), Idioma.t("Defensa", "Defense"), Idioma.t("Velocidad", "Speed")};
         int[] valores = {datos.hpMaxima, datos.ataque, datos.defensa, datos.velocidad};
 
         for (int i = 0; i < etiquetas.length; i++) {

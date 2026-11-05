@@ -280,4 +280,6 @@
     <string name="t_pts_racha">%1$d pts · racha %2$d</string>
     <string name="t_obtenida">Obtenida</string>
     <string name="t_obtenida_el">Obtenida el %1$s</string>
+    <string name="mod_pikachu_titulo" translatable="false">Pikachu Run</string>
+    <string name="mod_pikachu_desc">Salta y esquiva</string>
 </resources>

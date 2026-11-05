@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -87,7 +88,7 @@ public class QuienEsActivity extends AppCompatActivity {
         gridOpciones = findViewById(R.id.gridOpcionesQuien);
         btnJugar = findViewById(R.id.btnJugarQuien);
 
-        btnTipo.setText("🏷 Tipo −" + COSTO_TIPO);
+        btnTipo.setText(Idioma.t("🏷 Tipo −", "🏷 Type −") + COSTO_TIPO);
         btnStats.setText("📊 Stats −" + COSTO_STATS);
         btnCry.setText("🔊 Cry −" + COSTO_CRY);
 
@@ -130,9 +131,9 @@ public class QuienEsActivity extends AppCompatActivity {
 
     private void pintarMarcador() {
         tvPuntos.setText("⭐ " + puntos);
-        tvRacha.setText("🔥 Racha " + racha);
+        tvRacha.setText(Idioma.t("🔥 Racha ", "🔥 Streak ") + racha);
         tvVidas.setText(vidas > 0 ? new String(new char[vidas]).replace("\0", "❤️") : "💔");
-        tvRecord.setText("🏆 Récord: " + record + " · Mejor racha: " + mejorRacha);
+        tvRecord.setText(Idioma.t("🏆 Récord: ", "🏆 Record: ") + record + Idioma.t(" · Mejor racha: ", " · Best streak: ") + mejorRacha);
     }
 
     private void empezar() {
@@ -153,8 +154,8 @@ public class QuienEsActivity extends AppCompatActivity {
         tvPistas.setText("");
         eventoEspecial = eventoPendiente;
         eventoPendiente = false;
-        tvPregunta.setText(eventoEspecial ? "🎁 ¡EVENTO ESPECIAL!" + "\n" + "Adivina con solo un pedazo y recupera un ❤️"
-                : "Buscando un Pokémon…");
+        tvPregunta.setText(eventoEspecial ? Idioma.t("🎁 ¡EVENTO ESPECIAL!", "🎁 SPECIAL EVENT!") + "\n" + Idioma.t("Adivina con solo un pedazo y recupera un ❤️", "Guess from just a piece and recover a ❤️")
+                : Idioma.t("Buscando un Pokémon…", "Looking for a Pokémon…"));
         img.setImageResource(R.drawable.ic_pokeball_logo);
         img.clearColorFilter();
         entrenadorSecreto = null;
@@ -165,8 +166,8 @@ public class QuienEsActivity extends AppCompatActivity {
         CargadorPokemon.cargar(CargadorPokemon.idsAleatorios(OPCIONES, false, random), lista -> {
             if (!jugando || isFinishing() || isDestroyed()) return;
             if (lista == null) {
-                Toast.makeText(this, "No se pudo cargar el Pokémon. Revisa tu internet.", Toast.LENGTH_LONG).show();
-                terminar("Sin conexión");
+                Toast.makeText(this, Idioma.t("No se pudo cargar el Pokémon. Revisa tu internet.", "Could not load the Pokémon. Check your internet."), Toast.LENGTH_LONG).show();
+                terminar(Idioma.t("Sin conexión", "No connection"));
                 return;
             }
             secreto = new BattlePokemon(lista.get(0));
@@ -185,10 +186,10 @@ public class QuienEsActivity extends AppCompatActivity {
         img.setColorFilter(COLOR_SILUETA, PorterDuff.Mode.SRC_IN);   // solo la silueta
         if (eventoEspecial) {
             mostrarPedazo();   // sin pistas: solo un pedazo de la silueta
-            tvPregunta.setText("🎁 ¿Quién es? Si aciertas recuperas un ❤️");
+            tvPregunta.setText(Idioma.t("🎁 ¿Quién es? Si aciertas recuperas un ❤️", "🎁 Who is it? Get it right to recover a ❤️"));
         } else {
             Glide.with(this).load(secreto.imagen).into(img);
-            tvPregunta.setText("¿Quién es ese Pokémon?");
+            tvPregunta.setText(Idioma.t("¿Quién es ese Pokémon?", "Who's that Pokémon?"));
             for (TextView b : new TextView[]{btnTipo, btnStats, btnCry}) b.setAlpha(1f);
             filaPistas.setVisibility(View.VISIBLE);
         }
@@ -287,7 +288,7 @@ public class QuienEsActivity extends AppCompatActivity {
         esperandoRespuesta = true;
         img.setImageResource(getResources().getIdentifier("entrenador_" + n, "drawable", getPackageName()));
         img.setColorFilter(COLOR_SILUETA, PorterDuff.Mode.SRC_IN);
-        tvPregunta.setText("🎁 ¿Quién es este ENTRENADOR? Si aciertas recuperas un ❤️");
+        tvPregunta.setText(Idioma.t("🎁 ¿Quién es este ENTRENADOR? Si aciertas recuperas un ❤️", "🎁 Who is this TRAINER? Get it right to recover a ❤️"));
         pintarOpciones(nombres);
         return true;
     }
@@ -307,13 +308,13 @@ public class QuienEsActivity extends AppCompatActivity {
         if (cual == 1 && !pistaTipo) {
             pistaTipo = true;
             valorPregunta -= COSTO_TIPO;
-            agregarPista("Tipo: " + secreto.tiposTexto());
+            agregarPista(Idioma.t("Tipo: ", "Type: ") + secreto.tiposTexto());
             btnTipo.setAlpha(0.4f);
         } else if (cual == 2 && !pistaStats) {
             pistaStats = true;
             valorPregunta -= COSTO_STATS;
-            agregarPista("HP " + secreto.hpMaxima + " · Ataque " + secreto.ataque
-                    + " · Defensa " + secreto.defensa + " · Velocidad " + secreto.velocidad);
+            agregarPista("HP " + secreto.hpMaxima + Idioma.t(" · Ataque ", " · Attack ") + secreto.ataque
+                    + Idioma.t(" · Defensa ", " · Defense ") + secreto.defensa + Idioma.t(" · Velocidad ", " · Speed ") + secreto.velocidad);
             btnStats.setAlpha(0.4f);
         } else if (cual == 3) {
             // Con el sonido apagado no se cobra la pista (reproducirCry avisa por qué no suena)
@@ -324,7 +325,7 @@ public class QuienEsActivity extends AppCompatActivity {
             }
             reproducirCry();   // se puede volver a escuchar sin costo
         }
-        tvPregunta.setText("¿Quién es ese Pokémon? (vale " + valorPregunta + " puntos)");
+        tvPregunta.setText(Idioma.t("¿Quién es ese Pokémon? (vale ", "Who's that Pokémon? (worth ") + valorPregunta + Idioma.t(" puntos)", " points)"));
     }
 
     private void agregarPista(String texto) {
@@ -333,7 +334,7 @@ public class QuienEsActivity extends AppCompatActivity {
 
     private void reproducirCry() {
         if (!com.example.pokeapp.data.Preferencias.sonido(this)) {
-            Toast.makeText(this, "El sonido está desactivado en Configuración", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("El sonido está desactivado en Configuración", "Sound is turned off in Settings"), Toast.LENGTH_SHORT).show();
             return;
         }
         soltarCry();
@@ -343,12 +344,12 @@ public class QuienEsActivity extends AppCompatActivity {
                     + secreto.id + ".ogg");
             cry.setOnPreparedListener(MediaPlayer::start);
             cry.setOnErrorListener((mp, what, extra) -> {
-                Toast.makeText(this, "No se pudo reproducir el cry", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, Idioma.t("No se pudo reproducir el cry", "Could not play the cry"), Toast.LENGTH_SHORT).show();
                 return true;
             });
             cry.prepareAsync();
         } catch (Exception e) {
-            Toast.makeText(this, "No se pudo reproducir el cry", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("No se pudo reproducir el cry", "Could not play the cry"), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -368,24 +369,24 @@ public class QuienEsActivity extends AppCompatActivity {
             if (acierto) {
                 vidas = Math.min(VIDAS, vidas + 1);
                 Efectos.victoria(this);
-                tvPregunta.setText("💖 ¡Es " + correcto + "! Recuperaste un corazón");
+                tvPregunta.setText(Idioma.t("💖 ¡Es ", "💖 It's ") + correcto + Idioma.t("! Recuperaste un corazón", "! You recovered a heart"));
             } else {
-                tvPregunta.setText("❌ ¡Era " + correcto + "! No pierdes vida, sigue jugando.");
+                tvPregunta.setText(Idioma.t("❌ ¡Era ", "❌ It was ") + correcto + Idioma.t("! No pierdes vida, sigue jugando.", "! You keep your life, keep playing."));
             }
         } else if (acierto) {
             puntos += valorPregunta;
             racha++;
             mejorRacha = Math.max(mejorRacha, racha);
-            tvPregunta.setText("✅ ¡Es " + correcto + "! +" + valorPregunta + " puntos");
+            tvPregunta.setText(Idioma.t("✅ ¡Es ", "✅ It's ") + correcto + "! +" + valorPregunta + Idioma.t(" puntos", " points"));
             // Cada 10 de racha, si falta algún corazón, la siguiente ronda es el evento especial
             if (racha % RACHA_EVENTO == 0 && vidas < VIDAS) {
                 eventoPendiente = true;
-                tvPregunta.setText(tvPregunta.getText() + "\n🎁 ¡Racha de " + racha + "! Viene un evento especial");
+                tvPregunta.setText(tvPregunta.getText() + Idioma.t("\n🎁 ¡Racha de ", "\n🎁 Streak of ") + racha + Idioma.t("! Viene un evento especial", "! A special event is coming"));
             }
         } else {
             vidas--;
             racha = 0;
-            tvPregunta.setText("❌ ¡Era " + correcto + "!");
+            tvPregunta.setText(Idioma.t("❌ ¡Era ", "❌ It was ") + correcto + "!");
         }
 
         for (int i = 0; i < gridOpciones.getChildCount(); i++) {
@@ -398,7 +399,7 @@ public class QuienEsActivity extends AppCompatActivity {
         }
         pintarMarcador();
 
-        if (vidas <= 0) handler.postDelayed(() -> terminar("¡Fin del juego!"), PAUSA);
+        if (vidas <= 0) handler.postDelayed(() -> terminar(Idioma.t("¡Fin del juego!", "Game over!")), PAUSA);
         else handler.postDelayed(this::siguiente, PAUSA);
     }
 
@@ -417,8 +418,8 @@ public class QuienEsActivity extends AppCompatActivity {
         gridOpciones.removeAllViews();
         filaPistas.setVisibility(View.GONE);
         tvPistas.setText("");
-        tvPregunta.setText(titulo + "\n" + puntos + " puntos" + (nuevoRecord ? "\n🏆 ¡Nuevo récord!" : ""));
-        ((TextView) btnJugar).setText("🔁 Jugar otra vez");
+        tvPregunta.setText(titulo + "\n" + puntos + Idioma.t(" puntos", " points") + (nuevoRecord ? Idioma.t("\n🏆 ¡Nuevo récord!", "\n🏆 New record!") : ""));
+        ((TextView) btnJugar).setText(Idioma.t("🔁 Jugar otra vez", "🔁 Play again"));
         btnJugar.setVisibility(View.VISIBLE);
         pintarMarcador();
     }

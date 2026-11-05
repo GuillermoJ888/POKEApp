@@ -50,15 +50,15 @@ public class AvatarManager {
     /** Lado, en pixeles, al que se reduce la foto propia. */
     private static final int LADO_FOTO = 512;
 
-    private static final Avatar CLASICO = new Avatar("clasico", "Clásico", R.drawable.ic_avatar_entrenador);
-    private static final Avatar FOTO = new Avatar(CLAVE_FOTO, "Mi foto", 0);
+    private static final Avatar CLASICO = new Avatar("clasico", Idioma.t("Clásico", "Classic"), R.drawable.ic_avatar_entrenador);
+    private static final Avatar FOTO = new Avatar(CLAVE_FOTO, Idioma.t("Mi foto", "My photo"), 0);
 
     /** Modelos dibujados en la app; solo se muestran si todavía no hay imágenes propias. */
     private static final List<Avatar> MODELOS = Arrays.asList(
-            new Avatar("chico1", "Chico 1", R.drawable.ic_avatar_chico1),
-            new Avatar("chico2", "Chico 2", R.drawable.ic_avatar_chico2),
-            new Avatar("chica1", "Chica 1", R.drawable.ic_avatar_chica1),
-            new Avatar("chica2", "Chica 2", R.drawable.ic_avatar_chica2));
+            new Avatar("chico1", Idioma.t("Chico 1", "Boy 1"), R.drawable.ic_avatar_chico1),
+            new Avatar("chico2", Idioma.t("Chico 2", "Boy 2"), R.drawable.ic_avatar_chico2),
+            new Avatar("chica1", Idioma.t("Chica 1", "Girl 1"), R.drawable.ic_avatar_chica1),
+            new Avatar("chica2", Idioma.t("Chica 2", "Girl 2"), R.drawable.ic_avatar_chica2));
 
     /**
      * Avatares disponibles: la foto propia (si ya subió una), el Clásico y las imágenes

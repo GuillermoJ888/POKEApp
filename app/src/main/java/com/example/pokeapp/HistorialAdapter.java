@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,16 +62,16 @@ public class HistorialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     /** "HOY", "AYER" o "LUNES 5 DE OCTUBRE". Sin fecha (aún sincronizando) cuenta como hoy. */
     static String nombreDelDia(Date fecha) {
-        if (fecha == null) return "HOY";
+        if (fecha == null) return Idioma.t("HOY", "TODAY");
 
         Calendar dia = Calendar.getInstance();
         dia.setTime(fecha);
         Calendar hoy = Calendar.getInstance();
 
-        if (mismoDia(dia, hoy)) return "HOY";
+        if (mismoDia(dia, hoy)) return Idioma.t("HOY", "TODAY");
 
         hoy.add(Calendar.DAY_OF_YEAR, -1);
-        if (mismoDia(dia, hoy)) return "AYER";
+        if (mismoDia(dia, hoy)) return Idioma.t("AYER", "YESTERDAY");
 
         return new SimpleDateFormat(Preferencias.esIngles() ? "EEEE, MMMM d" : "EEEE d 'de' MMMM", idioma())
                 .format(fecha).toUpperCase(idioma());
@@ -82,7 +83,7 @@ public class HistorialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     static String hora(Date fecha) {
-        return fecha != null ? new SimpleDateFormat("h:mm a", idioma()).format(fecha) : "Guardando...";
+        return fecha != null ? new SimpleDateFormat("h:mm a", idioma()).format(fecha) : Idioma.t("Guardando...", "Saving...");
     }
 
     static void cargarSprite(ImageView img, List<Integer> ids, int posicion) {
@@ -131,10 +132,10 @@ public class HistorialAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         boolean ganoB = nombreB.equals(b.ganador);
 
         h.tvHora.setText(hora(b.fecha));
-        h.tvTurnos.setText(b.turnos + (b.turnos == 1 ? " turno" : " turnos"));
+        h.tvTurnos.setText(b.turnos + (b.turnos == 1 ? Idioma.t(" turno", " turn") : Idioma.t(" turnos", " turns")));
         h.tvNombreA.setText(nombreA);
         h.tvNombreB.setText(nombreB);
-        h.tvGanador.setText("🏆 Ganó " + b.ganador);
+        h.tvGanador.setText(Idioma.t("🏆 Ganó ", "🏆 Winner: ") + b.ganador);
 
         cargarSprite(h.imgA, b.pokemonIds, 0);
         cargarSprite(h.imgB, b.pokemonIds, 1);

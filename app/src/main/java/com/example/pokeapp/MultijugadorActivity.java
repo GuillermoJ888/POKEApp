@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -94,7 +95,7 @@ public class MultijugadorActivity extends AppCompatActivity {
                 if (!concedidos.containsValue(false)) {
                     if (accion != null) accion.run();
                 } else {
-                    Toast.makeText(this, "Sin esos permisos no se puede encontrar al otro celular",
+                    Toast.makeText(this, Idioma.t("Sin esos permisos no se puede encontrar al otro celular", "Without those permissions the other phone cannot be found"),
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -124,7 +125,7 @@ public class MultijugadorActivity extends AppCompatActivity {
 
         FirebaseUser usuario = FirebaseAuth.getInstance().getCurrentUser();
         miNombre = usuario != null && usuario.getDisplayName() != null && !usuario.getDisplayName().isEmpty()
-                ? usuario.getDisplayName() : "Entrenador";
+                ? usuario.getDisplayName() : Idioma.t("Entrenador", "Trainer");
 
         slots = findViewById(R.id.slotsMiEquipo);
         listaSalas = findViewById(R.id.listaSalas);
@@ -154,7 +155,7 @@ public class MultijugadorActivity extends AppCompatActivity {
 
         // La conexión pudo cortarse mientras se veía la arena
         if (estado == Estado.CONECTADO && !cargandoRival && !red.estaConectado()) {
-            Toast.makeText(this, "Se terminó la conexión con el otro celular", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("Se terminó la conexión con el otro celular", "The connection with the other phone ended"), Toast.LENGTH_SHORT).show();
             reiniciar();
         }
         actualizarVista();
@@ -174,7 +175,7 @@ public class MultijugadorActivity extends AppCompatActivity {
     /** Pide (si faltan) los permisos de Bluetooth/WiFi cercano y luego hace la acción. */
     private void conPermisos(Runnable accion) {
         if (contar() < TAM_EQUIPO) {
-            Toast.makeText(this, "Primero completa tu equipo de " + TAM_EQUIPO, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("Primero completa tu equipo de ", "First complete your team of ") + TAM_EQUIPO, Toast.LENGTH_SHORT).show();
             return;
         }
         List<String> faltan = new ArrayList<>();
@@ -237,14 +238,14 @@ public class MultijugadorActivity extends AppCompatActivity {
         public void alPedirConexion(String rival, String codigo) {
             if (isFinishing() || isDestroyed()) return;
             View vista = LayoutInflater.from(MultijugadorActivity.this).inflate(R.layout.dialog_conexion, null);
-            ((TextView) vista.findViewById(R.id.tvRivalConexion)).setText("¿Pelear contra " + rival + "?");
+            ((TextView) vista.findViewById(R.id.tvRivalConexion)).setText(Idioma.t("¿Pelear contra ", "Battle ") + rival + "?");
             ((TextView) vista.findViewById(R.id.tvCodigoConexion)).setText(codigo);
 
             AlertDialog dialogo = new AlertDialog.Builder(MultijugadorActivity.this)
                     .setView(vista).setCancelable(false).create();
             vista.findViewById(R.id.btnAceptarConexion).setOnClickListener(v -> {
                 dialogo.dismiss();
-                tvEstado.setText("Conectando con " + rival + "…");
+                tvEstado.setText(Idioma.t("Conectando con ", "Connecting to ") + rival + "…");
                 red.aceptar();
             });
             vista.findViewById(R.id.btnRechazarConexion).setOnClickListener(v -> {
@@ -274,7 +275,7 @@ public class MultijugadorActivity extends AppCompatActivity {
         @Override
         public void alRechazar() {
             if (dialogoConexion != null) dialogoConexion.dismiss();
-            Toast.makeText(MultijugadorActivity.this, "No se aceptó la conexión", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MultijugadorActivity.this, Idioma.t("No se aceptó la conexión", "The connection was not accepted"), Toast.LENGTH_SHORT).show();
             actualizarVista();   // la sala (o la búsqueda) sigue abierta
         }
 
@@ -282,7 +283,7 @@ public class MultijugadorActivity extends AppCompatActivity {
         public void alFallar(String motivo) {
             if (estado == Estado.CONECTADO) return;
             Toast.makeText(MultijugadorActivity.this,
-                    motivo + ". Revisa que Bluetooth, WiFi y ubicación estén encendidos.",
+                    motivo + Idioma.t(". Revisa que Bluetooth, WiFi y ubicación estén encendidos.", ". Make sure Bluetooth, WiFi and location are on."),
                     Toast.LENGTH_LONG).show();
             // Si falló al unirse a una sala se sigue buscando; si falló lo demás, se regresa al inicio
             if (estado != Estado.BUSCANDO || salas.isEmpty()) desconectar();
@@ -309,7 +310,7 @@ public class MultijugadorActivity extends AppCompatActivity {
 
         @Override
         public void alDesconectar() {
-            Toast.makeText(MultijugadorActivity.this, "El otro celular se desconectó", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MultijugadorActivity.this, Idioma.t("El otro celular se desconectó", "The other phone disconnected"), Toast.LENGTH_SHORT).show();
             reiniciar();
             actualizarVista();
         }
@@ -345,8 +346,8 @@ public class MultijugadorActivity extends AppCompatActivity {
 
             if (rival == null || !red.estaConectado()) {
                 Toast.makeText(this, rival == null
-                        ? "No se pudieron cargar los Pokémon del rival (revisa tu internet)"
-                        : "Se terminó la conexión con el otro celular", Toast.LENGTH_LONG).show();
+                        ? Idioma.t("No se pudieron cargar los Pokémon del rival (revisa tu internet)", "Could not load the rival's Pokémon (check your internet)")
+                        : Idioma.t("Se terminó la conexión con el otro celular", "The connection with the other phone ended"), Toast.LENGTH_LONG).show();
                 red.setEscucha(escucha);
                 desconectar();
                 return;
@@ -370,14 +371,14 @@ public class MultijugadorActivity extends AppCompatActivity {
 
         View vista = LayoutInflater.from(this).inflate(R.layout.dialog_ganador, null);
         Glide.with(this).load(pokemon.imagen).into((ImageView) vista.findViewById(R.id.imgGanador));
-        ((TextView) vista.findViewById(R.id.tvGanador)).setText(gane ? "¡Ganaste!" : rival);
+        ((TextView) vista.findViewById(R.id.tvGanador)).setText(gane ? Idioma.t("¡Ganaste!", "You won!") : rival);
         ((TextView) vista.findViewById(R.id.tvContra)).setText(gane
-                ? "venciste a " + rival + " con " + pokemon.nombre
-                : "te venció con " + pokemon.nombre);
+                ? Idioma.t("venciste a ", "you defeated ") + rival + Idioma.t(" con ", " with ") + pokemon.nombre
+                : Idioma.t("te venció con ", "defeated you with ") + pokemon.nombre);
         // El HP máximo lo dicta el anfitrión, así que aquí solo se muestra el HP con que quedó
         ((TextView) vista.findViewById(R.id.tvHpGanador)).setText(String.valueOf(hpRestante));
         ((TextView) vista.findViewById(R.id.tvTurnosGanador)).setText(String.valueOf(turnos));
-        ((TextView) vista.findViewById(R.id.btnElegirOtro)).setText("Cambiar equipo");
+        ((TextView) vista.findViewById(R.id.btnElegirOtro)).setText(Idioma.t("Cambiar equipo", "Change team"));
 
         AlertDialog dialogo = new AlertDialog.Builder(this).setView(vista).create();
         vista.findViewById(R.id.btnRevancha).setOnClickListener(v -> {
@@ -418,34 +419,34 @@ public class MultijugadorActivity extends AppCompatActivity {
 
     private void actualizarVista() {
         pintarSlots();
-        tvTituloEquipo.setText("🔴 Tu equipo · " + contar() + "/" + TAM_EQUIPO);
+        tvTituloEquipo.setText(Idioma.t("🔴 Tu equipo · ", "🔴 Your team · ") + contar() + "/" + TAM_EQUIPO);
         pintarSalas();
 
-        String rival = nombreRival != null ? nombreRival : "tu rival";
+        String rival = nombreRival != null ? nombreRival : Idioma.t("tu rival", "your rival");
         boolean revancha = estado == Estado.CONECTADO && !equipoEnviado && !cargandoRival;
         switch (estado) {
             case ANUNCIANDO:
-                tvEstado.setText("📡 Sala de " + miNombre + " creada. Esperando a que tu rival la busque…");
+                tvEstado.setText(Idioma.t("📡 Sala de " + miNombre + " creada. Esperando a que tu rival la busque…", "📡 " + miNombre + "'s room is open. Waiting for your rival to find it…"));
                 break;
             case BUSCANDO:
-                tvEstado.setText(salas.isEmpty() ? "🔍 Buscando salas cercanas…" : "🔍 Toca una sala para unirte:");
+                tvEstado.setText(salas.isEmpty() ? Idioma.t("🔍 Buscando salas cercanas…", "🔍 Looking for nearby rooms…") : Idioma.t("🔍 Toca una sala para unirte:", "🔍 Tap a room to join:"));
                 break;
             case CONECTADO:
                 if (cargandoRival) {
-                    tvEstado.setText("✅ Conectado con " + rival + ". Preparando la batalla…");
+                    tvEstado.setText(Idioma.t("✅ Conectado con ", "✅ Connected to ") + rival + Idioma.t(". Preparando la batalla…", ". Preparing the battle…"));
                 } else if (equipoEnviado) {
-                    tvEstado.setText("✅ Conectado con " + rival + ". Esperando su equipo…");
+                    tvEstado.setText(Idioma.t("✅ Conectado con ", "✅ Connected to ") + rival + Idioma.t(". Esperando su equipo…", ". Waiting for their team…"));
                 } else if (idsRival != null) {
-                    tvEstado.setText("✅ " + rival + " quiere la revancha. Toca Revancha para aceptar.");
+                    tvEstado.setText("✅ " + rival + Idioma.t(" quiere la revancha. Toca Revancha para aceptar.", " wants a rematch. Tap Rematch to accept."));
                 } else {
-                    tvEstado.setText("✅ Conectado con " + rival + (huboBatalla
-                            ? ". Puedes cambiar tu equipo y tocar Revancha."
-                            : ". Completa tu equipo para empezar."));
+                    tvEstado.setText(Idioma.t("✅ Conectado con ", "✅ Connected to ") + rival + (huboBatalla
+                            ? Idioma.t(". Puedes cambiar tu equipo y tocar Revancha.", ". You can change your team and tap Rematch.")
+                            : Idioma.t(". Completa tu equipo para empezar.", ". Complete your team to begin.")));
                 }
                 break;
             default:
-                tvEstado.setText("Arma tu equipo. Luego uno crea la sala y el otro la busca. "
-                        + "Los dos necesitan Bluetooth, WiFi y ubicación encendidos.");
+                tvEstado.setText(Idioma.t("Arma tu equipo. Luego uno crea la sala y el otro la busca. ", "Build your team. Then one creates the room and the other looks for it. ")
+                        + Idioma.t("Los dos necesitan Bluetooth, WiFi y ubicación encendidos.", "Both need Bluetooth, WiFi and location turned on."));
                 break;
         }
 
@@ -453,7 +454,7 @@ public class MultijugadorActivity extends AppCompatActivity {
         btnBuscar.setVisibility(estado == Estado.INICIO ? View.VISIBLE : View.GONE);
         btnRevancha.setVisibility(revancha ? View.VISIBLE : View.GONE);
         btnCancelar.setVisibility(estado == Estado.INICIO ? View.GONE : View.VISIBLE);
-        btnCancelar.setText(estado == Estado.CONECTADO ? "Desconectar" : "Cancelar");
+        btnCancelar.setText(estado == Estado.CONECTADO ? Idioma.t("Desconectar", "Disconnect") : Idioma.t("Cancelar", "Cancel"));
     }
 
     private void pintarSalas() {
@@ -463,7 +464,7 @@ public class MultijugadorActivity extends AppCompatActivity {
         float dp = getResources().getDisplayMetrics().density;
         for (Map.Entry<String, String> sala : salas.entrySet()) {
             TextView fila = new TextView(this);
-            fila.setText("⚔️ Sala de " + sala.getValue());
+            fila.setText(Idioma.t("⚔️ Sala de " + sala.getValue(), "⚔️ " + sala.getValue() + "'s room"));
             fila.setTextColor(PokeApp.color(this, R.attr.pkTexto));
             fila.setTextSize(15);
             fila.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -473,7 +474,7 @@ public class MultijugadorActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             lp.topMargin = Math.round(8 * dp);
             fila.setOnClickListener(v -> {
-                tvEstado.setText("Conectando con " + sala.getValue() + "…");
+                tvEstado.setText(Idioma.t("Conectando con ", "Connecting to ") + sala.getValue() + "…");
                 red.unirse(sala.getKey());
             });
             listaSalas.addView(fila, lp);
@@ -517,7 +518,7 @@ public class MultijugadorActivity extends AppCompatActivity {
                 });
             } else {
                 img.setImageDrawable(null);
-                nombre.setText("Agregar");
+                nombre.setText(Idioma.t("Agregar", "Add"));
                 vacio.setVisibility(View.VISIBLE);
                 quitar.setVisibility(View.GONE);
             }
@@ -535,6 +536,6 @@ public class MultijugadorActivity extends AppCompatActivity {
             if (equipo[i] != null && i != posicion) excluir.add(equipo[i].getId());
         }
         lanzadorElegir.launch(ElegirPokemonActivity.crearIntent(this, null,
-                "Tu equipo · lugar " + (posicion + 1) + " de " + TAM_EQUIPO, posicion, excluir));
+                Idioma.t("Tu equipo · lugar ", "Your team · slot ") + (posicion + 1) + Idioma.t(" de ", " of ") + TAM_EQUIPO, posicion, excluir));
     }
 }

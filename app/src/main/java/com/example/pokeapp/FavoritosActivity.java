@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -47,7 +48,7 @@ public class FavoritosActivity extends AppCompatActivity {
             public void alEscuchar(Favorito favorito) {
                 if (!Efectos.cry(FavoritosActivity.this, favorito.getId())) {
                     Toast.makeText(FavoritosActivity.this,
-                            "El sonido está desactivado en Configuración", Toast.LENGTH_SHORT).show();
+                            Idioma.t("El sonido está desactivado en Configuración", "Sound is turned off in Settings"), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -76,15 +77,15 @@ public class FavoritosActivity extends AppCompatActivity {
     }
 
     private void confirmarEliminar(Favorito favorito) {
-        Dialogos.confirmar(this, "🗑️", "¿Quitar a " + favorito.getNombre() + "?",
-                "Dejará de aparecer en tus favoritos. Puedes volver a marcarlo con la estrella en la Pokédex.",
-                "Quitar de favoritos", "Cancelar",
+        Dialogos.confirmar(this, "🗑️", Idioma.t("¿Quitar a ", "Remove ") + favorito.getNombre() + "?",
+                Idioma.t("Dejará de aparecer en tus favoritos. Puedes volver a marcarlo con la estrella en la Pokédex.", "It will no longer appear in your favorites. You can mark it again with the star in the Pokédex."),
+                Idioma.t("Quitar de favoritos", "Remove from favorites"), Idioma.t("Cancelar", "Cancel"),
                 () -> FavoritosManager.quitar(favorito.getId(), ok -> {
                     if (isFinishing() || isDestroyed()) return;
                     if (Boolean.TRUE.equals(ok)) {
                         cargarFavoritos();
                     } else {
-                        Toast.makeText(this, "No se pudo quitar: " + FavoritosManager.ultimoError(),
+                        Toast.makeText(this, Idioma.t("No se pudo quitar: ", "Could not remove: ") + FavoritosManager.ultimoError(),
                                 Toast.LENGTH_LONG).show();
                     }
                 }), null);
@@ -97,7 +98,7 @@ public class FavoritosActivity extends AppCompatActivity {
             progressFavoritos.setVisibility(View.GONE);
 
             if (lista == null) {
-                Toast.makeText(this, "No se pudieron cargar tus favoritos: " + FavoritosManager.ultimoError(),
+                Toast.makeText(this, Idioma.t("No se pudieron cargar tus favoritos: ", "Could not load your favorites: ") + FavoritosManager.ultimoError(),
                         Toast.LENGTH_LONG).show();
                 tvVacio.setText("⚠️ " + FavoritosManager.ultimoError());
                 seccionVacia.setVisibility(View.VISIBLE);

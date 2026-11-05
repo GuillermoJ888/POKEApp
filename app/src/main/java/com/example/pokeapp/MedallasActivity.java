@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
@@ -25,9 +26,9 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Medallas (módulo K): las 10 medallas del proyecto, obtenidas o bloqueadas.
- * Como pide el PDF, cada Torre Pokémon completada desbloquea la siguiente
- * (UsuarioManager.otorgarMedallasTorre). De las obtenidas se muestra la fecha.
+ * Medallas (módulo K): las 10 medallas del PDF (cada Torre Pokémon completada desbloquea la
+ * siguiente, UsuarioManager.otorgarMedallasTorre) y 2 especiales: la 11 por hacer 1,000 puntos en
+ * Pikachu Run y la 12 por vencer al jefe secreto. De las obtenidas se muestra la fecha.
  * La imagen de cada una es res/drawable-nodpi/medalla_<n>.png.
  */
 public class MedallasActivity extends AppCompatActivity {
@@ -38,19 +39,31 @@ public class MedallasActivity extends AppCompatActivity {
     /** Emoji y tipo (da el color) de cada medalla, de la 1 a la 10 (solo si falta su imagen). */
     private static final String[][] MEDALLAS = {
             {"🪨", "rock"}, {"💧", "water"}, {"⚡", "electric"}, {"🌿", "grass"}, {"🔥", "fire"},
-            {"👑", "dragon"}, {"🌙", "dark"}, {"💤", "normal"}, {"🔥", "fire"}, {"⚡", "electric"}};
+            {"👑", "dragon"}, {"🌙", "dark"}, {"💤", "normal"}, {"🔥", "fire"}, {"⚡", "electric"},
+            {"⚡", "electric"}, {"🌟", "psychic"}};
 
     /** Nombre de cada medalla: el Pokémon de su insignia. */
     private static final String[] NOMBRES = {"Medalla Arceus", "Medalla Gengar", "Medalla Eevee", "Medalla Sylveon", "Medalla Greninja",
-            "Medalla Dragonite", "Medalla Darkrai", "Medalla Snorlax", "Medalla Charizard", "Medalla Pikachu"};
+            "Medalla Dragonite", "Medalla Darkrai", "Medalla Snorlax", "Medalla Charizard", "Medalla Pikachu",
+            "Medalla Pikachu Run", "Medalla Presidencial"};
+    private static final String[] NOMBRES_EN = {"Arceus Medal", "Gengar Medal", "Eevee Medal", "Sylveon Medal", "Greninja Medal",
+            "Dragonite Medal", "Darkrai Medal", "Snorlax Medal", "Charizard Medal", "Pikachu Medal",
+            "Pikachu Run Medal", "Presidential Medal"};
 
     public static String nombre(int numero) {
-        return NOMBRES[Math.max(1, Math.min(numero, NOMBRES.length)) - 1];
+        int i = Math.max(1, Math.min(numero, NOMBRES.length)) - 1;
+        return Idioma.t(NOMBRES[i], NOMBRES_EN[i]);
     }
 
     /** Cómo se gana cada medalla: la n se gana al completar la Torre por n-ésima vez. */
     private static String requisito(int numero) {
-        return numero == 1 ? "Completa la Torre por primera vez" : "Completa la Torre " + numero + " veces";
+        if (numero == UsuarioManager.MEDALLA_PIKACHU_RUN) {
+            return Idioma.t("Haz 1,000 puntos en Pikachu Run", "Score 1,000 points in Pikachu Run");
+        }
+        if (numero == UsuarioManager.MEDALLA_JEFE_SECRETO) {
+            return Idioma.t("Vence al jefe secreto de la Torre", "Defeat the Tower's secret boss");
+        }
+        return numero == 1 ? Idioma.t("Completa la Torre por primera vez", "Complete the Tower for the first time") : Idioma.t("Completa la Torre ", "Complete the Tower ") + numero + Idioma.t(" veces", " times");
     }
 
     @Override
@@ -67,9 +80,9 @@ public class MedallasActivity extends AppCompatActivity {
     }
 
     private void pintar(int obtenidas, Map<Integer, Date> fechas) {
-        ((TextView) findViewById(R.id.tvProgresoMedallas)).setText(obtenidas + " de " + MEDALLAS.length
-                + (obtenidas >= MEDALLAS.length ? " · ¡Colección completa! 🏆"
-                : " · Completa la Torre Pokémon para ganar la siguiente"));
+        ((TextView) findViewById(R.id.tvProgresoMedallas)).setText(obtenidas + Idioma.t(" de ", " of ") + MEDALLAS.length
+                + (obtenidas >= MEDALLAS.length ? Idioma.t(" · ¡Colección completa! 🏆", " · Collection complete! 🏆")
+                : Idioma.t(" · Gánalas en la Torre, en Pikachu Run y contra el jefe secreto", " · Earn them in the Tower, in Pikachu Run and against the secret boss")));
         ProgressBar barra = findViewById(R.id.barraMedallas);
         barra.setMax(MEDALLAS.length);
         barra.setProgress(obtenidas);

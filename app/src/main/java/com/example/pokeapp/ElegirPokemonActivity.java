@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,9 +71,9 @@ public class ElegirPokemonActivity extends AppCompatActivity {
                     finish();
                 });
 
-        selector.setTextoAceptar(jugador != null ? "Agregar al equipo del " + jugador : "Aceptar");
+        selector.setTextoAceptar(jugador != null ? Idioma.t("Agregar al equipo del ", "Add to the team of ") + jugador : Idioma.t("Aceptar", "Accept"));
         selector.setValidador(p -> excluir != null && excluir.contains(p.getId())
-                ? "Ese Pokémon ya está en el equipo" + (jugador != null ? " del " + jugador : "")
+                ? Idioma.t("Ese Pokémon ya está en el equipo", "That Pokémon is already on the team") + (jugador != null ? Idioma.t(" del ", " of ") + jugador : "")
                 : null);
     }
 }

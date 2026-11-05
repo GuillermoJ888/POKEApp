@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -100,7 +101,7 @@ public class MaestroTiposActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (jugando) terminar("Partida interrumpida");
+        if (jugando) terminar(Idioma.t("Partida interrumpida", "Game interrupted"));
     }
 
     private int nivel() {
@@ -110,8 +111,8 @@ public class MaestroTiposActivity extends AppCompatActivity {
     private void pintarMarcador() {
         tvPuntos.setText("⭐ " + puntos);
         tvVidas.setText(vidas > 0 ? new String(new char[vidas]).replace("\0", "❤️") : "💔");
-        tvNivel.setText("Nivel " + nivel());
-        tvRecord.setText("🏆 Récord: " + record);
+        tvNivel.setText(Idioma.t("Nivel ", "Level ") + nivel());
+        tvRecord.setText(Idioma.t("🏆 Récord: ", "🏆 Record: ") + record);
     }
 
     private void empezar() {
@@ -127,7 +128,7 @@ public class MaestroTiposActivity extends AppCompatActivity {
     private void siguientePregunta() {
         if (!jugando || isFinishing() || isDestroyed()) return;
         gridOpciones.removeAllViews();
-        tvPregunta.setText("Buscando un Pokémon salvaje…");
+        tvPregunta.setText(Idioma.t("Buscando un Pokémon salvaje…", "Looking for a wild Pokémon…"));
         barraTiempo.setProgress(barraTiempo.getMax());
 
         int id = CargadorPokemon.idsAleatorios(1, false, random).get(0);
@@ -141,7 +142,7 @@ public class MaestroTiposActivity extends AppCompatActivity {
                 // Sin internet: se pregunta por un tipo, sin Pokémon
                 String tipo = TIPOS.get(random.nextInt(TIPOS.size()));
                 img.setImageResource(R.drawable.ic_pokeball_logo);
-                preguntar("Pokémon de tipo " + TypeColors.traducir(tipo), Collections.singletonList(tipo));
+                preguntar(Idioma.t("Pokémon de tipo " + TypeColors.traducir(tipo), TypeColors.traducir(tipo) + "-type Pokémon"), Collections.singletonList(tipo));
             }
         });
     }
@@ -165,7 +166,7 @@ public class MaestroTiposActivity extends AppCompatActivity {
         StringBuilder texto = new StringBuilder();
         for (String t : tipos) texto.append(texto.length() > 0 ? " · " : "").append(TypeColors.traducir(t));
         tvTipos.setText(texto);
-        tvPregunta.setText("¿Qué tipo de ataque es súper eficaz contra " + nombre + "?");
+        tvPregunta.setText(Idioma.t("¿Qué tipo de ataque es súper eficaz contra ", "Which attack type is super effective against ") + nombre + "?");
 
         float dp = getResources().getDisplayMetrics().density;
         gridOpciones.removeAllViews();
@@ -237,12 +238,12 @@ public class MaestroTiposActivity extends AppCompatActivity {
             int ganados = 50 + Math.round(150f * tiempoRestante / tiempoPregunta);
             puntos += ganados;
             aciertos++;
-            tvPregunta.setText("✅ ¡Correcto! +" + ganados + " puntos");
+            tvPregunta.setText(Idioma.t("✅ ¡Correcto! +", "✅ Correct! +") + ganados + Idioma.t(" puntos", " points"));
         } else {
             vidas--;
             float veces = TypeChart.efectividad(correcta, tiposRival);
-            tvPregunta.setText((tipo == null ? "⏰ ¡Se acabó el tiempo! " : "❌ ")
-                    + "Era " + TypeColors.traducir(correcta) + " (×" + (int) veces + ")");
+            tvPregunta.setText((tipo == null ? Idioma.t("⏰ ¡Se acabó el tiempo! ", "⏰ Time's up! ") : "❌ ")
+                    + Idioma.t("Era ", "It was ") + TypeColors.traducir(correcta) + " (×" + (int) veces + ")");
         }
 
         // Se marca la correcta en verde y, si falló, la que tocó en rojo
@@ -256,7 +257,7 @@ public class MaestroTiposActivity extends AppCompatActivity {
         }
         pintarMarcador();
 
-        if (vidas <= 0) handler.postDelayed(() -> terminar("¡Fin del juego!"), PAUSA);
+        if (vidas <= 0) handler.postDelayed(() -> terminar(Idioma.t("¡Fin del juego!", "Game over!")), PAUSA);
         else handler.postDelayed(this::siguientePregunta, PAUSA);
     }
 
@@ -273,9 +274,9 @@ public class MaestroTiposActivity extends AppCompatActivity {
             UsuarioManager.guardarRecord(RECORD, puntos);
         }
         gridOpciones.removeAllViews();
-        tvPregunta.setText(titulo + "\n" + puntos + " puntos · " + aciertos + " aciertos · nivel " + nivel()
-                + (nuevoRecord ? "\n🏆 ¡Nuevo récord!" : ""));
-        ((TextView) btnJugar).setText("🔁 Jugar otra vez");
+        tvPregunta.setText(titulo + "\n" + puntos + Idioma.t(" puntos · ", " points · ") + aciertos + Idioma.t(" aciertos · nivel ", " correct · level ") + nivel()
+                + (nuevoRecord ? Idioma.t("\n🏆 ¡Nuevo récord!", "\n🏆 New record!") : ""));
+        ((TextView) btnJugar).setText(Idioma.t("🔁 Jugar otra vez", "🔁 Play again"));
         btnJugar.setVisibility(View.VISIBLE);
         pintarMarcador();
     }

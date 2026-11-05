@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -50,7 +51,7 @@ public class HistorialActivity extends AppCompatActivity {
         modo = getIntent().getStringExtra(EXTRA_MODO);
         if (modo == null) modo = HistorialManager.MODO_TODOS;   // así lo abre el Menú (módulo J)
 
-        ((TextView) findViewById(R.id.tvModo)).setText(modo);
+        ((TextView) findViewById(R.id.tvModo)).setText(HistorialManager.modoTexto(modo));
         seccionResumen = findViewById(R.id.seccionResumen);
         seccionVacia = findViewById(R.id.seccionVacia);
         Animaciones.flotar(findViewById(R.id.imgVacio));
@@ -70,7 +71,7 @@ public class HistorialActivity extends AppCompatActivity {
             progress.setVisibility(View.GONE);
 
             if (batallas == null) {
-                tvVacio.setText("No se pudo cargar el Historial.\nRevisa tu conexión y las reglas de Firestore.");
+                tvVacio.setText(Idioma.t("No se pudo cargar el Historial.\nRevisa tu conexión y las reglas de Firestore.", "Could not load the History.\nCheck your connection and the Firestore rules."));
                 seccionVacia.setVisibility(View.VISIBLE);
                 return;
             }
@@ -116,7 +117,7 @@ public class HistorialActivity extends AppCompatActivity {
                 String.format(Locale.ROOT, "%.1f", sumaTurnos / (float) batallas.size()));
         ((TextView) findViewById(R.id.tvCampeon)).setText(campeon != null ? campeon : "-");
         ((TextView) findViewById(R.id.tvCampeonVictorias)).setText(
-                "👑 " + maxVictorias + (maxVictorias == 1 ? " victoria" : " victorias"));
+                "👑 " + maxVictorias + (maxVictorias == 1 ? Idioma.t(" victoria", " win") : Idioma.t(" victorias", " wins")));
 
         ImageView imgCampeon = findViewById(R.id.imgCampeon);
         Integer idCampeon = campeon != null ? idPorNombre.get(campeon) : null;
@@ -146,7 +147,7 @@ public class HistorialActivity extends AppCompatActivity {
             String[] lineas = movimiento.split("\n");
 
             // Equipos de cada jugador (Versus / Torre): renglones tal cual, sin número
-            if (!lineas[0].startsWith("Turno ")) {
+            if (!lineas[0].startsWith("Turno ") && !lineas[0].startsWith("Turn ")) {
                 for (String linea : lineas) agregarRenglon(lista, "👥 " + linea);
                 lista.append("\n");
                 posicion--;
@@ -159,21 +160,21 @@ public class HistorialActivity extends AppCompatActivity {
                 continue;
             }
 
-            String numero = lineas[0].substring("Turno ".length()).trim();
+            String numero = lineas[0].substring(lineas[0].indexOf(' ') + 1).trim();
             String ataque = lineas[1];
-            String estado = lineas[3].replace(" · ¡Se debilitó!", " y se debilita");
+            String estado = lineas[3].replace(" · ¡Se debilitó!", " y se debilita").replace(" · It fainted!", " and faints");
 
             // "Causa 18 puntos…" → "y causa 18 puntos…"; "¡Pero falló!" → ", pero falló"
-            String resultado = lineas[2].startsWith("Causa")
-                    ? " y " + primeraMinuscula(detallesEntreParentesis(lineas[2]))
+            String resultado = lineas[2].startsWith("Causa") || lineas[2].startsWith("Deals")
+                    ? (lineas[2].startsWith("Deals") ? " and " : " y ") + primeraMinuscula(detallesEntreParentesis(lineas[2]))
                     : ", " + primeraMinuscula(lineas[2].replace("¡", "").replace("!", ""));
 
             agregarRenglon(lista, numero + ". " + ataque + resultado + "; " + estado);
         }
 
         lista.append("\n");
-        agregarRenglon(lista, "🏆 " + batalla.ganador + " ganó la batalla en "
-                + batalla.turnos + (batalla.turnos == 1 ? " turno" : " turnos"));
+        agregarRenglon(lista, "🏆 " + batalla.ganador + Idioma.t(" ganó la batalla en ", " won the battle in ")
+                + batalla.turnos + (batalla.turnos == 1 ? Idioma.t(" turno", " turn") : Idioma.t(" turnos", " turns")));
 
         return lista.toString();
     }
@@ -218,9 +219,9 @@ public class HistorialActivity extends AppCompatActivity {
         HistorialAdapter.cargarSprite(vista.findViewById(R.id.imgDetalleB), batalla.pokemonIds, 1);
         ((TextView) vista.findViewById(R.id.tvDetalleVs)).setText(nombreA + " vs " + nombreB);
         ((TextView) vista.findViewById(R.id.tvDetalleGanador)).setText(
-                "🏆 Ganó " + batalla.ganador + " · " + batalla.turnos + " turnos");
+                Idioma.t("🏆 Ganó ", "🏆 Winner: ") + batalla.ganador + " · " + batalla.turnos + Idioma.t(" turnos", " turns"));
         ((TextView) vista.findViewById(R.id.tvDetalleFecha)).setText(
-                batalla.modo + " · " + HistorialAdapter.nombreDelDia(batalla.fecha).toLowerCase(Locale.ROOT)
+                HistorialManager.modoTexto(batalla.modo) + " · " + HistorialAdapter.nombreDelDia(batalla.fecha).toLowerCase(Locale.ROOT)
                         + " · " + HistorialAdapter.hora(batalla.fecha));
 
         ((TextView) vista.findViewById(R.id.tvNarracion)).setText(narrar(batalla));

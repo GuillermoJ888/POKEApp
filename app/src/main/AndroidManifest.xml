@@ -85,6 +85,8 @@
             android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".PokeMemoryActivity"
             android:screenOrientation="portrait" android:exported="false" />
+        <activity android:name=".PikachuRunActivity"
+            android:screenOrientation="sensorLandscape" android:exported="false" />
         <activity android:name=".QuienEsActivity"
             android:screenOrientation="portrait" android:exported="false" />
         <activity android:name=".SafariActivity"

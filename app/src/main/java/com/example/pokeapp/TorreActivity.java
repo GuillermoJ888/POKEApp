@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -125,9 +126,9 @@ public class TorreActivity extends AppCompatActivity {
         btnConfirmar.setOnClickListener(v -> confirmarEquipo());
         btnPelear.setOnClickListener(v -> pelear());
         findViewById(R.id.btnAbandonar).setOnClickListener(v ->
-                Dialogos.confirmar(this, "🏳️", "¿Abandonar la campaña?",
-                        "Perderás el avance de esta Torre y tendrás que empezar desde el nivel 1.",
-                        "Abandonar", "Seguir peleando", this::mostrarInicio, null));
+                Dialogos.confirmar(this, "🏳️", Idioma.t("¿Abandonar la campaña?", "Give up the campaign?"),
+                        Idioma.t("Perderás el avance de esta Torre y tendrás que empezar desde el nivel 1.", "You will lose your progress in this Tower and start again from level 1."),
+                        Idioma.t("Abandonar", "Give up"), Idioma.t("Seguir peleando", "Keep fighting"), this::mostrarInicio, null));
 
         mostrarInicio();
     }
@@ -157,7 +158,7 @@ public class TorreActivity extends AppCompatActivity {
         pintarEscalera();
         UsuarioManager.obtenerMedallasConFecha((total, fechas) -> {
             if (!isFinishing() && !isDestroyed()) {
-                tvMedallas.setText("🏅 Medallas: " + total + " / " + UsuarioManager.MAX_MEDALLAS);
+                tvMedallas.setText(Idioma.t("🏅 Medallas: ", "🏅 Medals: ") + total + " / " + UsuarioManager.MAX_MEDALLAS);
                 // Tener la medalla del jefe final = ya lo venció alguna vez: se revela el piso secreto
                 boolean descubierto = total > 0;   // ya completó la Torre alguna vez
                 if (descubierto != secretoDescubierto) {
@@ -189,17 +190,17 @@ public class TorreActivity extends AppCompatActivity {
         // El piso del jefe secreto no existe a la vista hasta haber conquistado la Torre alguna vez
         if (secretoDescubierto) {
             agregarPiso(inflater, SECRETO, R.drawable.ic_torre_techo_secreto, fotoDocente(SECRETO),
-                    "NIVEL SECRETO", nombreDocente(SECRETO),
-                    "5 legendarios · Vence a " + nombreDocente(NIVELES) + " para retarlo", "🌟");
+                    Idioma.t("NIVEL SECRETO", "SECRET LEVEL"), nombreDocente(SECRETO),
+                    Idioma.t("5 legendarios · Vence a ", "5 legendaries · Defeat ") + nombreDocente(NIVELES) + Idioma.t(" para retarlo", " to challenge them"), "🌟");
         }
 
         // De arriba (jefe) hacia abajo (nivel 1)
         for (int n = NIVELES; n >= 1; n--) {
             boolean jefe = n == NIVELES;
             agregarPiso(inflater, n, jefe ? R.drawable.ic_torre_techo_jefe : R.drawable.ic_torre_techo, fotoDocente(n),
-                    jefe ? "NIVEL " + n + " · JEFE FINAL" : n == 1 ? "NIVEL 1 · TOCA PARA COMENZAR" : "NIVEL " + n,
+                    jefe ? Idioma.t("NIVEL ", "LEVEL ") + n + Idioma.t(" · JEFE FINAL", " · FINAL BOSS") : n == 1 ? Idioma.t("NIVEL 1 · TOCA PARA COMENZAR", "LEVEL 1 · TAP TO START") : Idioma.t("NIVEL ", "LEVEL ") + n,
                     nombreDocente(n),
-                    (jefe ? "4 legendarios" : RIVALES_POR_NIVEL[n - 1] + " Pokémon rivales")
+                    (jefe ? Idioma.t("4 legendarios", "4 legendaries") : RIVALES_POR_NIVEL[n - 1] + Idioma.t(" Pokémon rivales", " rival Pokémon"))
                             + " · " + Escenario.TODOS.get(ESCENARIO_POR_NIVEL[n - 1]).nombre,
                     nivel == 0 ? (jefe ? "👑" : n == 1 ? "▶️" : "🔒") : n < nivel ? "✅" : n == nivel ? "⚔️" : "🔒");
         }
@@ -303,7 +304,7 @@ public class TorreActivity extends AppCompatActivity {
     }
 
     private void actualizarElegidos() {
-        tvElegidos.setText("Elegidos: " + elegidos.size() + " / " + TAM_EQUIPO);
+        tvElegidos.setText(Idioma.t("Elegidos: ", "Chosen: ") + elegidos.size() + " / " + TAM_EQUIPO);
         boolean listo = elegidos.size() == TAM_EQUIPO;
         btnConfirmar.setEnabled(listo);
         btnConfirmar.setAlpha(listo ? 1f : 0.5f);
@@ -325,14 +326,14 @@ public class TorreActivity extends AppCompatActivity {
         rivales.clear();
         mostrarSeccion(seccionNivel);
 
-        tvNivelActual.setText(n == SECRETO ? "❓ NIVEL SECRETO · JEFE SECRETO"
-                : n == NIVELES ? "👑 NIVEL 6 · JEFE FINAL" : "NIVEL " + n + " DE " + NIVELES);
+        tvNivelActual.setText(n == SECRETO ? Idioma.t("❓ NIVEL SECRETO · JEFE SECRETO", "❓ SECRET LEVEL · SECRET BOSS")
+                : n == NIVELES ? Idioma.t("👑 NIVEL 6 · JEFE FINAL", "👑 LEVEL 6 · FINAL BOSS") : Idioma.t("NIVEL ", "LEVEL ") + n + Idioma.t(" DE ", " OF ") + NIVELES);
         imgDocente.setImageResource(fotoDocente(n));
         tvDocente.setText(nombreDocente(n));
         tvEscenarioNivel.setText("📍 " + Escenario.TODOS.get(ESCENARIO_POR_NIVEL[n - 1]).nombre);
         tvMensajeNivel.setVisibility(View.GONE);
         if (n >= NIVELES && companero != null) {
-            tvMensajeNivel.setText("🤝 Si caen tus 3 Pokémon, " + new BattlePokemon(companero).nombre + " saldrá al rescate.");
+            tvMensajeNivel.setText(Idioma.t("🤝 Si caen tus 3 Pokémon, ", "🤝 If your 3 Pokémon faint, ") + new BattlePokemon(companero).nombre + Idioma.t(" saldrá al rescate.", " will come to the rescue."));
             tvMensajeNivel.setVisibility(View.VISIBLE);
         }
         pintarFila(filaTuEquipo, equipo);
@@ -347,7 +348,7 @@ public class TorreActivity extends AppCompatActivity {
             if (isFinishing() || isDestroyed() || nivel != n) return;
             progressRivales.setVisibility(View.GONE);
             if (lista == null) {
-                tvMensajeNivel.setText("No se pudieron cargar los rivales. Revisa tu conexión.");
+                tvMensajeNivel.setText(Idioma.t("No se pudieron cargar los rivales. Revisa tu conexión.", "Could not load the rivals. Check your connection."));
                 tvMensajeNivel.setVisibility(View.VISIBLE);
                 avisoSinConexion(() -> irANivel(n));
                 return;
@@ -379,7 +380,7 @@ public class TorreActivity extends AppCompatActivity {
         int personaje = personajeDocente(nivel);
         lanzadorArena.launch(BattleArenaActivity.crearIntentEquipos(this,
                         equipo, rivales,
-                        "Tú", (nivel == SECRETO ? "Jefe secreto" : "Nivel " + nivel) + " · " + nombreDocente(nivel),
+                        Idioma.t("Tú", "You"), (nivel == SECRETO ? Idioma.t("Jefe secreto", "Secret boss") : Idioma.t("Nivel ", "Level ") + nivel) + " · " + nombreDocente(nivel),
                         true, false,
                         HistorialManager.MODO_TORRE, ESCENARIO_POR_NIVEL[nivel - 1])
                 // Junto al Pokémon rival va el personaje del docente (nunca su foto); si aún no hay dibujo, no sale nadie
@@ -395,46 +396,46 @@ public class TorreActivity extends AppCompatActivity {
     private void alTerminarNivel(boolean gano) {
         if (!gano) {
             if (nivel == SECRETO) {
-                mostrarResultado("💥", nombreDocente(SECRETO) + " te venció",
-                        "Conservas tus medallas. Conquista otra vez la Torre para volver a retar al jefe secreto.",
-                        "Nueva campaña", this::comenzarCampania,
-                        "Salir", this::mostrarInicio);
+                mostrarResultado("💥", nombreDocente(SECRETO) + Idioma.t(" te venció", " defeated you"),
+                        Idioma.t("Conservas tus medallas. Conquista otra vez la Torre para volver a retar al jefe secreto.", "You keep your medals. Conquer the Tower again to challenge the secret boss once more."),
+                        Idioma.t("Nueva campaña", "New campaign"), this::comenzarCampania,
+                        Idioma.t("Salir", "Exit"), this::mostrarInicio);
             } else {
-                mostrarResultado("💥", "Caíste en el nivel " + nivel,
-                        "La campaña terminó. Para ganar una medalla hay que superar los 6 niveles seguidos.",
-                        "Nueva campaña", this::comenzarCampania,
-                        "Salir", this::mostrarInicio);
+                mostrarResultado("💥", Idioma.t("Caíste en el nivel ", "You fell on level ") + nivel,
+                        Idioma.t("La campaña terminó. Para ganar una medalla hay que superar los 6 niveles seguidos.", "The campaign is over. To earn a medal you must clear all 6 levels in a row."),
+                        Idioma.t("Nueva campaña", "New campaign"), this::comenzarCampania,
+                        Idioma.t("Salir", "Exit"), this::mostrarInicio);
             }
             return;
         }
 
         int ganado = nivel;
-        UsuarioManager.otorgarMedallasTorre(ganado, nuevas -> {
+        com.example.pokeapp.data.FavoritosManager.Resultado<List<Integer>> alGuardar = nuevas -> {
             if (isFinishing() || isDestroyed() || nivel != ganado) return;
             String premio = textoMedallas(nuevas);
 
             // Si ganó medalla, primero se ve la medalla girando y luego la ventana del resultado
             Runnable verResultado = () -> {
                 if (ganado == SECRETO) {
-                    mostrarResultado("🌟", "¡Venciste al jefe secreto!",
-                            "Derrotaste a " + nombreDocente(SECRETO) + " y a sus 5 legendarios. "
-                                    + "No queda nadie más fuerte en la Torre." + premio,
-                            "Nueva campaña", this::comenzarCampania,
-                            "Salir", this::mostrarInicio);
+                    mostrarResultado("🌟", Idioma.t("¡Venciste al jefe secreto!", "You defeated the secret boss!"),
+                            Idioma.t("Derrotaste a ", "You defeated ") + nombreDocente(SECRETO) + Idioma.t(" y a sus 5 legendarios. ", " and their 5 legendaries. ")
+                                    + Idioma.t("No queda nadie más fuerte en la Torre.", "There is no one stronger left in the Tower.") + premio,
+                            Idioma.t("Nueva campaña", "New campaign"), this::comenzarCampania,
+                            Idioma.t("Salir", "Exit"), this::mostrarInicio);
                 } else if (ganado < NIVELES) {
                     int siguiente = ganado + 1;
-                    mostrarResultado("🏆", "¡Nivel " + ganado + " superado!",
-                            "Venciste a " + nombreDocente(ganado) + "." + premio
-                                    + "\n\nTu equipo se cura para el siguiente nivel."
-                                    + (siguiente == NIVELES ? " 👑 Sigue el jefe final con 4 legendarios." : ""),
-                            "Ir al nivel " + siguiente, () -> irANivel(siguiente),
-                            "Abandonar", this::mostrarInicio);
+                    mostrarResultado("🏆", Idioma.t("¡Nivel ", "Level ") + ganado + Idioma.t(" superado!", " cleared!"),
+                            Idioma.t("Venciste a ", "You defeated ") + nombreDocente(ganado) + "." + premio
+                                    + Idioma.t("\n\nTu equipo se cura para el siguiente nivel.", "\n\nYour team heals for the next level.")
+                                    + (siguiente == NIVELES ? Idioma.t(" 👑 Sigue el jefe final con 4 legendarios.", " 👑 Next is the final boss with 4 legendaries.") : ""),
+                            Idioma.t("Ir al nivel ", "Go to level ") + siguiente, () -> irANivel(siguiente),
+                            Idioma.t("Abandonar", "Give up"), this::mostrarInicio);
                 } else {
-                    mostrarResultado("🏅", "¡Conquistaste la Torre!",
-                            "Venciste a " + nombreDocente(ganado) + ", el jefe final." + premio
-                                    + "\n\n❓ Algo se mueve en lo más alto de la Torre… ¡Apareció un jefe secreto!",
-                            "Retar al jefe secreto", () -> irANivel(SECRETO),
-                            "Salir", this::mostrarInicio);
+                    mostrarResultado("🏅", Idioma.t("¡Conquistaste la Torre!", "You conquered the Tower!"),
+                            Idioma.t("Venciste a ", "You defeated ") + nombreDocente(ganado) + Idioma.t(", el jefe final.", ", the final boss.") + premio
+                                    + Idioma.t("\n\n❓ Algo se mueve en lo más alto de la Torre… ¡Apareció un jefe secreto!", "\n\n❓ Something stirs at the top of the Tower… A secret boss appeared!"),
+                            Idioma.t("Retar al jefe secreto", "Challenge the secret boss"), () -> irANivel(SECRETO),
+                            Idioma.t("Salir", "Exit"), this::mostrarInicio);
                 }
             };
             if (nuevas != null && !nuevas.isEmpty()) {
@@ -442,15 +443,21 @@ public class TorreActivity extends AppCompatActivity {
             } else {
                 verResultado.run();
             }
-        });
+        };
+        // El jefe secreto da la medalla 12 (una sola vez); el jefe final, la siguiente de la Torre
+        if (ganado == SECRETO) {
+            UsuarioManager.otorgarMedallaEspecial(UsuarioManager.MEDALLA_JEFE_SECRETO, alGuardar);
+        } else {
+            UsuarioManager.otorgarMedallasTorre(ganado, alGuardar);
+        }
     }
 
     /** Renglones "🏅 Ganaste la Medalla Gaz" para la ventana de resultado (vacío si no hubo medalla nueva). */
     private String textoMedallas(List<Integer> nuevas) {
-        if (nuevas == null) return "\n\n⚠️ No se pudo guardar tu medalla. Revisa tu conexión.";
+        if (nuevas == null) return Idioma.t("\n\n⚠️ No se pudo guardar tu medalla. Revisa tu conexión.", "\n\n⚠️ Could not save your medal. Check your connection.");
         StringBuilder texto = new StringBuilder();
         for (int numero : nuevas) {
-            texto.append("\n\n🏅 ¡Ganaste la ").append(MedallasActivity.nombre(numero)).append("!");
+            texto.append(Idioma.t("\n\n🏅 ¡Ganaste la ", "\n\n🏅 You earned the ")).append(MedallasActivity.nombre(numero)).append("!");
         }
         return texto.toString();
     }
@@ -525,13 +532,13 @@ public class TorreActivity extends AppCompatActivity {
                 }
             }
         }
-        return "HP " + hp + " · ATK " + atk + "\nDEF " + def + " · VEL " + vel;
+        return "HP " + hp + " · ATK " + atk + "\nDEF " + def + Idioma.t(" · VEL ", " · SPD ") + vel;
     }
 
     private void avisoSinConexion(Runnable reintentar) {
-        Dialogos.confirmar(this, "📡", "Sin conexión",
-                "No se pudieron cargar los Pokémon de la PokéAPI. Revisa tu Internet.",
-                "Reintentar", "Salir", reintentar, this::mostrarInicio);
+        Dialogos.confirmar(this, "📡", Idioma.t("Sin conexión", "No connection"),
+                Idioma.t("No se pudieron cargar los Pokémon de la PokéAPI. Revisa tu Internet.", "Could not load the Pokémon from the PokéAPI. Check your internet."),
+                Idioma.t("Reintentar", "Retry"), Idioma.t("Salir", "Exit"), reintentar, this::mostrarInicio);
     }
 
     private void mostrarResultado(String emoji, String titulo, String mensaje,

@@ -53,25 +53,25 @@ public class FavoritosManager {
         if (e instanceof FirebaseFirestoreException) {
             switch (((FirebaseFirestoreException) e).getCode()) {
                 case PERMISSION_DENIED:
-                    ultimoError = "Firestore bloqueó el acceso (PERMISSION_DENIED). "
-                            + "Publica las reglas de firestore.rules en Firebase Console → Firestore → Reglas.";
+                    ultimoError = Idioma.t("Firestore bloqueó el acceso (PERMISSION_DENIED). ", "Firestore blocked access (PERMISSION_DENIED). ")
+                            + Idioma.t("Publica las reglas de firestore.rules en Firebase Console → Firestore → Reglas.", "Publish the firestore.rules rules in Firebase Console → Firestore → Rules.");
                     return;
                 case NOT_FOUND:
-                    ultimoError = "La base de datos de Firestore no existe. "
-                            + "Créala en Firebase Console → Firestore Database → Crear base de datos.";
+                    ultimoError = Idioma.t("La base de datos de Firestore no existe. ", "The Firestore database does not exist. ")
+                            + Idioma.t("Créala en Firebase Console → Firestore Database → Crear base de datos.", "Create it in Firebase Console → Firestore Database → Create database.");
                     return;
                 case UNAVAILABLE:
-                    ultimoError = "Sin conexión con Firestore. Revisa tu Internet.";
+                    ultimoError = Idioma.t("Sin conexión con Firestore. Revisa tu Internet.", "No connection to Firestore. Check your internet.");
                     return;
                 case UNAUTHENTICATED:
-                    ultimoError = "Sesión no válida. Cierra sesión y vuelve a entrar.";
+                    ultimoError = Idioma.t("Sesión no válida. Cierra sesión y vuelve a entrar.", "Invalid session. Sign out and sign in again.");
                     return;
                 default:
                     break;
             }
         }
 
-        ultimoError = e.getMessage() != null ? e.getMessage() : "Error desconocido con Firestore";
+        ultimoError = e.getMessage() != null ? e.getMessage() : Idioma.t("Error desconocido con Firestore", "Unknown Firestore error");
     }
 
     private static CollectionReference coleccion() {

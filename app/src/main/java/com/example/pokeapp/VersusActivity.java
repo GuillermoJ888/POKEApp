@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -38,12 +39,13 @@ import java.util.List;
 public class VersusActivity extends AppCompatActivity {
 
     public static final int TAM_EQUIPO = 3;
-    private static final String JUGADOR_1 = "Jugador 1";
-    private static final String JUGADOR_2 = "Jugador 2";
+    private final String JUGADOR_1 = Idioma.t("Jugador 1", "Player 1");
+    private final String JUGADOR_2 = Idioma.t("Jugador 2", "Player 2");
 
     /** Lugares de cada equipo (null = vacío); se pueden llenar en cualquier orden. */
     private final Pokemon[] equipo1 = new Pokemon[TAM_EQUIPO];
     private final Pokemon[] equipo2 = new Pokemon[TAM_EQUIPO];
+    private Pokemon companero;   // compañero de Mi perfil: rescata al Jugador 1 (tu cuenta), igual que en la Torre
     private Pokemon[] equipoEligiendo;   // a qué equipo va el Pokémon que regresa
 
     private NestedScrollView scroll;
@@ -80,6 +82,7 @@ public class VersusActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cargarCompanero();
         setContentView(R.layout.activity_versus);
 
         scroll = findViewById(R.id.scrollVersus);
@@ -112,8 +115,8 @@ public class VersusActivity extends AppCompatActivity {
         btnIniciar.setEnabled(listos);
         btnIniciar.setAlpha(listos ? 1f : 0.5f);
         tvPaso.setText(listos
-                ? "¡Equipos listos! Toca un Pokémon para cambiarlo o su ✕ para quitarlo."
-                : "Toca un + para agregar un Pokémon (faltan "
+                ? Idioma.t("¡Equipos listos! Toca un Pokémon para cambiarlo o su ✕ para quitarlo.", "Teams ready! Tap a Pokémon to change it or its ✕ to remove it.")
+                : Idioma.t("Toca un + para agregar un Pokémon (faltan ", "Tap a + to add a Pokémon (remaining: ")
                         + (2 * TAM_EQUIPO - contar(equipo1) - contar(equipo2)) + ")");
     }
 
@@ -159,7 +162,7 @@ public class VersusActivity extends AppCompatActivity {
                 });
             } else {
                 img.setImageDrawable(null);
-                nombre.setText("Agregar");
+                nombre.setText(Idioma.t("Agregar", "Add"));
                 vacio.setVisibility(View.VISIBLE);
                 quitar.setVisibility(View.GONE);
             }
@@ -178,7 +181,7 @@ public class VersusActivity extends AppCompatActivity {
 
         equipoEligiendo = equipo;
         lanzadorElegir.launch(ElegirPokemonActivity.crearIntent(this, jugador,
-                jugador + " · lugar " + (posicion + 1) + " de " + TAM_EQUIPO, posicion, excluir));
+                jugador + Idioma.t(" · lugar ", " · slot ") + (posicion + 1) + Idioma.t(" de ", " of ") + TAM_EQUIPO, posicion, excluir));
     }
 
     // ------------------------------------------------------------------
@@ -195,22 +198,37 @@ public class VersusActivity extends AppCompatActivity {
         if (contar(equipo1) < TAM_EQUIPO || contar(equipo2) < TAM_EQUIPO) return;
         lanzadorArena.launch(BattleArenaActivity.crearIntentEquipos(this,
                 lista(equipo1), lista(equipo2), JUGADOR_1, JUGADOR_2, true, true,
-                HistorialManager.MODO_VERSUS, -1));
+                HistorialManager.MODO_VERSUS, -1)
+                .putExtra(BattleArenaActivity.EXTRA_COMPANERO_A,
+                        companero != null ? new com.google.gson.Gson().toJson(companero) : null));
+    }
+
+    /** Carga el compañero elegido en Mi perfil (si lo hay); entra al rescate cuando caen los 3 del Jugador 1. */
+    private void cargarCompanero() {
+        UsuarioManager.obtenerCompanero(id -> {
+            if (id == null || id <= 0) return;
+            com.example.pokeapp.data.CargadorPokemon.cargar(java.util.Collections.singletonList(id), lista -> {
+                if (lista != null && !lista.isEmpty()) companero = lista.get(0);
+            });
+        });
     }
 
     private void mostrarGanador(boolean ganoJugador1, int indice, int hpRestante, int turnos) {
         List<Pokemon> equipoGanador = lista(ganoJugador1 ? equipo1 : equipo2);
         if (equipoGanador.isEmpty()) return;
-        BattlePokemon pokemon = new BattlePokemon(equipoGanador.get(Math.min(indice, equipoGanador.size() - 1)));
+        // Si ganó el compañero de rescate (va después de los 3 del Jugador 1), se muestra a él
+        boolean ganoCompanero = ganoJugador1 && companero != null && indice >= equipoGanador.size();
+        BattlePokemon pokemon = new BattlePokemon(ganoCompanero ? companero
+                : equipoGanador.get(Math.min(indice, equipoGanador.size() - 1)));
 
         View vista = LayoutInflater.from(this).inflate(R.layout.dialog_ganador, null);
         Glide.with(this).load(pokemon.imagen).into((ImageView) vista.findViewById(R.id.imgGanador));
         ((TextView) vista.findViewById(R.id.tvGanador)).setText(ganoJugador1 ? JUGADOR_1 : JUGADOR_2);
         ((TextView) vista.findViewById(R.id.tvContra)).setText(
-                "venció a " + (ganoJugador1 ? JUGADOR_2 : JUGADOR_1) + " con " + pokemon.nombre);
+                Idioma.t("venció a ", "defeated ") + (ganoJugador1 ? JUGADOR_2 : JUGADOR_1) + Idioma.t(" con ", " with ") + pokemon.nombre);
         ((TextView) vista.findViewById(R.id.tvHpGanador)).setText(hpRestante + " / " + pokemon.hpMaxima);
         ((TextView) vista.findViewById(R.id.tvTurnosGanador)).setText(String.valueOf(turnos));
-        ((TextView) vista.findViewById(R.id.btnElegirOtro)).setText("Cambiar equipos");
+        ((TextView) vista.findViewById(R.id.btnElegirOtro)).setText(Idioma.t("Cambiar equipos", "Change teams"));
 
         AlertDialog dialogo = new AlertDialog.Builder(this).setView(vista).create();
         vista.findViewById(R.id.btnRevancha).setOnClickListener(v -> {

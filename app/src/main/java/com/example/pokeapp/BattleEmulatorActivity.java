@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -191,9 +192,9 @@ public class BattleEmulatorActivity extends AppCompatActivity {
         ponerMargenSuperior(tvPaso, hayUno ? 18 : 4);
 
         tvPaso.setText(eligiendoA()
-                ? (elegidoB == null ? "Paso 1 de 2 · Elige al Pokémon A" : "Elige al Pokémon A")
-                : "Paso 2 de 2 · Elige al Pokémon B");
-        btnAceptar.setText(eligiendoA() ? "Aceptar como Pokémon A" : "Aceptar como Pokémon B");
+                ? (elegidoB == null ? Idioma.t("Paso 1 de 2 · Elige al Pokémon A", "Step 1 of 2 · Choose Pokémon A") : Idioma.t("Elige al Pokémon A", "Choose Pokémon A"))
+                : Idioma.t("Paso 2 de 2 · Elige al Pokémon B", "Step 2 of 2 · Choose Pokémon B"));
+        btnAceptar.setText(eligiendoA() ? Idioma.t("Aceptar como Pokémon A", "Accept as Pokémon A") : Idioma.t("Aceptar como Pokémon B", "Accept as Pokémon B"));
 
         actualizarPopulares();
     }
@@ -288,7 +289,7 @@ public class BattleEmulatorActivity extends AppCompatActivity {
         String query = etBuscar.getText().toString().trim();
 
         if (TextUtils.isEmpty(query)) {
-            Toast.makeText(this, "Escribe un nombre o número", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("Escribe un nombre o número", "Type a name or number"), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -320,7 +321,7 @@ public class BattleEmulatorActivity extends AppCompatActivity {
                 progressSeleccion.setVisibility(View.GONE);
 
                 if (!response.isSuccessful() || response.body() == null) {
-                    mostrarMensajeSeleccion("No se encontró ningún Pokémon con ese nombre o número");
+                    mostrarMensajeSeleccion(Idioma.t("No se encontró ningún Pokémon con ese nombre o número", "No Pokémon found with that name or number"));
                     actualizarPopulares();
                     return;
                 }
@@ -333,7 +334,7 @@ public class BattleEmulatorActivity extends AppCompatActivity {
             public void onFailure(Call<Pokemon> call, Throwable t) {
                 if (token != tokenCarga || isFinishing() || isDestroyed()) return;
                 progressSeleccion.setVisibility(View.GONE);
-                mostrarMensajeSeleccion("Error de conexión. Revisa tu Internet e intenta de nuevo");
+                mostrarMensajeSeleccion(Idioma.t("Error de conexión. Revisa tu Internet e intenta de nuevo", "Connection error. Check your internet and try again"));
                 actualizarPopulares();
             }
         });
@@ -375,8 +376,8 @@ public class BattleEmulatorActivity extends AppCompatActivity {
             }
         }
 
-        return "HP " + hp + " · Ataque " + atk + " · Defensa " + def
-                + "\nAt. Esp. " + atkEsp + " · Def. Esp. " + defEsp + " · Velocidad " + vel;
+        return "HP " + hp + Idioma.t(" · Ataque ", " · Attack ") + atk + Idioma.t(" · Defensa ", " · Defense ") + def
+                + Idioma.t("\nAt. Esp. ", "\nSp. Atk ") + atkEsp + Idioma.t(" · Def. Esp. ", " · Sp. Def ") + defEsp + Idioma.t(" · Velocidad ", " · Speed ") + vel;
     }
 
     private void aceptar() {
@@ -403,8 +404,8 @@ public class BattleEmulatorActivity extends AppCompatActivity {
 
     private String mensajeRepetido() {
         return eligiendoA()
-                ? "Ese Pokémon ya es el B. Elige uno diferente para A."
-                : "Ese Pokémon ya es el A. Elige uno diferente para B.";
+                ? Idioma.t("Ese Pokémon ya es el B. Elige uno diferente para A.", "That Pokémon is already B. Choose a different one for A.")
+                : Idioma.t("Ese Pokémon ya es el A. Elige uno diferente para B.", "That Pokémon is already A. Choose a different one for B.");
     }
 
     private void limpiarBusqueda() {
@@ -458,7 +459,7 @@ public class BattleEmulatorActivity extends AppCompatActivity {
         View vista = LayoutInflater.from(this).inflate(R.layout.dialog_ganador, null);
         Glide.with(this).load(ganador.imagen).into((ImageView) vista.findViewById(R.id.imgGanador));
         ((TextView) vista.findViewById(R.id.tvGanador)).setText(ganador.nombre);
-        ((TextView) vista.findViewById(R.id.tvContra)).setText("venció a " + perdedor.nombre);
+        ((TextView) vista.findViewById(R.id.tvContra)).setText(Idioma.t("venció a ", "defeated ") + perdedor.nombre);
         ((TextView) vista.findViewById(R.id.tvHpGanador)).setText(hpRestante + " / " + ganador.hpMaxima);
         ((TextView) vista.findViewById(R.id.tvTurnosGanador)).setText(String.valueOf(turnos));
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Pikachu Run: el juego ocupa toda la pantalla y encima solo va la flecha de regresar -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.pokeapp.PikachuRunView
+        android:id="@+id/juegoPikachu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/btnRegresar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="12dp"
+        android:background="@drawable/bg_boton_regresar"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="←"
+        android:textColor="#FFFFFF"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:contentDescription="@string/t_regresar" />
+</FrameLayout>

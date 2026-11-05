@@ -67,6 +67,7 @@ public class Modulo {
         m.add(new Modulo("safari", "f", "Safari Pokémon", "Captura Pokémon", "🌿", R.drawable.ic_mod_safari, 0xFF166534, 0xFF4ADE80, SafariActivity.class));
         m.add(new Modulo("tipos", "g", "Maestro de Tipos", "Ventajas de tipo", "🔥", R.drawable.ic_mod_tipos, 0xFFB91C1C, 0xFFF59E0B, MaestroTiposActivity.class));
         m.add(new Modulo("memory", "h", "PokéMemory", "Encuentra parejas", "🃏", R.drawable.ic_mod_memory, 0xFF9D174D, 0xFFF472B6, PokeMemoryActivity.class));
+        m.add(new Modulo("pikachu", "", "Pikachu Run", "Salta y esquiva", "⚡", 0, 0xFFCA8A04, 0xFFFDE047, PikachuRunActivity.class));
         m.add(new Modulo("favoritos", "i", "Favoritos", "En la nube ☁️", "⭐", R.drawable.ic_mod_favoritos, 0xFFB45309, 0xFFFACC15, FavoritosActivity.class));
         m.add(new Modulo("historial", "j", "Historial", "Tus batallas", "📜", R.drawable.ic_mod_historial, 0xFF374151, 0xFF9CA3AF, HistorialActivity.class));
         m.add(new Modulo("medallas", "k", "Medallas", "10 logros", "🏅", R.drawable.ic_mod_medallas, 0xFF92400E, 0xFFEAB308, MedallasActivity.class));

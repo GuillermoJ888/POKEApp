@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,7 +35,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
     private static final String RECORD = "recordMemory";
     private static final int COLUMNAS = 4;
     private static final int[] PAREJAS = {6, 8, 10};
-    private static final String[] NIVELES = {"Fácil", "Normal", "Difícil"};
+    private final String[] NIVELES = {Idioma.t("Fácil", "Easy"), "Normal", Idioma.t("Difícil", "Hard")};
     private static final long PAUSA_FALLO = 800;
 
     private final Random random = new Random();
@@ -104,8 +105,8 @@ public class PokeMemoryActivity extends AppCompatActivity {
         tvIntentos.setText("🔁 " + intentos);
         tvParejas.setText("🃏 " + encontradas + "/" + (jugando ? cartas.size() / 2 : PAREJAS[nivel]));
         tvTiempo.setText(String.format(Locale.ROOT, "⏱ %d:%02d", segundos / 60, segundos % 60));
-        tvRecord.setText("🏆 Récord: " + record);
-        btnNivel.setText("Dificultad: " + NIVELES[nivel] + " (" + PAREJAS[nivel] + " parejas) · tocar para cambiar");
+        tvRecord.setText(Idioma.t("🏆 Récord: ", "🏆 Record: ") + record);
+        btnNivel.setText(Idioma.t("Dificultad: ", "Difficulty: ") + NIVELES[nivel] + " (" + PAREJAS[nivel] + Idioma.t(" parejas) · tocar para cambiar", " pairs) · tap to change"));
     }
 
     private void empezar() {
@@ -134,7 +135,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
             final int posicion = i;
             ImageView carta = new ImageView(this);
             carta.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            carta.setContentDescription("Carta " + (i + 1));
+            carta.setContentDescription(Idioma.t("Carta ", "Card ") + (i + 1));
             carta.setOnClickListener(v -> voltear(posicion));
             tapar(carta);
 
@@ -152,7 +153,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
 
         btnJugar.setVisibility(View.GONE);
         btnNivel.setVisibility(View.GONE);
-        tvMensaje.setText("Encuentra las " + PAREJAS[nivel] + " parejas");
+        tvMensaje.setText(Idioma.t("Encuentra las ", "Find the ") + PAREJAS[nivel] + Idioma.t(" parejas", " pairs"));
         pintarMarcador();
     }
 
@@ -234,9 +235,9 @@ public class PokeMemoryActivity extends AppCompatActivity {
 
         jugando = false;
         relojCorriendo = false;
-        tvMensaje.setText("🎉 ¡Completado! " + puntos + " puntos\n" + intentos + " intentos en "
-                + segundos + " s" + (nuevoRecord ? "\n🏆 ¡Nuevo récord!" : ""));
-        ((TextView) btnJugar).setText("🔁 Jugar otra vez");
+        tvMensaje.setText(Idioma.t("🎉 ¡Completado! ", "🎉 Completed! ") + puntos + Idioma.t(" puntos\n", " points\n") + intentos + Idioma.t(" intentos en ", " tries in ")
+                + segundos + " s" + (nuevoRecord ? Idioma.t("\n🏆 ¡Nuevo récord!", "\n🏆 New record!") : ""));
+        ((TextView) btnJugar).setText(Idioma.t("🔁 Jugar otra vez", "🔁 Play again"));
         btnJugar.setVisibility(View.VISIBLE);
         btnNivel.setVisibility(View.VISIBLE);
         pintarMarcador();

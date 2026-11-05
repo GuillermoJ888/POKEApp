@@ -246,4 +246,5 @@
     <string name="t_pts_racha">%1$d pts · streak %2$d</string>
     <string name="t_obtenida">Earned</string>
     <string name="t_obtenida_el">Earned on %1$s</string>
+    <string name="mod_pikachu_desc">Jump and dodge</string>
 </resources>

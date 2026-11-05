@@ -1,5 +1,6 @@
 package com.example.pokeapp.battle;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 
@@ -33,12 +34,12 @@ public class Escenario {
     private final int centroPlataforma, bordePlataforma, contornoPlataforma;
 
     public static final List<Escenario> TODOS = Collections.unmodifiableList(Arrays.asList(
-            new Escenario("Bosque", R.drawable.bg_escenario_bosque, 0xFFC8E89A, 0xFF7DBF55, 0xFF4E8A32),
-            new Escenario("Montaña nevada", R.drawable.bg_escenario_nieve, 0xFFFFFFFF, 0xFFCFE0F0, 0xFF9DB8D6),
-            new Escenario("Desierto", R.drawable.bg_escenario_desierto, 0xFFF6DCA0, 0xFFD9AE63, 0xFFB5853F),
-            new Escenario("Playa", R.drawable.bg_escenario_playa, 0xFFFFF4D6, 0xFFEBD39A, 0xFFC9A866),
+            new Escenario(Idioma.t("Bosque", "Forest"), R.drawable.bg_escenario_bosque, 0xFFC8E89A, 0xFF7DBF55, 0xFF4E8A32),
+            new Escenario(Idioma.t("Montaña nevada", "Snowy mountain"), R.drawable.bg_escenario_nieve, 0xFFFFFFFF, 0xFFCFE0F0, 0xFF9DB8D6),
+            new Escenario(Idioma.t("Desierto", "Desert"), R.drawable.bg_escenario_desierto, 0xFFF6DCA0, 0xFFD9AE63, 0xFFB5853F),
+            new Escenario(Idioma.t("Playa", "Beach"), R.drawable.bg_escenario_playa, 0xFFFFF4D6, 0xFFEBD39A, 0xFFC9A866),
             // Imagen de 800 × 1328 con las plataformas ya dibujadas (juntas: Pokémon al 75 %)
-            new Escenario("Bosque encantado", R.drawable.bg_escenario_bosque_encantado,
+            new Escenario(Idioma.t("Bosque encantado", "Enchanted forest"), R.drawable.bg_escenario_bosque_encantado,
                     0.696f, 0.527f, 0.338f, 0.655f, 0.75f)
     ));
 

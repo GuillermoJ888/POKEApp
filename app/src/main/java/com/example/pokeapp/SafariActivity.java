@@ -26,7 +26,9 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import com.bumptech.glide.Glide;
 import com.example.pokeapp.battle.BattlePokemon;
 import com.example.pokeapp.data.CargadorPokemon;
+import com.example.pokeapp.data.Idioma;
 import com.example.pokeapp.data.PokemonMini;
+import com.example.pokeapp.data.Preferencias;
 import com.example.pokeapp.data.UsuarioManager;
 
 import java.util.ArrayList;
@@ -42,7 +44,10 @@ import java.util.Random;
  *   A los Pokémon fuertes (suma de stats alta) se les resta hasta 25 puntos.
  * - Cada safari empieza con 8 Poké Ball, 4 Super Ball y 2 Ultra Ball; termina al acabarse.
  * - Lanzamiento estilo Pokémon GO: se elige la Pokéball con su botón y se desliza con el dedo hacia
- *   el Pokémon. Si va floja o desviada, se pierde. Tiro al centro: +5 %.
+ *   el Pokémon. Si va floja o desviada, se pierde.
+ * - Aro de captura: se encoge sin parar y su color indica la dificultad (verde, amarillo, naranja, rojo).
+ *   Si la bola cae dentro del aro da un bono según lo chico que esté: Bien +5, Genial +12, Excelente +20.
+ * - Rango de entrenador según los Pokémon distintos de la colección (Novato a Leyenda).
  * - Bola curva (+10 %): antes de lanzarla se gira en círculos con el dedo hasta que empieza a brillar.
  *   Tocar otra vez el botón de la bola elegida la lanza recta, sin bonos.
  * - Si no queda atrapado, el Pokémon puede escapar (25 %). También se puede huir del encuentro.
@@ -55,7 +60,9 @@ public class SafariActivity extends AppCompatActivity {
     private static final int[] INICIALES = {8, 4, 2};
     private static final int[] COLOR = {0xFFE3350D, 0xFF1D4ED8, 0xFFB8860B};
     private static final int PROBABILIDAD_ESCAPE = 25;
-    private static final int BONO_CURVA = 10, BONO_CENTRO = 5;
+    private static final int BONO_CURVA = 10, BONO_BIEN = 5, BONO_GENIAL = 12, BONO_EXCELENTE = 20;
+    private static final float ARO_EXCELENTE = 0.45f, ARO_GENIAL = 0.72f;   // tamaño del aro (1 = completo)
+    private static final int[] RANGO_MINIMO = {0, 5, 15, 30, 60, 100};      // Pokémon distintos capturados
 
     // Lanzamiento con el dedo (medidas en dp)
     private static final float ARRASTRE_MINIMO = 40f;      // menos que esto no cuenta como lanzamiento
@@ -87,6 +94,7 @@ public class SafariActivity extends AppCompatActivity {
     private List<PokemonMini> coleccion = new ArrayList<>();
 
     private ImageView imgPokemon, imgBola;
+    private AroCaptura aro;
     private TextView tvNombre, tvDatos, tvMensaje, tvColeccion;
     private final TextView[] botones = new TextView[BOLAS.length];
     private View btnHuir, btnNuevo;
@@ -99,6 +107,7 @@ public class SafariActivity extends AppCompatActivity {
 
         imgPokemon = findViewById(R.id.imgSafari);
         imgBola = findViewById(R.id.imgBolaSafari);
+        aro = findViewById(R.id.aroSafari);
         tvNombre = findViewById(R.id.tvNombreSafari);
         tvDatos = findViewById(R.id.tvDatosSafari);
         tvMensaje = findViewById(R.id.tvMensajeSafari);
@@ -124,7 +133,7 @@ public class SafariActivity extends AppCompatActivity {
         }
         btnHuir.setOnClickListener(v -> {
             if (ocupado || salvaje == null) return;
-            tvMensaje.setText("Huiste de " + salvaje.nombre + ".");
+            tvMensaje.setText(Idioma.t("Huiste de " + salvaje.nombre + ".", "You ran away from " + salvaje.nombre + "."));
             siguienteEncuentro(700);
         });
         btnNuevo.setOnClickListener(v -> nuevoSafari());
@@ -163,13 +172,35 @@ public class SafariActivity extends AppCompatActivity {
         return Math.max(5, PROBABILIDAD[tipo] - dificultad);
     }
 
+    private int nivelRango() {
+        int nivel = 0;
+        for (int i = 0; i < RANGO_MINIMO.length; i++) if (coleccion.size() >= RANGO_MINIMO[i]) nivel = i;
+        return nivel;
+    }
+
+    private String rango() {
+        String[] nombres = Preferencias.esIngles()
+                ? new String[]{"Rookie", "Explorer", "Expert", "Veteran", "Master", "Legend"}
+                : new String[]{"Novato", "Explorador", "Experto", "Veterano", "Maestro", "Leyenda"};
+        return nombres[nivelRango()];
+    }
+
+    /** Color del aro según lo difícil que es el Pokémon, como en Pokémon GO. */
+    private int colorAro() {
+        if (dificultad <= 6) return 0xFF4ADE80;
+        if (dificultad <= 13) return 0xFFFACC15;
+        if (dificultad <= 19) return 0xFFFB923C;
+        return 0xFFEF4444;
+    }
+
     private boolean quedanBolas() {
         for (int n : bolas) if (n > 0) return true;
         return false;
     }
 
     private void pintar() {
-        tvColeccion.setText("🎒 Colección: " + coleccion.size() + " · Hoy: " + capturadosHoy);
+        tvColeccion.setText(Idioma.t("🏅 Rango " + rango() + " · 🎒 " + coleccion.size() + " · Hoy: " + capturadosHoy,
+                "🏅 " + rango() + " rank · 🎒 " + coleccion.size() + " · Today: " + capturadosHoy));
         boolean hayPokemon = salvaje != null;
         for (int i = 0; i < BOLAS.length; i++) {
             botones[i].setText(BOLAS[i] + "\n×" + bolas[i] + (hayPokemon ? " · " + probabilidad(i) + "%" : ""));
@@ -186,6 +217,7 @@ public class SafariActivity extends AppCompatActivity {
     private void siguienteEncuentro(long espera) {
         ocupado = true;
         salvaje = null;
+        aro.detener();
         handler.postDelayed(() -> {
             if (isFinishing() || isDestroyed()) return;
             if (!quedanBolas()) {
@@ -197,14 +229,15 @@ public class SafariActivity extends AppCompatActivity {
             imgBola.setVisibility(View.INVISIBLE);
             tvNombre.setText("…");
             tvDatos.setText("");
-            tvMensaje.setText("Algo se mueve entre la hierba…");
+            tvMensaje.setText(getString(R.string.t_algo_se_mueve_entre_la_hierba));
             pintar();
 
             int id = CargadorPokemon.idsAleatorios(1, false, random).get(0);
             CargadorPokemon.cargar(Collections.singletonList(id), lista -> {
                 if (isFinishing() || isDestroyed()) return;
                 if (lista == null) {
-                    tvMensaje.setText("No se pudo cargar el Pokémon. Revisa tu internet.");
+                    tvMensaje.setText(Idioma.t("No se pudo cargar el Pokémon. Revisa tu internet.",
+                            "Could not load the Pokémon. Check your internet."));
                     btnNuevo.setVisibility(View.VISIBLE);
                     return;
                 }
@@ -226,11 +259,16 @@ public class SafariActivity extends AppCompatActivity {
         imgPokemon.setAlpha(1f);
         imgPokemon.animate().scaleX(1f).scaleY(1f).setDuration(350).start();
 
-        tvNombre.setText(p.nombre + (yaCapturado(p.id) ? " ✔" : ""));
-        tvDatos.setText(String.format(Locale.ROOT, "N.º %d · %s\nHP %d · Ataque %d · Defensa %d · Velocidad %d",
+        // PC estilo Pokémon GO: según sus stats y su nivel al azar (solo informativo)
+        int pc = total * (80 + random.nextInt(121)) / 100;
+        tvNombre.setText(Idioma.t("PC ", "CP ") + pc + " · " + p.nombre + (yaCapturado(p.id) ? " ✔" : ""));
+        tvDatos.setText(String.format(Locale.ROOT, Idioma.t(
+                "N.º %d · %s\nHP %d · Ataque %d · Defensa %d · Velocidad %d",
+                "No. %d · %s\nHP %d · Attack %d · Defense %d · Speed %d"),
                 p.id, p.tiposTexto(), p.hpMaxima, p.ataque, p.defensa, p.velocidad));
-        tvMensaje.setText("¡Un " + p.nombre + " salvaje apareció!\nDesliza la Pokéball hacia él. "
-                + "Si antes la giras en círculos sale bola curva (+" + BONO_CURVA + " %).");
+        tvMensaje.setText(Idioma.t(
+                "¡Un " + p.nombre + " salvaje apareció!\nLánzala cuando el aro esté chico; si antes la giras sale curva (+" + BONO_CURVA + " %).",
+                "A wild " + p.nombre + " appeared!\nThrow when the ring is small; spin it first for a curveball (+" + BONO_CURVA + "%)."));
         ocupado = false;
         prepararBola();
         pintar();
@@ -278,6 +316,7 @@ public class SafariActivity extends AppCompatActivity {
         imgBola.clearColorFilter();
         curva = 0;
         imgBola.setVisibility(bolas[seleccionada] > 0 ? View.VISIBLE : View.INVISIBLE);
+        if (salvaje != null && bolas[seleccionada] > 0) aro.iniciar(colorAro());
     }
 
     /** El dedo arrastra la bola (y puede girarla); al soltarla hacia arriba con impulso, sale lanzada. */
@@ -337,7 +376,8 @@ public class SafariActivity extends AppCompatActivity {
             curva = giro > 0 ? 1 : -1;
             imgBola.setColorFilter(0x66FFE066);   // brillo dorado: ya es bola curva
             Efectos.vibrar(this, 40);
-            tvMensaje.setText("🌀 ¡Bola curva lista! Ahora lánzala hacia " + salvaje.nombre + ".");
+            tvMensaje.setText(Idioma.t("🌀 ¡Bola curva lista! Ahora lánzala hacia " + salvaje.nombre + ".",
+                    "🌀 Curveball ready! Now throw it at " + salvaje.nombre + "."));
         }
     }
 
@@ -393,11 +433,12 @@ public class SafariActivity extends AppCompatActivity {
         float distancia = Math.abs(x1 - centroPokemonX);
         boolean llega = fuerza >= 1f;
         boolean acierta = llega && distancia <= imgPokemon.getWidth() * 0.5f;
-        boolean alCentro = conBonos && acierta && distancia <= imgPokemon.getWidth() * 0.16f;
         boolean esCurva = conBonos && curva != 0;
         float arco = curva * 85f * dp;
 
-        tvMensaje.setText(esCurva ? "¡Bola curva con " + BOLAS[tipo] + "!" : "¡Lanzaste una " + BOLAS[tipo] + "!");
+        tvMensaje.setText(esCurva
+                ? Idioma.t("¡Bola curva con " + BOLAS[tipo] + "!", "Curveball with " + BOLAS[tipo] + "!")
+                : Idioma.t("¡Lanzaste una " + BOLAS[tipo] + "!", "You threw a " + BOLAS[tipo] + "!"));
 
         ValueAnimator vuelo = ValueAnimator.ofFloat(0f, 1f);
         vuelo.setDuration(esCurva ? 620 : 460);
@@ -414,16 +455,35 @@ public class SafariActivity extends AppCompatActivity {
             public void onAnimationEnd(Animator animacion) {
                 if (isFinishing() || isDestroyed() || salvaje == null) return;
                 imgBola.setRotation(720f);
+                // Se mide el aro justo al llegar: cuanto más chico, mejor tiro
+                boolean dentroDelAro = conBonos && acierta && distancia <= aro.radio();
+                float tamanoAro = aro.fraccion();
+                aro.detener();
                 if (!acierta) {
-                    fallar(llega ? "¡Se fue de lado!" : "¡Se quedó corta!");
+                    fallar(llega ? Idioma.t("¡Se fue de lado!", "It went wide!")
+                            : Idioma.t("¡Se quedó corta!", "It fell short!"));
                     return;
                 }
-                int probabilidad = Math.min(95, probabilidad(tipo)
-                        + (esCurva ? BONO_CURVA : 0) + (alCentro ? BONO_CENTRO : 0));
+                int bonoAro = 0;
+                String tiro = "";
+                if (dentroDelAro) {
+                    if (tamanoAro <= ARO_EXCELENTE) {
+                        bonoAro = BONO_EXCELENTE;
+                        tiro = Idioma.t("✨ ¡Excelente! ", "✨ Excellent! ");
+                        Efectos.vibrar(SafariActivity.this, 60);
+                    } else if (tamanoAro <= ARO_GENIAL) {
+                        bonoAro = BONO_GENIAL;
+                        tiro = Idioma.t("🎯 ¡Genial! ", "🎯 Great! ");
+                    } else {
+                        bonoAro = BONO_BIEN;
+                        tiro = Idioma.t("👍 ¡Bien! ", "👍 Nice! ");
+                    }
+                }
+                int probabilidad = Math.min(95, probabilidad(tipo) + (esCurva ? BONO_CURVA : 0) + bonoAro);
                 boolean capturado = random.nextInt(100) < probabilidad;
-                if (esCurva || alCentro) {
-                    tvMensaje.setText((alCentro ? "🎯 ¡Al centro! " : "") + (esCurva ? "🌀 ¡Bola curva! " : "")
-                            + "\nProbabilidad: " + probabilidad + " %");
+                if (esCurva || dentroDelAro) {
+                    tvMensaje.setText(tiro + (esCurva ? Idioma.t("🌀 ¡Bola curva! ", "🌀 Curveball! ") : "")
+                            + Idioma.t("\nProbabilidad: " + probabilidad + " %", "\nChance: " + probabilidad + "%"));
                 }
                 // 2) El Pokémon entra en la bola
                 imgPokemon.animate().scaleX(0f).scaleY(0f).alpha(0f).setDuration(250)
@@ -439,11 +499,12 @@ public class SafariActivity extends AppCompatActivity {
         imgBola.animate().alpha(0f).setDuration(220).withEndAction(() -> {
             if (isFinishing() || isDestroyed() || salvaje == null) return;
             if (!quedanBolas()) {
-                tvMensaje.setText(motivo + " Perdiste la Pokéball.");
+                tvMensaje.setText(motivo + Idioma.t(" Perdiste la Pokéball.", " You lost the Poké Ball."));
                 siguienteEncuentro(1200);   // sin bolas: ahí se termina el safari
                 return;
             }
-            tvMensaje.setText(motivo + " Perdiste la Pokéball.\nDesliza otra hacia " + salvaje.nombre + ".");
+            tvMensaje.setText(motivo + Idioma.t(" Perdiste la Pokéball.\nDesliza otra hacia " + salvaje.nombre + ".",
+                    " You lost the Poké Ball.\nSwipe another at " + salvaje.nombre + "."));
             ocupado = false;
             prepararBola();
             pintar();
@@ -470,11 +531,17 @@ public class SafariActivity extends AppCompatActivity {
         if (capturado) {
             capturadosHoy++;
             boolean nuevo = !yaCapturado(salvaje.id);
+            int rangoAntes = nivelRango();
             if (nuevo) coleccion.add(new PokemonMini(salvaje.id, salvaje.nombre));
+            String subioRango = nivelRango() > rangoAntes
+                    ? Idioma.t("\n🏅 ¡Subiste a rango " + rango() + "!", "\n🏅 You reached " + rango() + " rank!") : "";
             UsuarioManager.registrarCaptura(salvaje.id, salvaje.nombre);
             Efectos.victoria(this);   // sonido y vibración (según Configuración)
-            tvMensaje.setText("⭐ ¡" + salvaje.nombre + " fue capturado!"
-                    + (nuevo ? "\nSe agregó a tu colección." : "\nYa lo tenías en tu colección."));
+            tvMensaje.setText(Idioma.t(
+                    "⭐ ¡" + salvaje.nombre + " fue capturado!"
+                            + (nuevo ? "\nSe agregó a tu colección." : "\nYa lo tenías en tu colección."),
+                    "⭐ " + salvaje.nombre + " was caught!"
+                            + (nuevo ? "\nAdded to your collection." : "\nAlready in your collection.")) + subioRango);
             imgBola.animate().scaleX(1.25f).scaleY(1.25f).setDuration(200).withEndAction(() ->
                     imgBola.animate().scaleX(1f).scaleY(1f).setDuration(200).start()).start();
             siguienteEncuentro(1700);
@@ -486,15 +553,15 @@ public class SafariActivity extends AppCompatActivity {
         imgPokemon.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(250).start();
 
         if (random.nextInt(100) < PROBABILIDAD_ESCAPE) {
-            tvMensaje.setText("¡" + salvaje.nombre + " se liberó y escapó!");
+            tvMensaje.setText(Idioma.t("¡" + salvaje.nombre + " se liberó y escapó!", salvaje.nombre + " broke free and fled!"));
             imgPokemon.animate().translationX(imgPokemon.getWidth() * 2f).setStartDelay(500).setDuration(350)
                     .withEndAction(() -> imgPokemon.setTranslationX(0f)).start();
             siguienteEncuentro(1500);
         } else if (!quedanBolas()) {
-            tvMensaje.setText("¡" + salvaje.nombre + " se liberó!");
+            tvMensaje.setText(Idioma.t("¡" + salvaje.nombre + " se liberó!", salvaje.nombre + " broke free!"));
             siguienteEncuentro(1200);   // sin bolas: ahí se termina el safari
         } else {
-            tvMensaje.setText("¡" + salvaje.nombre + " se liberó! Intenta otra vez.");
+            tvMensaje.setText(Idioma.t("¡" + salvaje.nombre + " se liberó! Intenta otra vez.", salvaje.nombre + " broke free! Try again."));
             ocupado = false;
             prepararBola();
             pintar();
@@ -505,10 +572,11 @@ public class SafariActivity extends AppCompatActivity {
         salvaje = null;
         imgPokemon.setVisibility(View.INVISIBLE);
         imgBola.setVisibility(View.INVISIBLE);
-        tvNombre.setText("Safari terminado");
+        tvNombre.setText(Idioma.t("Safari terminado", "Safari over"));
         tvDatos.setText("");
-        tvMensaje.setText("Te quedaste sin Pokéball.\nCapturaste " + capturadosHoy
-                + (capturadosHoy == 1 ? " Pokémon" : " Pokémon") + " en este safari.");
+        tvMensaje.setText(Idioma.t(
+                "Te quedaste sin Pokéball.\nCapturaste " + capturadosHoy + " Pokémon en este safari.",
+                "You ran out of Poké Balls.\nYou caught " + capturadosHoy + " Pokémon in this safari."));
         btnNuevo.setVisibility(View.VISIBLE);
         pintar();
     }
@@ -519,7 +587,8 @@ public class SafariActivity extends AppCompatActivity {
 
     private void mostrarColeccion() {
         if (coleccion.isEmpty()) {
-            Toast.makeText(this, "Aún no has capturado ningún Pokémon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("Aún no has capturado ningún Pokémon", "You haven't caught any Pokémon yet"),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
         float dp = getResources().getDisplayMetrics().density;
@@ -554,9 +623,9 @@ public class SafariActivity extends AppCompatActivity {
         ScrollView scroll = new ScrollView(this);
         scroll.addView(grid);
         new AlertDialog.Builder(this)
-                .setTitle("🎒 Mi colección (" + coleccion.size() + ")")
+                .setTitle(Idioma.t("🎒 Mi colección (", "🎒 My collection (") + coleccion.size() + ")")
                 .setView(scroll)
-                .setPositiveButton("Cerrar", null)
+                .setPositiveButton(Idioma.t("Cerrar", "Close"), null)
                 .show();
     }
 }

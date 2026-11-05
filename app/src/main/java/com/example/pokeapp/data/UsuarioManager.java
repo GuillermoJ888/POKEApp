@@ -206,16 +206,18 @@ public class UsuarioManager {
     public static final String RACHA_QUIEN = "rachaQuien";
     public static final String RECORD_TIPOS = "recordTipos";
     public static final String RECORD_MEMORY = "recordMemory";
+    public static final String RECORD_PIKACHU = "recordPikachu";
 
     /** Récords de los minijuegos y tamaño de la colección del Safari, para Mi perfil. */
     public static class ResumenJuegos {
-        public final int recordQuien, rachaQuien, recordTipos, recordMemory, capturados;
+        public final int recordQuien, rachaQuien, recordTipos, recordMemory, recordPikachu, capturados;
 
-        ResumenJuegos(int recordQuien, int rachaQuien, int recordTipos, int recordMemory, int capturados) {
+        ResumenJuegos(int recordQuien, int rachaQuien, int recordTipos, int recordMemory, int recordPikachu, int capturados) {
             this.recordQuien = recordQuien;
             this.rachaQuien = rachaQuien;
             this.recordTipos = recordTipos;
             this.recordMemory = recordMemory;
+            this.recordPikachu = recordPikachu;
             this.capturados = capturados;
         }
     }
@@ -224,7 +226,7 @@ public class UsuarioManager {
     public static void obtenerResumenJuegos(@NonNull FavoritosManager.Resultado<ResumenJuegos> callback) {
         DocumentReference doc = documento();
         if (doc == null) {
-            callback.alTerminar(new ResumenJuegos(0, 0, 0, 0, 0));
+            callback.alTerminar(new ResumenJuegos(0, 0, 0, 0, 0, 0));
             return;
         }
 
@@ -235,8 +237,9 @@ public class UsuarioManager {
                     valor(snapshot.getLong(RACHA_QUIEN)),
                     valor(snapshot.getLong(RECORD_TIPOS)),
                     valor(snapshot.getLong(RECORD_MEMORY)),
+                    valor(snapshot.getLong(RECORD_PIKACHU)),
                     capturados instanceof List ? ((List<?>) capturados).size() : 0));
-        }).addOnFailureListener(e -> callback.alTerminar(new ResumenJuegos(0, 0, 0, 0, 0)));
+        }).addOnFailureListener(e -> callback.alTerminar(new ResumenJuegos(0, 0, 0, 0, 0, 0)));
     }
 
     /**
@@ -262,6 +265,7 @@ public class UsuarioManager {
         datos.put(RACHA_QUIEN, FieldValue.delete());
         datos.put(RECORD_TIPOS, FieldValue.delete());
         datos.put(RECORD_MEMORY, FieldValue.delete());
+        datos.put(RECORD_PIKACHU, FieldValue.delete());
 
         doc.set(datos, SetOptions.merge()).addOnSuccessListener(v ->
                 // El historial es una subcolección: se borra documento por documento, en un lote
@@ -280,7 +284,12 @@ public class UsuarioManager {
         ).addOnFailureListener(e -> callback.alTerminar(false));
     }
 
-    public static final int MAX_MEDALLAS = 10;
+    /** Medallas 1–10: una por cada Torre completada. */
+    public static final int MEDALLAS_TORRE = 10;
+    /** Medallas especiales: 11 = Pikachu Run (PUNTOS_MEDALLA_PIKACHU), 12 = vencer al jefe secreto. */
+    public static final int MEDALLA_PIKACHU_RUN = 11, MEDALLA_JEFE_SECRETO = 12;
+    public static final int PUNTOS_MEDALLA_PIKACHU = 1000;
+    public static final int MAX_MEDALLAS = 12;
 
     /** Nivel de la Torre que, al ganarlo, la completa (el jefe final). */
     public static final int NIVEL_JEFE_FINAL = 6;
@@ -319,7 +328,7 @@ public class UsuarioManager {
 
             // La siguiente medalla que le falta (1, 2, 3… hasta 10); con las 10 ya no hay más
             List<Integer> nuevas = new ArrayList<>();
-            for (int numero = 1; numero <= MAX_MEDALLAS; numero++) {
+            for (int numero = 1; numero <= MEDALLAS_TORRE; numero++) {
                 if (tiene.add(numero)) {
                     nuevas.add(numero);
                     break;
@@ -340,6 +349,44 @@ public class UsuarioManager {
                 datos.put("medallasObtenidas", FieldValue.arrayUnion(registros));
             }
 
+            doc.set(datos, SetOptions.merge())
+                    .addOnSuccessListener(v -> callback.alTerminar(nuevas))
+                    .addOnFailureListener(e -> callback.alTerminar(null));
+        }).addOnFailureListener(e -> callback.alTerminar(null));
+    }
+
+    /**
+     * Medalla especial (11 o 12): se da una sola vez. Devuelve [numero] si es nueva,
+     * lista vacía si ya la tenía o null si falló.
+     */
+    @SuppressWarnings("unchecked")
+    public static void otorgarMedallaEspecial(int numero, @NonNull FavoritosManager.Resultado<List<Integer>> callback) {
+        DocumentReference doc = documento();
+        if (doc == null) {
+            callback.alTerminar(null);
+            return;
+        }
+        doc.get().addOnSuccessListener(snapshot -> {
+            Set<Integer> tiene = new HashSet<>();
+            Object lista = snapshot.get("medallasObtenidas");
+            if (lista instanceof List) {
+                for (Object o : (List<Object>) lista) {
+                    Object n = o instanceof Map ? ((Map<String, Object>) o).get("numero") : null;
+                    if (n instanceof Number) tiene.add(((Number) n).intValue());
+                }
+            }
+            if (!tiene.add(numero)) {
+                callback.alTerminar(new ArrayList<>());
+                return;
+            }
+            Map<String, Object> medalla = new HashMap<>();
+            medalla.put("numero", numero);
+            medalla.put("fecha", Timestamp.now());
+            Map<String, Object> datos = new HashMap<>();
+            datos.put("medallas", tiene.size());
+            datos.put("medallasObtenidas", FieldValue.arrayUnion(medalla));
+            List<Integer> nuevas = new ArrayList<>();
+            nuevas.add(numero);
             doc.set(datos, SetOptions.merge())
                     .addOnSuccessListener(v -> callback.alTerminar(nuevas))
                     .addOnFailureListener(e -> callback.alTerminar(null));

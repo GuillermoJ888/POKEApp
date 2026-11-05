@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
@@ -52,7 +53,7 @@ public final class Animaciones {
         columna.setGravity(Gravity.CENTER_HORIZONTAL);
 
         TextView titulo = new TextView(activity);
-        titulo.setText("¡NUEVA MEDALLA!");
+        titulo.setText(Idioma.t("¡NUEVA MEDALLA!", "NEW MEDAL!"));
         titulo.setTextColor(0xFFE8D08A);
         titulo.setTextSize(24);
         titulo.setTypeface(Typeface.SERIF, Typeface.BOLD);
@@ -76,7 +77,7 @@ public final class Animaciones {
         columna.addView(nombre);
 
         TextView aviso = new TextView(activity);
-        aviso.setText("Toca para continuar");
+        aviso.setText(Idioma.t("Toca para continuar", "Tap to continue"));
         aviso.setTextColor(0xFFA39373);
         aviso.setTextSize(13);
         aviso.setPadding(0, Math.round(26 * dp), 0, 0);

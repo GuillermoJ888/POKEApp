@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -53,22 +54,22 @@ public class RegisterActivity extends AppCompatActivity {
         String confirmar = etConfirmarContrasena.getText().toString().trim();
 
         if (TextUtils.isEmpty(nombre)) {
-            etNombre.setError("Escribe un nombre de entrenador");
+            etNombre.setError(Idioma.t("Escribe un nombre de entrenador", "Enter a trainer name"));
             return;
         }
 
         if (TextUtils.isEmpty(correo) || !Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-            etCorreo.setError("Correo inválido");
+            etCorreo.setError(Idioma.t("Correo inválido", "Invalid email"));
             return;
         }
 
         if (TextUtils.isEmpty(contrasena) || contrasena.length() < 6) {
-            etContrasena.setError("Mínimo 6 caracteres");
+            etContrasena.setError(Idioma.t("Mínimo 6 caracteres", "At least 6 characters"));
             return;
         }
 
         if (!contrasena.equals(confirmar)) {
-            etConfirmarContrasena.setError("Las contraseñas no coinciden");
+            etConfirmarContrasena.setError(Idioma.t("Las contraseñas no coinciden", "Passwords do not match"));
             return;
         }
 
@@ -80,8 +81,8 @@ public class RegisterActivity extends AppCompatActivity {
                     if (!task.isSuccessful()) {
                         mostrarCargando(false);
                         String detalle = task.getException() != null
-                                ? task.getException().getMessage() : "Error desconocido";
-                        Toast.makeText(this, "No se pudo crear la cuenta: " + detalle,
+                                ? task.getException().getMessage() : Idioma.t("Error desconocido", "Unknown error");
+                        Toast.makeText(this, Idioma.t("No se pudo crear la cuenta: ", "Could not create the account: ") + detalle,
                                 Toast.LENGTH_LONG).show();
                         return;
                     }
@@ -112,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
 
                     Toast.makeText(
                             this,
-                            "¡Cuenta creada! Bienvenido, " + nombre,
+                            Idioma.t("¡Cuenta creada! Bienvenido, ", "Account created! Welcome, ") + nombre,
                             Toast.LENGTH_SHORT
                     ).show();
 

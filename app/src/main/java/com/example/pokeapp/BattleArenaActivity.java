@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -195,7 +196,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         Pokemon[] a = leerEquipo(EXTRA_EQUIPO_A);
         Pokemon[] b = leerEquipo(EXTRA_EQUIPO_B);
         if (a == null || b == null || a.length == 0 || b.length == 0) {
-            Toast.makeText(this, "No se pudieron cargar los Pokémon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("No se pudieron cargar los Pokémon", "Could not load the Pokémon"), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -232,7 +233,7 @@ public class BattleArenaActivity extends AppCompatActivity {
             espejo = !soyAnfitrion;
             if (!red.estaConectado()) {
                 red = null;
-                Toast.makeText(this, "Se perdió la conexión con el otro celular", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, Idioma.t("Se perdió la conexión con el otro celular", "Lost the connection with the other phone"), Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }
@@ -259,7 +260,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         }
         handler.postDelayed(() -> {
             pausaInicioLista = true;
-            if (!ataquesListos) mostrarBanner("Preparando ataques…");
+            if (!ataquesListos) mostrarBanner(Idioma.t("Preparando ataques…", "Preparing moves…"));
             intentarComenzar();
         }, PAUSA_INICIO + (hayEntrenador ? PAUSA_ENTRENADOR : 0));
     }
@@ -388,13 +389,13 @@ public class BattleArenaActivity extends AppCompatActivity {
         equipoA.add(companero);
         handler.postDelayed(() -> {
             if (batallaTerminada || isFinishing() || isDestroyed()) return;
-            mostrarBanner("¡" + companero.nombre + " sale al rescate!");
-            agregarBitacora("🤝 ¡Tu compañero " + companero.nombre + " sale al rescate!");
+            mostrarBanner(Idioma.t("¡", "") + companero.nombre + Idioma.t(" sale al rescate!", " comes to the rescue!"));
+            agregarBitacora(Idioma.t("🤝 ¡Tu compañero ", "🤝 Your partner ") + companero.nombre + Idioma.t(" sale al rescate!", " comes to the rescue!"));
             MovimientoManager.asignar(Collections.singletonList(companero), () -> handler.postDelayed(() -> {
                 if (batallaTerminada || isFinishing() || isDestroyed()) return;
                 mostrarEntrada(true, equipoA.size() - 1);
-                agregarBitacora((nombreA != null ? nombreA : "Entra") + " envía a " + companero.nombre
-                        + ".\n¡" + companero.nombre + " ataca primero!");
+                agregarBitacora((nombreA != null ? nombreA : Idioma.t("Entra", "Trainer")) + Idioma.t(" envía a ", " sends out ") + companero.nombre
+                        + Idioma.t(".\n¡", ".\n") + companero.nombre + Idioma.t(" ataca primero!", " attacks first!"));
                 turnoDeA = true;
                 handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
             }, PAUSA_REEMPLAZO));
@@ -441,11 +442,11 @@ public class BattleArenaActivity extends AppCompatActivity {
             // "Nivel 3 · Edgar" → "¡A luchar contra Edgar!"
             String rival = nombreB.contains(" · ") ? nombreB.substring(nombreB.indexOf(" · ") + 3) : nombreB;
             String frase = getIntent().getStringExtra(EXTRA_FRASE_ENTRENADOR);
-            mostrarBanner(frase != null ? frase : "¡A luchar contra " + rival + "!");
+            mostrarBanner(frase != null ? frase : Idioma.t("¡A luchar contra " + rival + "!", "Battle against " + rival + "!"));
         } else if (esPorEquipos()) {
-            mostrarBanner("¡" + dueno(true) + " vs " + dueno(false) + "!");
+            mostrarBanner(Idioma.t("¡", "") + dueno(true) + " vs " + dueno(false) + "!");
         } else {
-            mostrarBanner("¡" + actual(true).nombre + " vs " + actual(false).nombre + "!");
+            mostrarBanner(Idioma.t("¡", "") + actual(true).nombre + " vs " + actual(false).nombre + "!");
         }
     }
 
@@ -636,7 +637,7 @@ public class BattleArenaActivity extends AppCompatActivity {
     private void intentarComenzar() {
         if (!ataquesListos || !pausaInicioLista || batallaIniciada) return;
         if (red != null && soyAnfitrion && !rivalListo) {
-            mostrarBanner("Esperando a " + dueno(false) + "…");
+            mostrarBanner(Idioma.t("Esperando a ", "Waiting for ") + dueno(false) + "…");
             return;
         }
         batallaIniciada = true;
@@ -650,12 +651,12 @@ public class BattleArenaActivity extends AppCompatActivity {
         Efectos.cry(this, actual(true).id);   // grito del Pokémon de abajo al empezar
         if (espejo) {
             // El anfitrión decide quién empieza y lo avisa con el primer "turno"
-            agregarBitacora("¡" + dueno(true) + " vs " + dueno(false) + "!");
-            tvTurno.setText("⏳ Esperando a " + dueno(false) + "…");
+            agregarBitacora(Idioma.t("¡", "") + dueno(true) + " vs " + dueno(false) + "!");
+            tvTurno.setText(Idioma.t("⏳ Esperando a ", "⏳ Waiting for ") + dueno(false) + "…");
             red.enviar(Protocolo.listo());
             return;
         }
-        agregarBitacora("¡" + dueno(true) + " vs " + dueno(false) + "!\n" + decidirQuienEmpieza());
+        agregarBitacora(Idioma.t("¡", "") + dueno(true) + " vs " + dueno(false) + "!\n" + decidirQuienEmpieza());
         handler.postDelayed(this::siguienteTurno, 700);
     }
 
@@ -664,9 +665,9 @@ public class BattleArenaActivity extends AppCompatActivity {
         BattlePokemon a = actual(true), b = actual(false);
         turnoDeA = motor.quienEmpieza(a, b) == a;
         BattlePokemon primero = actual(turnoDeA);
-        return "Empieza " + primero.nombre + (a.velocidad != b.velocidad
-                ? " por tener mayor Speed (" + primero.velocidad + ")."
-                : " por sorteo (misma Speed).");
+        return Idioma.t("Empieza ", "") + primero.nombre + (a.velocidad != b.velocidad
+                ? Idioma.t(" por tener mayor Speed (", " goes first: higher Speed (") + primero.velocidad + ")."
+                : Idioma.t(" por sorteo (misma Speed).", " goes first by coin toss (same Speed)."));
     }
 
     private void siguienteTurno() {
@@ -692,7 +693,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         esperandoJugador = true;
         BattlePokemon p = actual(ladoA);
         String quien = ladoA ? nombreA : nombreB;
-        tvTurnoDe.setText((quien != null ? quien + "\n" : "") + "¿Qué hará " + p.nombre + "?");
+        tvTurnoDe.setText((quien != null ? quien + "\n" : "") + Idioma.t("¿Qué hará " + p.nombre + "?", "What will " + p.nombre + " do?"));
 
         float dp = getResources().getDisplayMetrics().density;
         gridAtaques.removeAllViews();
@@ -735,7 +736,7 @@ public class BattleArenaActivity extends AppCompatActivity {
             filaTipo.addView(chipTipo);
 
             TextView detalle = new TextView(this);
-            detalle.setText("  Pot. " + m.potencia + " · " + (m.precision > 0 ? m.precision + "%" : "—"));
+            detalle.setText(Idioma.t("  Pot. ", "  Pow. ") + m.potencia + " · " + (m.precision > 0 ? m.precision + "%" : "—"));
             detalle.setTextColor(0xE6FFFFFF);
             detalle.setTextSize(11);
             detalle.setShadowLayer(2 * dp, 0, dp, 0x99000000);
@@ -745,7 +746,7 @@ public class BattleArenaActivity extends AppCompatActivity {
             // Daño base contra el rival actual (sin contar súper eficaz ni críticos)
             int[] rango = BattleEngine.rangoDanioBase(m, p, actual(!ladoA));
             TextView danio = new TextView(this);
-            danio.setText("💥 Daño " + (rango[0] == rango[1] ? String.valueOf(rango[0]) : rango[0] + "–" + rango[1]));
+            danio.setText(Idioma.t("💥 Daño ", "💥 Damage ") + (rango[0] == rango[1] ? String.valueOf(rango[0]) : rango[0] + "–" + rango[1]));
             danio.setTextColor(0xFFFFFFFF);
             danio.setTextSize(12);
             danio.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -820,14 +821,14 @@ public class BattleArenaActivity extends AppCompatActivity {
     /** Dibuja un ataque ya calculado: animaciones, barra de vida y bitácora. */
     private void mostrarAtaque(boolean ladoA, BattleTurn turno) {
         BattlePokemon defensor = turno.defensor;
-        tvTurno.setText("Turno " + turno.numero + " · " + turno.movimiento.nombre);
+        tvTurno.setText(Idioma.t("Turno ", "Turn ") + turno.numero + " · " + turno.movimiento.nombre);
 
         animarAtaque(contenedor(ladoA), ladoA ? 40f : -40f);
         if (turno.fallo) {
-            textoFlotante(contenedor(!ladoA), "¡Falló!", 0xFF8A93A6, 22);
+            textoFlotante(contenedor(!ladoA), Idioma.t("¡Falló!", "Missed!"), 0xFF8A93A6, 22);
             Efectos.fallo(this);
         } else if (turno.sinEfecto()) {
-            textoFlotante(contenedor(!ladoA), "No le afecta", 0xFF8A93A6, 20);
+            textoFlotante(contenedor(!ladoA), Idioma.t("No le afecta", "No effect"), 0xFF8A93A6, 20);
             Efectos.fallo(this);
         } else {
             animarGolpe(contenedor(!ladoA), turno);
@@ -859,7 +860,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         boolean lado = turnoDeA;
         if (otrosVivos(lado).isEmpty()) return;
 
-        mostrarVentanaEquipo(lado, "Cambiar Pokémon", true, indice -> {
+        mostrarVentanaEquipo(lado, Idioma.t("Cambiar Pokémon", "Switch Pokémon"), true, indice -> {
             esperandoJugador = false;
             barraAccion.setVisibility(View.GONE);
             if (espejo) {
@@ -886,7 +887,7 @@ public class BattleArenaActivity extends AppCompatActivity {
             entrarPokemon(ladoA, vivos.get(0), false);
             return;
         }
-        mostrarVentanaEquipo(ladoA, "Elige tu siguiente Pokémon", false,
+        mostrarVentanaEquipo(ladoA, Idioma.t("Elige tu siguiente Pokémon", "Choose your next Pokémon"), false,
                 indice -> entrarPokemon(ladoA, indice, false));
     }
 
@@ -946,12 +947,12 @@ public class BattleArenaActivity extends AppCompatActivity {
             TextView estado = tarjeta.findViewById(R.id.tvEstadoPokemonBatalla);
             boolean enBatalla = i == activo && !p.estaDerrotado();
             if (p.estaDerrotado()) {
-                estado.setText("Debilitado");
+                estado.setText(Idioma.t("Debilitado", "Fainted"));
                 estado.setVisibility(View.VISIBLE);
                 tarjeta.setAlpha(0.45f);
                 tarjeta.setClickable(false);
             } else if (enBatalla) {
-                estado.setText("En batalla");
+                estado.setText(Idioma.t("En batalla", "In battle"));
                 estado.setVisibility(View.VISIBLE);
                 tarjeta.setAlpha(0.6f);
                 tarjeta.setClickable(false);
@@ -986,10 +987,10 @@ public class BattleArenaActivity extends AppCompatActivity {
 
         String quien = ladoA ? nombreA : nombreB;
         if (porDecision) {
-            agregarBitacora((quien != null ? quien : "Entra") + " cambia a " + actual(ladoA).nombre + ".");
+            agregarBitacora((quien != null ? quien : Idioma.t("Entra", "Trainer")) + Idioma.t(" cambia a ", " switches to ") + actual(ladoA).nombre + ".");
             turnoDeA = !ladoA;
         } else {
-            agregarBitacora((quien != null ? quien : "Entra") + " envía a " + actual(ladoA).nombre
+            agregarBitacora((quien != null ? quien : Idioma.t("Entra", "Trainer")) + Idioma.t(" envía a ", " sends out ") + actual(ladoA).nombre
                     + ".\n" + decidirQuienEmpieza());
         }
         handler.postDelayed(this::siguienteTurno, PAUSA_TURNO);
@@ -1025,10 +1026,10 @@ public class BattleArenaActivity extends AppCompatActivity {
         }
 
         String ganador = esPorEquipos() ? dueno(ganoA) : actual(ganoA).nombre;
-        agregarBitacora("🏆 ¡" + ganador + " gana la batalla en " + totalTurnos + " turnos!");
+        agregarBitacora(Idioma.t("🏆 ¡", "🏆 ") + ganador + Idioma.t(" gana la batalla en ", " wins the battle in ") + totalTurnos + Idioma.t(" turnos!", " turns!"));
 
-        tvTurno.setText("Fin · " + totalTurnos + " turnos");
-        mostrarBanner("🏆 ¡" + ganador + " gana!");
+        tvTurno.setText(Idioma.t("Fin · ", "End · ") + totalTurnos + Idioma.t(" turnos", " turns"));
+        mostrarBanner(Idioma.t("🏆 ¡", "🏆 ") + ganador + Idioma.t(" gana!", " wins!"));
         Efectos.victoria(this);
         Efectos.cry(this, actual(ganoA).id);
 
@@ -1066,7 +1067,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         Context app = getApplicationContext();
         HistorialManager.guardarBatalla(modo, lados, ids, ganador, movimientos, guardado -> {
             if (!Boolean.TRUE.equals(guardado)) {
-                Toast.makeText(app, "No se pudo guardar la batalla en el Historial", Toast.LENGTH_LONG).show();
+                Toast.makeText(app, Idioma.t("No se pudo guardar la batalla en el Historial", "Could not save the battle to History"), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -1094,7 +1095,7 @@ public class BattleArenaActivity extends AppCompatActivity {
     private void esperarRival(boolean reemplazo) {
         esperandoRival = true;
         rivalEligeReemplazo = reemplazo;
-        tvTurno.setText("⏳ Esperando a " + dueno(false) + "…");
+        tvTurno.setText(Idioma.t("⏳ Esperando a ", "⏳ Waiting for ") + dueno(false) + "…");
     }
 
     /** (Anfitrión) Un equipo para el mensaje "inicio": ID, HP y ataques de cada Pokémon. */
@@ -1121,7 +1122,7 @@ public class BattleArenaActivity extends AppCompatActivity {
         @Override
         public void alDesconectar() {
             if (batallaTerminada || isFinishing() || isDestroyed()) return;
-            Toast.makeText(getApplicationContext(), "El otro celular se desconectó: batalla cancelada",
+            Toast.makeText(getApplicationContext(), Idioma.t("El otro celular se desconectó: batalla cancelada", "The other phone disconnected: battle cancelled"),
                     Toast.LENGTH_LONG).show();
             finish();
         }
@@ -1159,9 +1160,9 @@ public class BattleArenaActivity extends AppCompatActivity {
             case Protocolo.TURNO:
                 turnoDeA = esLadoA(mensaje, "lado");
                 if (!turnoDeA) {
-                    tvTurno.setText("⏳ Esperando a " + dueno(false) + "…");
+                    tvTurno.setText(Idioma.t("⏳ Esperando a ", "⏳ Waiting for ") + dueno(false) + "…");
                 } else if (Protocolo.PIDE_REEMPLAZO.equals(mensaje.optString("pide"))) {
-                    mostrarVentanaEquipo(true, "Elige tu siguiente Pokémon", false,
+                    mostrarVentanaEquipo(true, Idioma.t("Elige tu siguiente Pokémon", "Choose your next Pokémon"), false,
                             indice -> red.enviar(Protocolo.cambiar(indice)));
                 } else {
                     mostrarPanelAtaques(true);
@@ -1175,7 +1176,7 @@ public class BattleArenaActivity extends AppCompatActivity {
                 int indice = mensaje.optInt("indice", -1);
                 if (indice < 0 || indice >= equipo(ladoA).size()) return;
                 mostrarEntrada(ladoA, indice);
-                agregarBitacora(dueno(ladoA) + (mensaje.optBoolean("porDecision") ? " cambia a " : " envía a ")
+                agregarBitacora(dueno(ladoA) + (mensaje.optBoolean("porDecision") ? Idioma.t(" cambia a ", " switches to ") : Idioma.t(" envía a ", " sends out "))
                         + actual(ladoA).nombre + ".");
                 break;
             }
@@ -1219,7 +1220,7 @@ public class BattleArenaActivity extends AppCompatActivity {
 
     private Movimiento leerMovimiento(JSONObject o) {
         String tipo = o.optString("tipo", "");
-        return new Movimiento(o.optString("nombre", "Ataque"), tipo.isEmpty() ? null : tipo,
+        return new Movimiento(o.optString("nombre", Idioma.t("Ataque", "Attack")), tipo.isEmpty() ? null : tipo,
                 o.optInt("potencia", 0), o.optInt("precision", 0));
     }
 
@@ -1289,8 +1290,8 @@ public class BattleArenaActivity extends AppCompatActivity {
         // Texto de daño flotante
         TextView tvDanio = new TextView(this);
         String texto = "-" + turno.danio;
-        if (turno.critico) texto += " ¡Crítico!";
-        else if (turno.efectividad >= 2f) texto += " ¡Súper eficaz!";
+        if (turno.critico) texto += Idioma.t(" ¡Crítico!", " Critical!");
+        else if (turno.efectividad >= 2f) texto += Idioma.t(" ¡Súper eficaz!", " Super effective!");
         tvDanio.setText(texto);
         tvDanio.setTextColor(turno.critico ? 0xFFF59E0B : 0xFFE3350D);
         tvDanio.setTextSize(turno.critico || turno.efectividad >= 2f ? 22 : 26);

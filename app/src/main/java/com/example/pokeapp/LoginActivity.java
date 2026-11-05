@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -122,12 +123,12 @@ public class LoginActivity extends AppCompatActivity {
         String contrasena = etContrasena.getText().toString().trim();
 
         if (TextUtils.isEmpty(correo) || !Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-            etCorreo.setError("Correo inválido");
+            etCorreo.setError(Idioma.t("Correo inválido", "Invalid email"));
             return;
         }
 
         if (TextUtils.isEmpty(contrasena) || contrasena.length() < 6) {
-            etContrasena.setError("Mínimo 6 caracteres");
+            etContrasena.setError(Idioma.t("Mínimo 6 caracteres", "At least 6 characters"));
             return;
         }
 
@@ -148,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(
                                 this,
-                                "No se pudo iniciar sesión: correo o contraseña incorrectos",
+                                Idioma.t("No se pudo iniciar sesión: correo o contraseña incorrectos", "Could not sign in: wrong email or password"),
                                 Toast.LENGTH_SHORT
                         ).show();
                         if (task.getException() != null) {
@@ -173,19 +174,19 @@ public class LoginActivity extends AppCompatActivity {
     private void mostrarDialogoRecuperarContrasena() {
 
         EditText input = new EditText(this);
-        input.setHint("Tu correo electrónico");
+        input.setHint(Idioma.t("Tu correo electrónico", "Your email"));
         input.setText(etCorreo.getText().toString());
 
         new AlertDialog.Builder(this)
-                .setTitle("Recuperar contraseña")
-                .setMessage("Te enviaremos un enlace para restablecer tu contraseña.")
+                .setTitle(Idioma.t("Recuperar contraseña", "Recover password"))
+                .setMessage(Idioma.t("Te enviaremos un enlace para restablecer tu contraseña.", "We will send you a link to reset your password."))
                 .setView(input)
-                .setPositiveButton("Enviar", (dialog, which) -> {
+                .setPositiveButton(Idioma.t("Enviar", "Send"), (dialog, which) -> {
 
                     String correo = input.getText().toString().trim();
 
                     if (TextUtils.isEmpty(correo) || !Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-                        Toast.makeText(this, "Escribe un correo válido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, Idioma.t("Escribe un correo válido", "Enter a valid email"), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -193,12 +194,12 @@ public class LoginActivity extends AppCompatActivity {
                             .addOnCompleteListener(task -> Toast.makeText(
                                     this,
                                     task.isSuccessful()
-                                            ? "Revisa tu correo para restablecer la contraseña"
-                                            : "No se pudo enviar el correo",
+                                            ? Idioma.t("Revisa tu correo para restablecer la contraseña", "Check your email to reset the password")
+                                            : Idioma.t("No se pudo enviar el correo", "Could not send the email"),
                                     Toast.LENGTH_SHORT
                             ).show());
                 })
-                .setNegativeButton("Cancelar", null)
+                .setNegativeButton(Idioma.t("Cancelar", "Cancel"), null)
                 .show();
     }
 
@@ -216,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
         if (resId == 0) {
             Toast.makeText(
                     this,
-                    "Falta habilitar Google en Firebase y volver a descargar google-services.json",
+                    Idioma.t("Falta habilitar Google en Firebase y volver a descargar google-services.json", "Enable Google in Firebase and download google-services.json again"),
                     Toast.LENGTH_LONG
             ).show();
             return;
@@ -252,7 +253,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (!(e instanceof GetCredentialCancellationException)) {
                             Toast.makeText(
                                     LoginActivity.this,
-                                    "No se pudo abrir Google: " + e.getMessage(),
+                                    Idioma.t("No se pudo abrir Google: ", "Could not open Google: ") + e.getMessage(),
                                     Toast.LENGTH_LONG
                             ).show();
                         }
@@ -285,20 +286,20 @@ public class LoginActivity extends AppCompatActivity {
                                 finish();
                             } else {
                                 String detalle = task.getException() != null
-                                        ? task.getException().getMessage() : "Error desconocido";
-                                Toast.makeText(this, "Firebase rechazó el acceso: " + detalle,
+                                        ? task.getException().getMessage() : Idioma.t("Error desconocido", "Unknown error");
+                                Toast.makeText(this, Idioma.t("Firebase rechazó el acceso: ", "Firebase denied access: ") + detalle,
                                         Toast.LENGTH_LONG).show();
                             }
                         });
 
             } catch (Exception e) {
                 mostrarCargando(false);
-                Toast.makeText(this, "Respuesta de Google inválida", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, Idioma.t("Respuesta de Google inválida", "Invalid response from Google"), Toast.LENGTH_SHORT).show();
             }
 
         } else {
             mostrarCargando(false);
-            Toast.makeText(this, "Tipo de credencial no soportado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, Idioma.t("Tipo de credencial no soportado", "Unsupported credential type"), Toast.LENGTH_SHORT).show();
         }
     }
 

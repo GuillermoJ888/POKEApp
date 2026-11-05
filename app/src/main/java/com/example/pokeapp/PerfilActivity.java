@@ -1,5 +1,6 @@
 package com.example.pokeapp;
 
+import com.example.pokeapp.data.Idioma;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
@@ -51,7 +52,7 @@ public class PerfilActivity extends AppCompatActivity {
                 if (AvatarManager.guardarFoto(this, uri)) {
                     AvatarManager.mostrar(this, imgAvatar);
                 } else {
-                    Toast.makeText(this, "No se pudo usar esa imagen", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, Idioma.t("No se pudo usar esa imagen", "Could not use that image"), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -73,7 +74,7 @@ public class PerfilActivity extends AppCompatActivity {
 
         if (usuario != null) {
             String nombre = usuario.getDisplayName();
-            tvNombre.setText(nombre != null && !nombre.isEmpty() ? nombre : "Entrenador");
+            tvNombre.setText(nombre != null && !nombre.isEmpty() ? nombre : Idioma.t("Entrenador", "Trainer"));
             tvCorreo.setText(usuario.getEmail());
         }
 
@@ -93,9 +94,9 @@ public class PerfilActivity extends AppCompatActivity {
         findViewById(R.id.btnRegresar).setOnClickListener(v -> finish());
 
         findViewById(R.id.btnCerrarSesionPerfil).setOnClickListener(v ->
-                Dialogos.confirmar(this, "🚪", "¿Cerrar sesión?",
-                        "Tendrás que volver a entrar con tu correo o con Google.",
-                        "Cerrar sesión", "Cancelar",
+                Dialogos.confirmar(this, "🚪", Idioma.t("¿Cerrar sesión?", "Sign out?"),
+                        Idioma.t("Tendrás que volver a entrar con tu correo o con Google.", "You will have to sign in again with your email or Google."),
+                        Idioma.t("Cerrar sesión", "Sign out"), Idioma.t("Cancelar", "Cancel"),
                         () -> {
                             FirebaseAuth.getInstance().signOut();
                             Intent intent = new Intent(this, LoginActivity.class);
@@ -156,9 +157,9 @@ public class PerfilActivity extends AppCompatActivity {
                 UsuarioManager.guardarCompanero(id, ok -> {
                     if (Boolean.TRUE.equals(ok)) {
                         mostrarCompanero(id);
-                        Toast.makeText(this, nombre + " es tu compañero", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, nombre + Idioma.t(" es tu compañero", " is your partner"), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this, "No se pudo guardar. Revisa tu conexión.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, Idioma.t("No se pudo guardar. Revisa tu conexión.", "Could not save. Check your connection."), Toast.LENGTH_LONG).show();
                     }
                 });
             });
@@ -172,10 +173,10 @@ public class PerfilActivity extends AppCompatActivity {
         ScrollView scroll = new ScrollView(this);
         scroll.addView(grid);
         dialogo[0] = new AlertDialog.Builder(this)
-                .setTitle("Elige tu compañero")
+                .setTitle(Idioma.t("Elige tu compañero", "Choose your partner"))
                 .setView(scroll)
-                .setNegativeButton("Cerrar", null)
-                .setNeutralButton("Sin compañero", (d, w) -> UsuarioManager.guardarCompanero(0, ok -> {
+                .setNegativeButton(Idioma.t("Cerrar", "Close"), null)
+                .setNeutralButton(Idioma.t("Sin compañero", "No partner"), (d, w) -> UsuarioManager.guardarCompanero(0, ok -> {
                     if (Boolean.TRUE.equals(ok)) mostrarCompanero(0);
                 }))
                 .show();
@@ -212,7 +213,7 @@ public class PerfilActivity extends AppCompatActivity {
         imgSubir.setImageResource(android.R.drawable.ic_menu_camera);
         imgSubir.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         imgSubir.setPadding(40, 40, 40, 40);
-        ((TextView) subir.findViewById(R.id.tvOpcionNombre)).setText("📷 Subir foto");
+        ((TextView) subir.findViewById(R.id.tvOpcionNombre)).setText(Idioma.t("📷 Subir foto", "📷 Upload photo"));
         subir.setOnClickListener(v -> {
             dialogo.dismiss();
             lanzadorFoto.launch(new PickVisualMediaRequest.Builder()
@@ -234,7 +235,7 @@ public class PerfilActivity extends AppCompatActivity {
         FavoritosManager.contar(total -> tvFavoritos.setText(String.valueOf(total)));
 
         UsuarioManager.obtenerEstadisticas(est -> {
-            tvMedallas.setText(est.medallas + "/10");
+            tvMedallas.setText(est.medallas + "/" + UsuarioManager.MAX_MEDALLAS);
             tvVictorias.setText(String.valueOf(est.victorias));
             tvDerrotas.setText(String.valueOf(est.derrotas));
             tvNivel.setText(getString(R.string.t_nivel_n, est.nivel()));
@@ -255,11 +256,13 @@ public class PerfilActivity extends AppCompatActivity {
                     ? getString(R.string.t_n_pts, r.recordTipos) : getString(R.string.t_sin_jugar));
             ((TextView) findViewById(R.id.tvRecordMemoryPerfil)).setText(r.recordMemory > 0
                     ? getString(R.string.t_n_pts, r.recordMemory) : getString(R.string.t_sin_jugar));
+            ((TextView) findViewById(R.id.tvRecordPikachuPerfil)).setText(r.recordPikachu > 0
+                    ? getString(R.string.t_n_pts, r.recordPikachu) : getString(R.string.t_sin_jugar));
             ((TextView) findViewById(R.id.tvCapturadosPerfil)).setText(String.valueOf(r.capturados));
         });
     }
 
-    /** Las 10 medallas en dos filas: a color las ganadas y en gris las que faltan. */
+    /** Las 12 medallas en dos filas: a color las ganadas y en gris las que faltan. */
     private void pintarMedallas(Map<Integer, Date> fechas) {
         GridLayout grid = findViewById(R.id.gridMedallasPerfil);
         grid.removeAllViews();
@@ -269,7 +272,7 @@ public class PerfilActivity extends AppCompatActivity {
         ColorMatrix gris = new ColorMatrix();
         gris.setSaturation(0f);
 
-        for (int numero = 1; numero <= 10; numero++) {
+        for (int numero = 1; numero <= UsuarioManager.MAX_MEDALLAS; numero++) {
             ImageView medalla = new ImageView(this);
             int imagen = getResources().getIdentifier("medalla_" + numero, "drawable", getPackageName());
             if (imagen != 0) medalla.setImageResource(imagen);

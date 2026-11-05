@@ -35,6 +35,14 @@ public class HistorialManager {
     public static final String MODO_TORRE = "Torre Pokémon";
     public static final String MODO_DISPOSITIVOS = "Batalla entre dispositivos";
     /** Historial general (módulo J): no filtra por modo. */
+    /** Nombre del modo para mostrarlo en el idioma de la app. */
+    public static String modoTexto(String modo) {
+        if (MODO_TORRE.equals(modo)) return Idioma.t(modo, "Pokémon Tower");
+        if (MODO_DISPOSITIVOS.equals(modo)) return Idioma.t(modo, "Device battle");
+        if (MODO_TODOS.equals(modo)) return Idioma.t(modo, "All modes");
+        return modo;
+    }
+
     public static final String MODO_TODOS = "Todos los modos";
 
     private static final int MAX_LEIDAS = 50;
