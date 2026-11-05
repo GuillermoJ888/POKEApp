@@ -38,6 +38,7 @@ public class PikachuRunActivity extends AppCompatActivity {
         findViewById(R.id.btnRegresar).setOnClickListener(v -> finish());
         juego = findViewById(R.id.juegoPikachu);
         juego.setAlTerminar(this::alTerminar);
+        Efectos.precargar(this);
 
         for (int id : PikachuRunView.DE_SUELO) cargarSprite(id);
         for (int id : PikachuRunView.VOLADORES) cargarSprite(id);
@@ -92,10 +93,11 @@ public class PikachuRunActivity extends AppCompatActivity {
         if (puntos > record) {
             record = puntos;
             UsuarioManager.guardarRecord(UsuarioManager.RECORD_PIKACHU, puntos);
-            Efectos.victoria(this);
+            Efectos.sonar(this, R.raw.snd_record);
         } else {
-            Efectos.fallo(this);
+            Efectos.sonar(this, R.raw.snd_choque);
         }
+        Efectos.vibrar(this, 150);
     }
 
     @Override

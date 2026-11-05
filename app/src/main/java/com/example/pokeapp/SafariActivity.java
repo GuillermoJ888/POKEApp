@@ -102,6 +102,7 @@ public class SafariActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Efectos.precargar(this);
         setContentView(R.layout.activity_safari);
         pantallaCompleta();
 
@@ -491,11 +492,12 @@ public class SafariActivity extends AppCompatActivity {
             }
         });
         vuelo.start();
+        Efectos.sonar(this, R.raw.snd_lanzar);
     }
 
     /** La bola no le dio al Pokémon: se pierde y, si quedan, se prepara otra. */
     private void fallar(String motivo) {
-        Efectos.fallo(this);
+        Efectos.sonar(this, R.raw.snd_error);
         imgBola.animate().alpha(0f).setDuration(220).withEndAction(() -> {
             if (isFinishing() || isDestroyed() || salvaje == null) return;
             if (!quedanBolas()) {
@@ -518,6 +520,7 @@ public class SafariActivity extends AppCompatActivity {
             resolver(capturado);
             return;
         }
+        Efectos.sonar(this, R.raw.snd_sacudida);
         imgBola.animate().rotation(700f).setDuration(140).withEndAction(() ->
                 imgBola.animate().rotation(740f).setDuration(140).withEndAction(() ->
                         imgBola.animate().rotation(720f).setDuration(120).setStartDelay(0)
@@ -536,7 +539,8 @@ public class SafariActivity extends AppCompatActivity {
             String subioRango = nivelRango() > rangoAntes
                     ? Idioma.t("\n🏅 ¡Subiste a rango " + rango() + "!", "\n🏅 You reached " + rango() + " rank!") : "";
             UsuarioManager.registrarCaptura(salvaje.id, salvaje.nombre);
-            Efectos.victoria(this);   // sonido y vibración (según Configuración)
+            Efectos.sonar(this, R.raw.snd_captura);   // según Configuración
+            Efectos.vibrar(this, 200);
             tvMensaje.setText(Idioma.t(
                     "⭐ ¡" + salvaje.nombre + " fue capturado!"
                             + (nuevo ? "\nSe agregó a tu colección." : "\nYa lo tenías en tu colección."),
@@ -553,6 +557,7 @@ public class SafariActivity extends AppCompatActivity {
         imgPokemon.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(250).start();
 
         if (random.nextInt(100) < PROBABILIDAD_ESCAPE) {
+            Efectos.sonar(this, R.raw.snd_escape);
             tvMensaje.setText(Idioma.t("¡" + salvaje.nombre + " se liberó y escapó!", salvaje.nombre + " broke free and fled!"));
             imgPokemon.animate().translationX(imgPokemon.getWidth() * 2f).setStartDelay(500).setDuration(350)
                     .withEndAction(() -> imgPokemon.setTranslationX(0f)).start();

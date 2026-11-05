@@ -54,6 +54,7 @@ public final class Animaciones {
 
         TextView titulo = new TextView(activity);
         titulo.setText(Idioma.t("¡NUEVA MEDALLA!", "NEW MEDAL!"));
+        Efectos.sonar(activity, R.raw.snd_record);
         titulo.setTextColor(0xFFE8D08A);
         titulo.setTextSize(24);
         titulo.setTypeface(Typeface.SERIF, Typeface.BOLD);

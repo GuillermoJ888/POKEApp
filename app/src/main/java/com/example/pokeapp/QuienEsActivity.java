@@ -72,6 +72,7 @@ public class QuienEsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Efectos.precargar(this);
         setContentView(R.layout.activity_quien_es);
 
         tvPuntos = findViewById(R.id.tvPuntosQuien);
@@ -368,14 +369,17 @@ public class QuienEsActivity extends AppCompatActivity {
             entrenadorSecreto = null;
             if (acierto) {
                 vidas = Math.min(VIDAS, vidas + 1);
-                Efectos.victoria(this);
+                Efectos.sonar(this, R.raw.snd_captura);
+                Efectos.vibrar(this, 120);
                 tvPregunta.setText(Idioma.t("💖 ¡Es ", "💖 It's ") + correcto + Idioma.t("! Recuperaste un corazón", "! You recovered a heart"));
             } else {
+                Efectos.sonar(this, R.raw.snd_error);
                 tvPregunta.setText(Idioma.t("❌ ¡Era ", "❌ It was ") + correcto + Idioma.t("! No pierdes vida, sigue jugando.", "! You keep your life, keep playing."));
             }
         } else if (acierto) {
             puntos += valorPregunta;
             racha++;
+            Efectos.sonar(this, R.raw.snd_acierto);
             mejorRacha = Math.max(mejorRacha, racha);
             tvPregunta.setText(Idioma.t("✅ ¡Es ", "✅ It's ") + correcto + "! +" + valorPregunta + Idioma.t(" puntos", " points"));
             // Cada 10 de racha, si falta algún corazón, la siguiente ronda es el evento especial
@@ -386,6 +390,7 @@ public class QuienEsActivity extends AppCompatActivity {
         } else {
             vidas--;
             racha = 0;
+            Efectos.sonar(this, R.raw.snd_error);
             tvPregunta.setText(Idioma.t("❌ ¡Era ", "❌ It was ") + correcto + "!");
         }
 
@@ -409,6 +414,7 @@ public class QuienEsActivity extends AppCompatActivity {
         esperandoRespuesta = false;
 
         boolean nuevoRecord = puntos > record;
+        Efectos.sonar(this, nuevoRecord ? R.raw.snd_record : R.raw.snd_choque);
         if (nuevoRecord) {
             record = puntos;
             UsuarioManager.guardarRecord(RECORD, puntos);

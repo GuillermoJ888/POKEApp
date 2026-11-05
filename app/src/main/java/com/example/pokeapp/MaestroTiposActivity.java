@@ -66,6 +66,7 @@ public class MaestroTiposActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Efectos.precargar(this);
         setContentView(R.layout.activity_maestro_tipos);
 
         tvPuntos = findViewById(R.id.tvPuntosTipos);
@@ -238,9 +239,11 @@ public class MaestroTiposActivity extends AppCompatActivity {
             int ganados = 50 + Math.round(150f * tiempoRestante / tiempoPregunta);
             puntos += ganados;
             aciertos++;
+            Efectos.sonar(this, R.raw.snd_acierto);
             tvPregunta.setText(Idioma.t("✅ ¡Correcto! +", "✅ Correct! +") + ganados + Idioma.t(" puntos", " points"));
         } else {
             vidas--;
+            Efectos.sonar(this, R.raw.snd_error);
             float veces = TypeChart.efectividad(correcta, tiposRival);
             tvPregunta.setText((tipo == null ? Idioma.t("⏰ ¡Se acabó el tiempo! ", "⏰ Time's up! ") : "❌ ")
                     + Idioma.t("Era ", "It was ") + TypeColors.traducir(correcta) + " (×" + (int) veces + ")");
@@ -269,6 +272,9 @@ public class MaestroTiposActivity extends AppCompatActivity {
         handler.removeCallbacksAndMessages(null);
 
         boolean nuevoRecord = puntos > record;
+        if (!"Partida interrumpida".equals(titulo) && !"Game interrupted".equals(titulo)) {
+            Efectos.sonar(this, nuevoRecord ? R.raw.snd_record : R.raw.snd_choque);
+        }
         if (nuevoRecord) {
             record = puntos;
             UsuarioManager.guardarRecord(RECORD, puntos);

@@ -57,6 +57,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Efectos.precargar(this);
         setContentView(R.layout.activity_poke_memory);
 
         tvIntentos = findViewById(R.id.tvIntentosMemory);
@@ -189,6 +190,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
             handler.postDelayed(pasoReloj, 1000);
         }
         girar(vistas.get(posicion), () -> destapar(posicion));
+        Efectos.sonar(this, R.raw.snd_carta);
 
         if (primera < 0) {
             primera = posicion;
@@ -203,11 +205,13 @@ public class PokeMemoryActivity extends AppCompatActivity {
             descubierta[otra] = true;
             descubierta[posicion] = true;
             encontradas++;
+            Efectos.sonar(this, R.raw.snd_pareja);
             vistas.get(otra).setAlpha(0.75f);
             vistas.get(posicion).setAlpha(0.75f);
             if (encontradas == cartas.size() / 2) terminar();
         } else {
             bloqueado = true;
+            handler.postDelayed(() -> Efectos.sonar(this, R.raw.snd_error), 250);
             handler.postDelayed(() -> {
                 girar(vistas.get(otra), () -> tapar(vistas.get(otra)));
                 girar(vistas.get(posicion), () -> tapar(vistas.get(posicion)));
@@ -228,6 +232,7 @@ public class PokeMemoryActivity extends AppCompatActivity {
         int parejas = cartas.size() / 2;
         int puntos = Math.max(10, parejas * 100 - (intentos - parejas) * 10 - segundos);
         boolean nuevoRecord = puntos > record;
+        Efectos.sonar(this, nuevoRecord ? R.raw.snd_record : R.raw.snd_acierto);
         if (nuevoRecord) {
             record = puntos;
             UsuarioManager.guardarRecord(RECORD, puntos);

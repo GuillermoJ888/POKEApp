@@ -152,7 +152,10 @@ public class PikachuRunView extends View {
                 if (System.currentTimeMillis() - momentoFin > 500) empezar();
             } else if (ladoDerecho) {
                 saltoPresionado = true;
-                if (alturaPikachu <= 0f) velocidadY = IMPULSO_SALTO;
+                if (alturaPikachu <= 0f) {
+                    velocidadY = IMPULSO_SALTO;
+                    Efectos.sonar(getContext(), R.raw.snd_salto);
+                }
             } else {
                 agachado = true;
             }
@@ -226,6 +229,7 @@ public class PikachuRunView extends View {
             } else if (RectF.intersects(cuerpo, new RectF(r.x, ALTURA_RAYO, r.x + 26f, ALTURA_RAYO + 26f))) {
                 it.remove();
                 puntos += PUNTOS_RAYO;
+                Efectos.sonar(getContext(), R.raw.snd_moneda);
                 Efectos.vibrar(getContext(), 20);
             }
         }
